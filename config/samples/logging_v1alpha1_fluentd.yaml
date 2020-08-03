@@ -1,0 +1,7 @@
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Fluentd
+metadata:
+  name: fluentd-sample
+spec:
+  # Add fields here
+  foo: bar

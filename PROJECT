@@ -1,0 +1,16 @@
+domain: opstreelabs.in
+layout: go.kubebuilder.io/v2
+repo: logging-operator
+resources:
+- group: logging
+  kind: Elasticsearch
+  version: v1alpha1
+- group: logging
+  kind: Kibana
+  version: v1alpha1
+- group: logging
+  kind: Fluentd
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  go.operator-sdk.io/v2-alpha: {}
