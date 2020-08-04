@@ -1,0 +1,67 @@
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - elasticsearches
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - elasticsearches/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - fluentds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - fluentds/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - kibanas
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - kibanas/status
+  verbs:
+  - get
+  - patch
+  - update

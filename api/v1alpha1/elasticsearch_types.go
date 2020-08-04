@@ -17,25 +17,64 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ElasticsearchSpec defines the desired state of Elasticsearch
 type ElasticsearchSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Elasticsearch. Edit Elasticsearch_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	ClusterName          string   `json:"clusterName"`
+	ElasticsearchVersion string   `json:"elasticSearchVersion,omitempty"`
+	Security             Security `json:"security,omitempty"`
+	Plugins              []string `json:"plugins,omitempty"`
+	Master               NodeSpec `json:"master,omitempty"`
+	Data                 NodeSpec `json:"data,omitempty"`
+	Ingestion            NodeSpec `json:"ingestion,omitempty"`
 }
 
 // ElasticsearchStatus defines the observed state of Elasticsearch
 type ElasticsearchStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	Nodes []string `json:"nodes"`
+}
+
+// Security defines the security of elasticsearch
+type Security struct {
+	TLSEnabled bool   `json:"tlsEnabled,omitempty"`
+	Password   string `json:"password,omitempty"`
+}
+
+// NodeSpec define the state of elasticsearch nodes
+type NodeSpec struct {
+	Enabled    bool             `json:"enabled,omitempty"`
+	Resources  Resources        `json:"resources,omitempty"`
+	Storage    *Storage         `json:"storage,omitempty"`
+	JVMOptions JVMOptions       `json:"jvmOptions,omitempty"`
+	Affinity   *corev1.Affinity `json:"affinity,omitempty"`
+}
+
+// JVMOptions define the JVM size for elasticsearch nodes
+type JVMOptions struct {
+	Max string `json:"Xmx,omitempty"`
+	Min string `json:"Xms,omitempty"`
+}
+
+// Resources describes requests and limits for the cluster resouces.
+type Resources struct {
+	ResourceRequests ResourceDescription `json:"requests,omitempty"`
+	ResourceLimits   ResourceDescription `json:"limits,omitempty"`
+}
+
+// Storage is the inteface to add pvc and pv support in redis
+type Storage struct {
+	VolumeClaimTemplate corev1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+}
+
+// ResourceDescription describes CPU and memory resources defined for a cluster.
+type ResourceDescription struct {
+	CPU    string `json:"cpu"`
+	Memory string `json:"memory"`
 }
 
 // +kubebuilder:object:root=true
