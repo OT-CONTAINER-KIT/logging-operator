@@ -1,0 +1,109 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch-cluster
+  labels:
+    organization: opstree
+    owned-by: Abhishek
+  namespace: logging-operator
+spec:
+  clusterName: "production"
+  elasticSearchVersion: "7.8.0"
+  security:
+    tlsEnabled: true
+    password: "Opstree@1234"
+  plugins: ["repository-s3"]
+  master:
+    enabled: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+      limits:
+        cpu: 500m
+        memory: 2048Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cephfs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+        selector: {}
+    jvmOptions:
+      Xmx: "1g"
+      Xms: "1g"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - "elasticsearch-cluster-ingestion"
+          topologyKey: kubernetes.io/hostname
+  data:
+    enabled: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+      limits:
+        cpu: 500m
+        memory: 2048Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cephfs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+        selector: {}
+    jvmOptions:
+      Xmx: "1g"
+      Xms: "1g"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - "elasticsearch-cluster-ingestion"
+          topologyKey: kubernetes.io/hostname
+  ingestion:
+    enabled: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+      limits:
+        cpu: 500m
+        memory: 2048Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cephfs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+        selector: {}
+    jvmOptions:
+      Xmx: "1g"
+      Xms: "1g"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - "elasticsearch-cluster-ingestion"
+          topologyKey: kubernetes.io/hostname
