@@ -18,11 +18,15 @@ package controllers
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-logr/logr"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"logging-operator/k8sutils/secret"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	loggingv1alpha1 "logging-operator/api/v1alpha1"
 )
@@ -38,12 +42,31 @@ type ElasticsearchReconciler struct {
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=elasticsearches/status,verbs=get;update;patch
 
 func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
-	_ = r.Log.WithValues("elasticsearch", req.NamespacedName)
+	// _ = context.Background()
+	reqLogger := r.Log.WithValues("elasticsearch", req.NamespacedName)
 
-	// your logic here
+	instance := &loggingv1alpha1.Elasticsearch{}
+	err := r.Get(context.TODO(), req.NamespacedName, instance)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
 
-	return ctrl.Result{}, nil
+	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	if *instance.Spec.Security.TLSEnabled != false && instance.Spec.Security.TLSEnabled != nil {
+		tlsCert := secret.GenerateTLSecret(instance)
+		secret.CreateAndUpdateSecret(instance, tlsCert)
+
+		password := secret.GenerateElasticPassword(instance)
+		secret.CreateAndUpdateSecret(instance, password)
+	}
+	reqLogger.Info("Will reconcile after 10 seconds", "Elasticsearch.Namespace", instance.Namespace, "Elasticsearch.Name", instance.Name)
+	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
 func (r *ElasticsearchReconciler) SetupWithManager(mgr ctrl.Manager) error {

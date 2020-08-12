@@ -34,6 +34,7 @@ func GenerateTLSecret(cr *loggingv1alpha1.Elasticsearch) *corev1.Secret {
 			"elastic-certificates.p12": decoded,
 		},
 	}
+	identifier.AddOwnerRefToObject(secret, identifier.ElasticAsOwner(cr))
 	return secret
 }
 
@@ -57,4 +58,23 @@ func CreateAndUpdateSecret(cr *loggingv1alpha1.Elasticsearch, secretBody *corev1
 	} else {
 		reqLogger.Info("Elasticsearch tls secret is already synced", "Secret.Name", cr.ObjectMeta.Name)
 	}
+}
+
+// GenerateElasticPassword will generate the passowrd field for elasticsearch
+func GenerateElasticPassword(cr *loggingv1alpha1.Elasticsearch) *corev1.Secret {
+	password := []byte(cr.Spec.Security.Password)
+	labels := map[string]string{
+		"name":                        cr.ObjectMeta.Name + "-password",
+		"logging.opstreelabs.in":      "true",
+		"logging.opstreelabs.in/kind": "Elasticsearch",
+	}
+	secret := &corev1.Secret{
+		TypeMeta:   identifier.GenerateMetaInformation("Secret", "v1"),
+		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name+"-password", cr.Namespace, labels, identifier.GenerateElasticAnnotations()),
+		Data: map[string][]byte{
+			"password": password,
+		},
+	}
+	identifier.AddOwnerRefToObject(secret, identifier.ElasticAsOwner(cr))
+	return secret
 }
