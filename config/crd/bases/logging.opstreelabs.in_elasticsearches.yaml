@@ -1772,7 +1772,11 @@ spec:
                       type: object
                   type: object
               type: object
-            elasticSearchVersion:
+            image:
+              type: string
+            imagePullPolicy:
+              description: PullPolicy describes a policy for if/when to pull a container
+                image
               type: string
             ingestion:
               description: NodeSpec define the state of elasticsearch nodes
@@ -3522,6 +3526,7 @@ spec:
               type: object
           required:
           - clusterName
+          - image
           type: object
         status:
           description: ElasticsearchStatus defines the observed state of Elasticsearch

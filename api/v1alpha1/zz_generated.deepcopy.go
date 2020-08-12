@@ -330,7 +330,11 @@ func (in *NodeSpec) DeepCopyInto(out *NodeSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	out.Resources = in.Resources
+	if in.Resources != nil {
+		in, out := &in.Resources, &out.Resources
+		*out = new(Resources)
+		**out = **in
+	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(Storage)

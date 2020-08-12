@@ -23,14 +23,15 @@ import (
 
 // ElasticsearchSpec defines the desired state of Elasticsearch
 type ElasticsearchSpec struct {
-	ClusterName          string   `json:"clusterName"`
-	ElasticsearchVersion string   `json:"elasticSearchVersion,omitempty"`
-	Security             Security `json:"security,omitempty"`
-	Plugins              []string `json:"plugins,omitempty"`
-	Master               NodeSpec `json:"master,omitempty"`
-	Data                 NodeSpec `json:"data,omitempty"`
-	Ingestion            NodeSpec `json:"ingestion,omitempty"`
-	Client               NodeSpec `json:"client,omitempty"`
+	ClusterName     string            `json:"clusterName"`
+	Image           string            `json:"image"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
+	Security        Security          `json:"security,omitempty"`
+	Plugins         []string          `json:"plugins,omitempty"`
+	Master          NodeSpec          `json:"master,omitempty"`
+	Data            NodeSpec          `json:"data,omitempty"`
+	Ingestion       NodeSpec          `json:"ingestion,omitempty"`
+	Client          NodeSpec          `json:"client,omitempty"`
 }
 
 // ElasticsearchStatus defines the observed state of Elasticsearch
@@ -50,7 +51,7 @@ type Security struct {
 type NodeSpec struct {
 	Enabled    bool             `json:"enabled,omitempty"`
 	Count      *int32           `json:"count,omitempty"`
-	Resources  Resources        `json:"resources,omitempty"`
+	Resources  *Resources       `json:"resources,omitempty"`
 	Storage    *Storage         `json:"storage,omitempty"`
 	JVMOptions JVMOptions       `json:"jvmOptions,omitempty"`
 	Affinity   *corev1.Affinity `json:"affinity,omitempty"`
