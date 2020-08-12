@@ -50,13 +50,13 @@ func CreateAndUpdateSecret(cr *loggingv1alpha1.Elasticsearch, secretBody *corev1
 	secretName, err := k8sClient.CoreV1().Secrets(cr.Namespace).Get(context.TODO(), cr.ObjectMeta.Name, metav1.GetOptions{})
 
 	if err != nil {
-		reqLogger.Info("Creating secret for elasticsearch tls", "Secret.Name", cr.ObjectMeta.Name)
+		reqLogger.Info("Creating secret for elasticsearch", "Secret.Name", cr.ObjectMeta.Name)
 		k8sClient.CoreV1().Secrets(cr.Namespace).Create(context.TODO(), secretBody, metav1.CreateOptions{})
 	} else if secretBody != secretName {
-		reqLogger.Info("Reconciling secret for elasticsearch tls", "Secret.Name", cr.ObjectMeta.Name)
+		reqLogger.Info("Reconciling secret for elasticsearch", "Secret.Name", cr.ObjectMeta.Name)
 		k8sClient.CoreV1().Secrets(cr.Namespace).Update(context.TODO(), secretBody, metav1.UpdateOptions{})
 	} else {
-		reqLogger.Info("Elasticsearch tls secret is already synced", "Secret.Name", cr.ObjectMeta.Name)
+		reqLogger.Info("Elasticsearch secret is already synced", "Secret.Name", cr.ObjectMeta.Name)
 	}
 }
 
