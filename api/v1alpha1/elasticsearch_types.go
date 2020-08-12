@@ -30,6 +30,7 @@ type ElasticsearchSpec struct {
 	Master               NodeSpec `json:"master,omitempty"`
 	Data                 NodeSpec `json:"data,omitempty"`
 	Ingestion            NodeSpec `json:"ingestion,omitempty"`
+	Client               NodeSpec `json:"client,omitempty"`
 }
 
 // ElasticsearchStatus defines the observed state of Elasticsearch
@@ -41,13 +42,14 @@ type ElasticsearchStatus struct {
 
 // Security defines the security of elasticsearch
 type Security struct {
-	TLSEnabled bool   `json:"tlsEnabled,omitempty"`
+	TLSEnabled *bool  `json:"tlsEnabled,omitempty"`
 	Password   string `json:"password,omitempty"`
 }
 
 // NodeSpec define the state of elasticsearch nodes
 type NodeSpec struct {
 	Enabled    bool             `json:"enabled,omitempty"`
+	Count      *int32           `json:"count,omitempty"`
 	Resources  Resources        `json:"resources,omitempty"`
 	Storage    *Storage         `json:"storage,omitempty"`
 	JVMOptions JVMOptions       `json:"jvmOptions,omitempty"`

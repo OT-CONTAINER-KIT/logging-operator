@@ -1,4 +1,4 @@
-package labels
+package identifier
 
 import (
 	// loggingv1alpha1 "logging-operator/api/v1alpha1"
