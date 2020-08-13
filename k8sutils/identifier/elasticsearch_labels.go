@@ -41,7 +41,5 @@ func GenerateElasticAnnotations() map[string]string {
 	return map[string]string{
 		"logging.opstreelabs.in":      "true",
 		"logging.opstreelabs.in/kind": "Elasticsearch",
-		"prometheus.io/scrape":        "true",
-		"prometheus.io/port":          "9121",
 	}
 }

@@ -27,7 +27,7 @@ type ElasticsearchSpec struct {
 	Image           string            `json:"image"`
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	Security        Security          `json:"security,omitempty"`
-	Plugins         []string          `json:"plugins,omitempty"`
+	Plugins         []*string         `json:"plugins,omitempty"`
 	Master          NodeSpec          `json:"master,omitempty"`
 	Data            NodeSpec          `json:"data,omitempty"`
 	Ingestion       NodeSpec          `json:"ingestion,omitempty"`

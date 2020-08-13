@@ -24,6 +24,8 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"logging-operator/k8sutils/secret"
+	masterservice "logging-operator/k8sutils/service/master"
+	"logging-operator/k8sutils/statefulset/master"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -64,6 +66,11 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 
 		password := secret.GenerateElasticPassword(instance)
 		secret.CreateAndUpdateSecret(instance, password)
+	}
+
+	if instance.Spec.Master.Enabled != false {
+		master.ElasticSearchMaster(instance)
+		masterservice.MasterElasticSearchService(instance)
 	}
 	reqLogger.Info("Will reconcile after 10 seconds", "Elasticsearch.Namespace", instance.Namespace, "Elasticsearch.Name", instance.Name)
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil

@@ -9,9 +9,10 @@ metadata:
   namespace: logging-operator
 spec:
   clusterName: "production"
-  elasticSearchVersion: "7.8.0"
+  image: "docker.elastic.co/elasticsearch/elasticsearch:7.8.0"
+  imagePullPolicy: "IfNotPresent"
   security:
-    tlsEnabled: true
+    tlsEnabled: false
     password: "Opstree@1234"
   plugins: ["repository-s3"]
   master:
@@ -44,7 +45,7 @@ spec:
             - key: app
               operator: In
               values:
-              - "elasticsearch-cluster-ingestion"
+              - "elasticsearch-cluster-master"
           topologyKey: kubernetes.io/hostname
   data:
     enabled: true
