@@ -9,22 +9,22 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-var log = logf.Log.WithName("elastic_data")
+var log = logf.Log.WithName("elastic_ingestion")
 
 func generateIngestionContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container {
 
 	reqLogger := log.WithValues("Namespace", cr.Namespace, "Elasticsearch.Name", cr.ObjectMeta.Name, "Node.Type", "ingestion")
 	containerDefinition := statefulset.ElasticContainer(cr)
 
-	if cr.Spec.Data.Resources != nil {
+	if cr.Spec.Ingestion.Resources != nil {
 		containerDefinition.Resources.Limits[corev1.ResourceCPU] = resource.MustParse(cr.Spec.Ingestion.Resources.ResourceLimits.CPU)
 		containerDefinition.Resources.Requests[corev1.ResourceCPU] = resource.MustParse(cr.Spec.Ingestion.Resources.ResourceRequests.CPU)
 		containerDefinition.Resources.Limits[corev1.ResourceMemory] = resource.MustParse(cr.Spec.Ingestion.Resources.ResourceLimits.Memory)
 		containerDefinition.Resources.Requests[corev1.ResourceMemory] = resource.MustParse(cr.Spec.Ingestion.Resources.ResourceRequests.Memory)
 	}
 
-	if cr.Spec.Data.Storage != nil {
-		VolumeMounts := corev1.VolumeMount{Name: cr.ObjectMeta.Name + "-data", MountPath: "/usr/share/elasticsearch/data"}
+	if cr.Spec.Ingestion.Storage != nil {
+		VolumeMounts := corev1.VolumeMount{Name: cr.ObjectMeta.Name + "-ingestion", MountPath: "/usr/share/elasticsearch/data"}
 		containerDefinition.VolumeMounts = append(containerDefinition.VolumeMounts, VolumeMounts)
 	}
 
@@ -35,51 +35,51 @@ func generateIngestionContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Contai
 		containerDefinition.VolumeMounts = append(containerDefinition.VolumeMounts, corev1.VolumeMount{Name: "tls-certificates", MountPath: "/usr/share/elasticsearch/config/certs"})
 	}
 
-	dataEnvVars := []corev1.EnvVar{
+	ingestionEnvVars := []corev1.EnvVar{
 		corev1.EnvVar{Name: "discovery.seed_hosts", Value: cr.ObjectMeta.Name + "-master-headless"},
 		corev1.EnvVar{Name: "network.host", Value: "0.0.0.0"},
 		corev1.EnvVar{Name: "cluster.name", Value: cr.Spec.ClusterName},
-		corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Data.JVMOptions.Max + " " + "-Xms" + cr.Spec.Data.JVMOptions.Min},
-		corev1.EnvVar{Name: "node.data", Value: "true"},
-		corev1.EnvVar{Name: "node.ingest", Value: "false"},
+		corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Ingestion.JVMOptions.Max + " " + "-Xms" + cr.Spec.Ingestion.JVMOptions.Min},
+		corev1.EnvVar{Name: "node.data", Value: "false"},
+		corev1.EnvVar{Name: "node.ingest", Value: "true"},
 		corev1.EnvVar{Name: "node.master", Value: "false"},
 		corev1.EnvVar{Name: "node.name", ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name"}}},
 	}
 
 	if *cr.Spec.Security.TLSEnabled != false {
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "https"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "ELASTIC_PASSWORD", Value: cr.Spec.Security.Password})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "ELASTIC_USERNAME", Value: "elastic"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.enabled", Value: "true"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.enabled", Value: "true"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.verification_mode", Value: "certificate"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.enabled", Value: "true"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "https"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "ELASTIC_PASSWORD", Value: cr.Spec.Security.Password})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "ELASTIC_USERNAME", Value: "elastic"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.enabled", Value: "true"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.enabled", Value: "true"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.verification_mode", Value: "certificate"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.enabled", Value: "true"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
 	} else {
-		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
+		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 
-	containerDefinition.Env = dataEnvVars
+	containerDefinition.Env = ingestionEnvVars
 
-	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch data")
+	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch ingestion")
 	return containerDefinition
 }
 
-// ElasticSearchData creates the elasticsearch data statefulset
-func ElasticSearchData(cr *loggingv1alpha1.Elasticsearch) {
+// ElasticSearchIngestion creates the elasticsearch ingestion statefulset
+func ElasticSearchIngestion(cr *loggingv1alpha1.Elasticsearch) {
 	labels := map[string]string{
-		"app":                         cr.ObjectMeta.Name + "-data",
-		"role":                        "data",
+		"app":                         cr.ObjectMeta.Name + "-ingestion",
+		"role":                        "ingestion",
 		"logging.opstreelabs.in":      "true",
 		"logging.opstreelabs.in/kind": "Elasticsearch",
 	}
 
-	statefulsetObject := statefulset.StatefulSetObject(cr, "data", labels, cr.Spec.Data.Count)
+	statefulsetObject := statefulset.StatefulSetObject(cr, "ingestion", labels, cr.Spec.Ingestion.Count)
 
-	statefulsetObject.Spec.Template.Spec.Containers = append(statefulsetObject.Spec.Template.Spec.Containers, generateDataContainer(cr))
+	statefulsetObject.Spec.Template.Spec.Containers = append(statefulsetObject.Spec.Template.Spec.Containers, generateIngestionContainer(cr))
 
 	statefulsetObject.Spec.Template.Spec.InitContainers = append(statefulsetObject.Spec.Template.Spec.InitContainers, statefulset.SysctlInitContainer(cr))
 
@@ -87,12 +87,12 @@ func ElasticSearchData(cr *loggingv1alpha1.Elasticsearch) {
 		statefulsetObject.Spec.Template.Spec.InitContainers = append(statefulsetObject.Spec.Template.Spec.InitContainers, statefulset.PluginsInitContainer(cr))
 	}
 
-	if cr.Spec.Data.Storage != nil {
-		statefulsetObject.Spec.VolumeClaimTemplates = append(statefulsetObject.Spec.VolumeClaimTemplates, statefulset.GeneratePVCTemplate(cr, "data", cr.Spec.Data.Storage))
+	if cr.Spec.Ingestion.Storage != nil {
+		statefulsetObject.Spec.VolumeClaimTemplates = append(statefulsetObject.Spec.VolumeClaimTemplates, statefulset.GeneratePVCTemplate(cr, "ingestion", cr.Spec.Ingestion.Storage))
 	}
 
-	if cr.Spec.Data.Affinity != nil {
-		statefulsetObject.Spec.Template.Spec.Affinity = cr.Spec.Data.Affinity
+	if cr.Spec.Ingestion.Affinity != nil {
+		statefulsetObject.Spec.Template.Spec.Affinity = cr.Spec.Ingestion.Affinity
 	}
 
 	tlsSecretVolume := corev1.Volume{
@@ -106,5 +106,5 @@ func ElasticSearchData(cr *loggingv1alpha1.Elasticsearch) {
 	if *cr.Spec.Security.TLSEnabled != false {
 		statefulsetObject.Spec.Template.Spec.Volumes = append(statefulsetObject.Spec.Template.Spec.Volumes, tlsSecretVolume)
 	}
-	statefulset.SyncStatefulSet(cr, statefulsetObject, "data")
+	statefulset.SyncStatefulSet(cr, statefulsetObject, "ingestion")
 }

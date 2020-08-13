@@ -24,7 +24,13 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"logging-operator/k8sutils/secret"
+	clientservice "logging-operator/k8sutils/service/client"
+	dataservice "logging-operator/k8sutils/service/data"
+	ingestionservice "logging-operator/k8sutils/service/ingestion"
 	masterservice "logging-operator/k8sutils/service/master"
+	clientnode "logging-operator/k8sutils/statefulset/client"
+	"logging-operator/k8sutils/statefulset/data"
+	"logging-operator/k8sutils/statefulset/ingestion"
 	"logging-operator/k8sutils/statefulset/master"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -71,6 +77,21 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 	if instance.Spec.Master.Enabled != false {
 		master.ElasticSearchMaster(instance)
 		masterservice.MasterElasticSearchService(instance)
+	}
+
+	if instance.Spec.Data.Enabled != false {
+		data.ElasticSearchData(instance)
+		dataservice.DataElasticSearchService(instance)
+	}
+
+	if instance.Spec.Ingestion.Enabled != false {
+		ingestion.ElasticSearchIngestion(instance)
+		ingestionservice.IngestionElasticSearchService(instance)
+	}
+
+	if instance.Spec.Client.Enabled != false {
+		clientnode.ElasticSearchClient(instance)
+		clientservice.ClientElasticSearchService(instance)
 	}
 	reqLogger.Info("Will reconcile after 10 seconds", "Elasticsearch.Namespace", instance.Namespace, "Elasticsearch.Name", instance.Name)
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
