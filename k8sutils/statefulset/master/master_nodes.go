@@ -31,19 +31,16 @@ func generateMasterContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 	}
 
 	if cr.Spec.Master.Storage != nil {
-		VolumeMounts := corev1.VolumeMount{
-			Name:      cr.ObjectMeta.Name + "-master",
-			MountPath: "/usr/share/elasticsearch/data",
-		}
+		VolumeMounts := corev1.VolumeMount{Name: cr.ObjectMeta.Name + "-master", MountPath: "/usr/share/elasticsearch/data"}
 		containerDefinition.VolumeMounts = append(containerDefinition.VolumeMounts, VolumeMounts)
 	}
 
-	pluginVolume := corev1.VolumeMount{
-		Name:      "plugin-volume",
-		MountPath: "/usr/share/elasticsearch/plugins",
-	}
+	pluginVolume := corev1.VolumeMount{Name: "plugin-volume", MountPath: "/usr/share/elasticsearch/plugins"}
 	containerDefinition.VolumeMounts = append(containerDefinition.VolumeMounts, pluginVolume)
 
+	if *cr.Spec.Security.TLSEnabled != false {
+		containerDefinition.VolumeMounts = append(containerDefinition.VolumeMounts, corev1.VolumeMount{Name: "tls-certificates", MountPath: "/usr/share/elasticsearch/config/certs"})
+	}
 	for count := 1; count <= int(*cr.Spec.Master.Count); count++ {
 		nodes = append(nodes, cr.ObjectMeta.Name+"-master-"+strconv.Itoa(count)+",")
 	}
@@ -62,6 +59,16 @@ func generateMasterContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 
 	if *cr.Spec.Security.TLSEnabled != false {
 		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "https"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "ELASTIC_PASSWORD", Value: cr.Spec.Security.Password})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "ELASTIC_USERNAME", Value: "elastic"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.enabled", Value: "true"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.enabled", Value: "true"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.verification_mode", Value: "certificate"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.transport.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.enabled", Value: "true"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.truststore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
+		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "xpack.security.http.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
 	} else {
 		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
@@ -97,6 +104,18 @@ func ElasticSearchMaster(cr *loggingv1alpha1.Elasticsearch) {
 
 	if cr.Spec.Master.Affinity != nil {
 		statefulsetObject.Spec.Template.Spec.Affinity = cr.Spec.Master.Affinity
+	}
+
+	tlsSecretVolume := corev1.Volume{
+		Name: "tls-certificates",
+		VolumeSource: corev1.VolumeSource{
+			Secret: &corev1.SecretVolumeSource{
+				SecretName: cr.ObjectMeta.Name + "-tls",
+			},
+		},
+	}
+	if *cr.Spec.Security.TLSEnabled != false {
+		statefulsetObject.Spec.Template.Spec.Volumes = append(statefulsetObject.Spec.Template.Spec.Volumes, tlsSecretVolume)
 	}
 	statefulset.SyncStatefulSet(cr, statefulsetObject, "master")
 }
