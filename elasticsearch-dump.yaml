@@ -9,13 +9,15 @@ metadata:
   namespace: logging-operator
 spec:
   clusterName: "production"
-  elasticSearchVersion: "7.8.0"
+  image: "docker.elastic.co/elasticsearch/elasticsearch:7.8.0"
+  imagePullPolicy: "IfNotPresent"
   security:
     tlsEnabled: true
     password: "Opstree@1234"
   plugins: ["repository-s3"]
   master:
     enabled: true
+    count: 3
     resources:
       requests:
         cpu: 500m
@@ -43,10 +45,43 @@ spec:
             - key: app
               operator: In
               values:
-              - "elasticsearch-cluster-ingestion"
+              - "elasticsearch-cluster-master"
           topologyKey: kubernetes.io/hostname
   data:
     enabled: true
+    count: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+      limits:
+        cpu: 500m
+        memory: 2048Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cephfs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+        selector: {}
+    jvmOptions:
+      Xmx: "1g"
+      Xms: "1g"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - "elasticsearch-cluster-data"
+          topologyKey: kubernetes.io/hostname
+  ingestion:
+    enabled: true
+    count: 1
     resources:
       requests:
         cpu: 500m
@@ -76,8 +111,9 @@ spec:
               values:
               - "elasticsearch-cluster-ingestion"
           topologyKey: kubernetes.io/hostname
-  ingestion:
+  client:
     enabled: true
+    count: 1
     resources:
       requests:
         cpu: 500m

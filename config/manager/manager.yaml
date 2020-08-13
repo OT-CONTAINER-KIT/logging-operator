@@ -1,40 +1,35 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    control-plane: controller-manager
-  name: system
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
+  name: logging-operator
   labels:
-    control-plane: controller-manager
+    control-plane: logging-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: logging-operator
   replicas: 1
   template:
     metadata:
       labels:
-        control-plane: controller-manager
+        control-plane: logging-operator
     spec:
       containers:
       - command:
         - /manager
         args:
         - --enable-leader-election
-        image: controller:latest
-        name: manager
+        image: quay.io/opstree/logging-operator:v0.1
+        imagePullPolicy: Always
+        name: logging-operator
         resources:
           limits:
             cpu: 100m
-            memory: 30Mi
+            memory: 100Mi
           requests:
             cpu: 100m
-            memory: 20Mi
+            memory: 100Mi
       terminationGracePeriodSeconds: 10
+      serviceAccount: logging-operator
+      serviceAccountName: logging-operator
