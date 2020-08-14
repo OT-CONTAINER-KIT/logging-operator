@@ -1,0 +1,29 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Fluentd
+metadata:
+  name: fluentd
+  labels:
+    organization: opstree
+    owned-by: Abhishek
+  namespace: logging-operator
+spec:
+  elasticsearch:
+    tlsEnabled: true
+    password: Opstree@1234
+    user: elastic
+    host: "https://elasticsearch-cluster-client:9200"
+  nodeSelector:
+    kubernetesWorker: "true"
+  customConfiguration: |-
+    <filter kubernetes.**>
+      @type kubernetes_metadata
+      verify_ssl false
+    </filter>
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 100m
+      memory: 200Mi
