@@ -32,6 +32,7 @@ import (
 	"logging-operator/k8sutils/statefulset/data"
 	"logging-operator/k8sutils/statefulset/ingestion"
 	"logging-operator/k8sutils/statefulset/master"
+	elasticutils "logging-operator/utils/elasticsearch"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -99,7 +100,13 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 	}
 	instance.Status.ClusterName = instance.Spec.ClusterName
 
-	instance.Status.ClusterState = "green"
+	clusterStatus, err := elasticutils.GetElasticHealth(instance)
+
+	if err != nil {
+		instance.Status.ClusterState = "Not Ready"
+	} else {
+		instance.Status.ClusterState = *clusterStatus
+	}
 
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		if errors.IsConflict(err) {
