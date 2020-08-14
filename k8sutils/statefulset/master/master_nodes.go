@@ -85,6 +85,11 @@ func generateMasterContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 		masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 
+	if cr.Spec.Master.ExtraEnvVariables != nil {
+		for envName, envValue := range *cr.Spec.Master.ExtraEnvVariables {
+			masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
+		}
+	}
 	containerDefinition.Env = masterEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch master")

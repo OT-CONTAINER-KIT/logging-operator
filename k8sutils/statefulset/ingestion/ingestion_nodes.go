@@ -78,6 +78,12 @@ func generateIngestionContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Contai
 		ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 
+	if cr.Spec.Ingestion.ExtraEnvVariables != nil {
+		for envName, envValue := range *cr.Spec.Ingestion.ExtraEnvVariables {
+			ingestionEnvVars = append(ingestionEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
+		}
+	}
+
 	containerDefinition.Env = ingestionEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch ingestion")

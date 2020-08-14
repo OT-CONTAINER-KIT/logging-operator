@@ -133,6 +133,8 @@ spec:
     jvmOptions:
       Xmx: "1g"
       Xms: "1g"
+    extraEnvVariables:
+      - foo: "bar"
     affinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
