@@ -8,6 +8,26 @@ metadata:
   creationTimestamp: null
   name: elasticsearches.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.master
+    description: Current master node count
+    name: Master
+    type: integer
+  - JSONPath: .status.data
+    description: Current data node count
+    name: Data
+    type: integer
+  - JSONPath: .status.ingestion
+    description: Current ingestion node count
+    name: Ingestion
+    type: integer
+  - JSONPath: .status.client
+    description: Current client node count
+    name: Client
+    type: integer
+  - JSONPath: .status.clusterState
+    name: Cluster State
+    type: string
   group: logging.opstreelabs.in
   names:
     kind: Elasticsearch
@@ -3531,15 +3551,32 @@ spec:
         status:
           description: ElasticsearchStatus defines the observed state of Elasticsearch
           properties:
-            nodes:
+            client:
+              format: int32
+              type: integer
+            clusterName:
               description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                 of cluster Important: Run "make" to regenerate code after modifying
                 this file'
-              items:
-                type: string
-              type: array
+              type: string
+            clusterState:
+              type: string
+            data:
+              format: int32
+              type: integer
+            ingestion:
+              format: int32
+              type: integer
+            master:
+              format: int32
+              type: integer
           required:
-          - nodes
+          - client
+          - clusterName
+          - clusterState
+          - data
+          - ingestion
+          - master
           type: object
       type: object
   version: v1alpha1

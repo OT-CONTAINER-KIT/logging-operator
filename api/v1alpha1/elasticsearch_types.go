@@ -38,7 +38,12 @@ type ElasticsearchSpec struct {
 type ElasticsearchStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Nodes []string `json:"nodes"`
+	ClusterName  string `json:"clusterName"`
+	Master       *int32 `json:"master"`
+	Data         *int32 `json:"data"`
+	Ingestion    *int32 `json:"ingestion"`
+	Client       *int32 `json:"client"`
+	ClusterState string `json:"clusterState"`
 }
 
 // Security defines the security of elasticsearch
