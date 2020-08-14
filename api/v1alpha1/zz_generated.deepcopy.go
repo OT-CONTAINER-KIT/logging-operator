@@ -356,6 +356,17 @@ func (in *NodeSpec) DeepCopyInto(out *NodeSpec) {
 		*out = new(Resources)
 		**out = **in
 	}
+	if in.ExtraEnvVariables != nil {
+		in, out := &in.ExtraEnvVariables, &out.ExtraEnvVariables
+		*out = new(map[string]string)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[string]string, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val
+			}
+		}
+	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(Storage)

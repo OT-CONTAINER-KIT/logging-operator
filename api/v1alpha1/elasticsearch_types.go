@@ -54,12 +54,13 @@ type Security struct {
 
 // NodeSpec define the state of elasticsearch nodes
 type NodeSpec struct {
-	Enabled    bool             `json:"enabled,omitempty"`
-	Count      *int32           `json:"count,omitempty"`
-	Resources  *Resources       `json:"resources,omitempty"`
-	Storage    *Storage         `json:"storage,omitempty"`
-	JVMOptions JVMOptions       `json:"jvmOptions,omitempty"`
-	Affinity   *corev1.Affinity `json:"affinity,omitempty"`
+	Enabled           bool               `json:"enabled,omitempty"`
+	Count             *int32             `json:"count,omitempty"`
+	Resources         *Resources         `json:"resources,omitempty"`
+	ExtraEnvVariables *map[string]string `json:"extraEnvVariables,omitempty"`
+	Storage           *Storage           `json:"storage,omitempty"`
+	JVMOptions        JVMOptions         `json:"jvmOptions,omitempty"`
+	Affinity          *corev1.Affinity   `json:"affinity,omitempty"`
 }
 
 // JVMOptions define the JVM size for elasticsearch nodes

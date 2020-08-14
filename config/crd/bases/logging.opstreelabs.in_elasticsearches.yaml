@@ -663,6 +663,10 @@ spec:
                   type: integer
                 enabled:
                   type: boolean
+                extraEnvVariables:
+                  additionalProperties:
+                    type: string
+                  type: object
                 jvmOptions:
                   description: JVMOptions define the JVM size for elasticsearch nodes
                   properties:
@@ -1532,6 +1536,10 @@ spec:
                   type: integer
                 enabled:
                   type: boolean
+                extraEnvVariables:
+                  additionalProperties:
+                    type: string
+                  type: object
                 jvmOptions:
                   description: JVMOptions define the JVM size for elasticsearch nodes
                   properties:
@@ -2405,6 +2413,10 @@ spec:
                   type: integer
                 enabled:
                   type: boolean
+                extraEnvVariables:
+                  additionalProperties:
+                    type: string
+                  type: object
                 jvmOptions:
                   description: JVMOptions define the JVM size for elasticsearch nodes
                   properties:
@@ -3272,6 +3284,10 @@ spec:
                   type: integer
                 enabled:
                   type: boolean
+                extraEnvVariables:
+                  additionalProperties:
+                    type: string
+                  type: object
                 jvmOptions:
                   description: JVMOptions define the JVM size for elasticsearch nodes
                   properties:
