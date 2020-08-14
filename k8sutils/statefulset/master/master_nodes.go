@@ -17,9 +17,9 @@ limitations under the License.
 package master
 
 import (
-	"strconv"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"strconv"
 	"strings"
 
 	loggingv1alpha1 "logging-operator/api/v1alpha1"

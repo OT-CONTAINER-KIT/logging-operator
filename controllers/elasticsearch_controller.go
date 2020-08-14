@@ -77,21 +77,36 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 	if instance.Spec.Master.Enabled != false {
 		master.ElasticSearchMaster(instance)
 		masterservice.MasterElasticSearchService(instance)
+		instance.Status.Master = instance.Spec.Master.Count
 	}
 
 	if instance.Spec.Data.Enabled != false {
 		data.ElasticSearchData(instance)
 		dataservice.DataElasticSearchService(instance)
+		instance.Status.Data = instance.Spec.Data.Count
 	}
 
 	if instance.Spec.Ingestion.Enabled != false {
 		ingestion.ElasticSearchIngestion(instance)
 		ingestionservice.IngestionElasticSearchService(instance)
+		instance.Status.Ingestion = instance.Spec.Ingestion.Count
 	}
 
 	if instance.Spec.Client.Enabled != false {
 		clientnode.ElasticSearchClient(instance)
 		clientservice.ClientElasticSearchService(instance)
+		instance.Status.Client = instance.Spec.Client.Count
+	}
+	instance.Status.ClusterName = instance.Spec.ClusterName
+
+	instance.Status.ClusterState = "green"
+
+	if err := r.Status().Update(context.TODO(), instance); err != nil {
+		if errors.IsConflict(err) {
+			reqLogger.Error(err, "Conflict updating Elasticsearch status, requeueing")
+			return ctrl.Result{Requeue: true}, nil
+		}
+		return ctrl.Result{}, err
 	}
 	reqLogger.Info("Will reconcile after 10 seconds", "Elasticsearch.Namespace", instance.Namespace, "Elasticsearch.Name", instance.Name)
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
