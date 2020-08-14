@@ -36,13 +36,62 @@ spec:
         spec:
           description: FluentdSpec defines the desired state of Fluentd
           properties:
-            foo:
-              description: Foo is an example field of Fluentd. Edit Fluentd_types.go
-                to remove/update
+            customConfiguration:
               type: string
+            elasticsearch:
+              description: FluentdElasticsearch is the struct for elasticsearch configuration
+                for fluentd
+              properties:
+                host:
+                  type: string
+                password:
+                  type: string
+                tlsEnabled:
+                  type: string
+                username:
+                  type: string
+              type: object
+            logPrefix:
+              type: string
+            nodeSelector:
+              additionalProperties:
+                type: string
+              type: object
+            resources:
+              description: Resources describes requests and limits for the cluster
+                resouces.
+              properties:
+                limits:
+                  description: ResourceDescription describes CPU and memory resources
+                    defined for a cluster.
+                  properties:
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+                  required:
+                  - cpu
+                  - memory
+                  type: object
+                requests:
+                  description: ResourceDescription describes CPU and memory resources
+                    defined for a cluster.
+                  properties:
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+                  required:
+                  - cpu
+                  - memory
+                  type: object
+              type: object
           type: object
         status:
           description: FluentdStatus defines the observed state of Fluentd
+          properties:
+            elasticsearch:
+              type: string
           type: object
       type: object
   version: v1alpha1

@@ -20,22 +20,26 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // FluentdSpec defines the desired state of Fluentd
 type FluentdSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	FluentdElasticsearch FluentdElasticsearch `json:"elasticsearch,omitempty"`
+	NodeSelector         map[string]string    `json:"nodeSelector,omitempty"`
+	LogPrefix            *string              `json:"logPrefix,omitempty"`
+	CustomConfiguration  *string              `json:"customConfiguration,omitempty"`
+	Resources            Resources            `json:"resources,omitempty"`
+}
 
-	// Foo is an example field of Fluentd. Edit Fluentd_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+// FluentdElasticsearch is the struct for elasticsearch configuration for fluentd
+type FluentdElasticsearch struct {
+	Host       string `json:"host,omitempty"`
+	Username   string `json:"username,omitempty"`
+	Password   string `json:"password,omitempty"`
+	TLSEnabled string `json:"tlsEnabled,omitempty"`
 }
 
 // FluentdStatus defines the observed state of Fluentd
 type FluentdStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Elasticsearch string `json:"elasticsearch,omitempty"`
 }
 
 // +kubebuilder:object:root=true

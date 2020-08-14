@@ -78,6 +78,12 @@ func generateDataContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container {
 		dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 
+	if cr.Spec.Data.ExtraEnvVariables != nil {
+		for envName, envValue := range *cr.Spec.Data.ExtraEnvVariables {
+			dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
+		}
+	}
+
 	containerDefinition.Env = dataEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch data")

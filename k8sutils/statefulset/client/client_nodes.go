@@ -78,6 +78,12 @@ func generateClientContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 		clienNodeEnvVars = append(clienNodeEnvVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 
+	if cr.Spec.Client.ExtraEnvVariables != nil {
+		for envName, envValue := range *cr.Spec.Client.ExtraEnvVariables {
+			clienNodeEnvVars = append(clienNodeEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
+		}
+	}
+
 	containerDefinition.Env = clienNodeEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch client")
