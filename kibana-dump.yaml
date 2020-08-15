@@ -8,20 +8,22 @@ metadata:
     owned-by: Abhishek
   namespace: logging-operator
 spec:
+  replicas: 1
   image: docker.elastic.co/kibana/kibana:7.8.0
   imagePullPolicy: "IfNotPresent"
   elasticsearch:
-    host: "elasticsearch-cluster-ingestion"
+    host: "http://elasticsearch-cluster-client:9200"
     username: elastic
     password: "Opstree@1234"
     tlsEnabled: false
+  # elasticSecretName: elasticsearch-cluster-tls
   resources:
     requests:
-      cpu: 100m
-      memory: 200Mi
+      cpu: 500m
+      memory: 1000Mi
     limits:
-      cpu: 100m
-      memory: 200Mi
+      cpu: 500m
+      memory: 1000Mi
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:

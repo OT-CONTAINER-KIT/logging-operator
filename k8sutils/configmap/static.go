@@ -107,3 +107,17 @@ format json
   </buffer>
 </match>
 `
+
+const kiabanConfigTLSData = `server.name: kibana
+server.host: "0"
+elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/config/certs/elastic-certificates.p12
+elasticsearch.ssl.truststore.path: /usr/share/kibana/config/certs/elastic-certificates.p12
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+elasticsearch.hosts: ['${ELASTICSEARCH_HOST:elasticsearch-master-headless}:${ELASTICSEARCH_PORT:9200}']
+elasticsearch.username: ${ELASTICSEARCH_USERNAME}
+elasticsearch.password: ${ELASTICSEARCH_PASSWORD}
+`
+
+const kiabanConfigData = `server.name: kibana
+server.host: "0"
+`

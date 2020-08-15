@@ -26,9 +26,11 @@ import (
 
 // KibanaSpec defines the desired state of Kibana
 type KibanaSpec struct {
+	Replicas            *int32              `json:"replicas"`
 	Image               string              `json:"image"`
 	ImagePullPolicy     corev1.PullPolicy   `json:"imagePullPolicy,omitempty"`
 	KibanaElasticsearch KibanaElasticsearch `json:"elasticsearch,omitempty"`
+	ElasticSecretName   *string             `json:"elasticSecretName,omitempty"`
 	Resources           *Resources          `json:"resources,omitempty"`
 	Affinity            *corev1.Affinity    `json:"affinity,omitempty"`
 }
