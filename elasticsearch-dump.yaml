@@ -12,7 +12,7 @@ spec:
   image: "docker.elastic.co/elasticsearch/elasticsearch:7.8.0"
   imagePullPolicy: "IfNotPresent"
   security:
-    tlsEnabled: true
+    tlsEnabled: false
     password: "Opstree@1234"
   plugins: ["repository-s3"]
   master:
@@ -133,9 +133,6 @@ spec:
     jvmOptions:
       Xmx: "1g"
       Xms: "1g"
-    extraEnvVariables:
-      foo: "bar"
-      foo2: "bar2"
     affinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

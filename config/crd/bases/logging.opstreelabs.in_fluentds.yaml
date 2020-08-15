@@ -8,6 +8,10 @@ metadata:
   creationTimestamp: null
   name: fluentds.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.elasticsearch.host
+    name: Elasticsearch
+    type: string
   group: logging.opstreelabs.in
   names:
     kind: Fluentd
@@ -47,10 +51,16 @@ spec:
                 password:
                   type: string
                 tlsEnabled:
-                  type: string
+                  type: boolean
                 username:
                   type: string
               type: object
+            image:
+              type: string
+            imagePullPolicy:
+              description: PullPolicy describes a policy for if/when to pull a container
+                image
+              type: string
             logPrefix:
               type: string
             nodeSelector:
@@ -86,6 +96,8 @@ spec:
                   - memory
                   type: object
               type: object
+          required:
+          - image
           type: object
         status:
           description: FluentdStatus defines the observed state of Fluentd

@@ -2,25 +2,27 @@
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: Fluentd
 metadata:
-  name: fluentd
+  name: fluentd-oos
   labels:
     organization: opstree
     owned-by: Abhishek
   namespace: logging-operator
 spec:
+  image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
+  imagePullPolicy: "IfNotPresent"
   elasticsearch:
-    host: "https://elasticsearch-cluster-client:9200"
+    host: "elasticsearch-cluster-ingestion"
     username: elastic
     password: "Opstree@1234"
-    tlsEnabled: true
-  nodeSelector:
-    kubernetesWorker: "true"
+    tlsEnabled: false
+  # nodeSelector:
+  #   kubernetesWorker: "true"
   logPrefix: namespace # namespace or podName
-  customConfiguration: |-
-    <filter kubernetes.**>
-      @type kubernetes_metadata
-      verify_ssl false
-    </filter>
+  # customConfiguration: |-
+  #   <filter kubernetes.**>
+  #     @type kubernetes_metadata
+  #     verify_ssl false
+  #   </filter>
   resources:
     requests:
       cpu: 100m
