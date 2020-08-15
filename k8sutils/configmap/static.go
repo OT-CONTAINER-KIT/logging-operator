@@ -37,6 +37,9 @@ format json
   host "#{ENV['FLUENT_ELASTICSEARCH_HOST']}"
   port "#{ENV['FLUENT_ELASTICSEARCH_PORT']}"
   scheme "#{ENV['FLUENT_ELASTICSEARCH_SCHEME'] || 'http'}"
+  ssl_verify "#{ENV['FLUENT_ELASTICSEARCH_SSL_VERIFY'] || 'true'}"
+  user "#{ENV['FLUENT_ELASTICSEARCH_USER']}"
+  password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}"
   reload_connections false
   reconnect_on_error true
   reload_on_failure true
@@ -88,6 +91,9 @@ format json
   host "#{ENV['FLUENT_ELASTICSEARCH_HOST']}"
   port "#{ENV['FLUENT_ELASTICSEARCH_PORT']}"
   scheme "#{ENV['FLUENT_ELASTICSEARCH_SCHEME'] || 'http'}"
+  ssl_verify "#{ENV['FLUENT_ELASTICSEARCH_SSL_VERIFY'] || 'true'}"
+  user "#{ENV['FLUENT_ELASTICSEARCH_USER']}"
+  password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}"
   reload_connections false
   reconnect_on_error true
   reload_on_failure true

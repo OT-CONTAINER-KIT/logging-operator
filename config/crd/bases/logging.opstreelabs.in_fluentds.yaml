@@ -8,6 +8,10 @@ metadata:
   creationTimestamp: null
   name: fluentds.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.elasticsearch.host
+    name: Elasticsearch
+    type: string
   group: logging.opstreelabs.in
   names:
     kind: Fluentd

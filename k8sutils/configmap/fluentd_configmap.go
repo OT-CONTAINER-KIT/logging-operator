@@ -48,7 +48,7 @@ func generateConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *c
 		TypeMeta:   identifier.GenerateMetaInformation("ConfigMap", "v1"),
 		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
 		Data: map[string]string{
-			"fluentd.conf": configmapData,
+			"fluent.conf": configmapData,
 		},
 	}
 	identifier.AddOwnerRefToObject(config, identifier.FluentdAsOwner(cr))
