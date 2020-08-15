@@ -17,16 +17,19 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // FluentdSpec defines the desired state of Fluentd
 type FluentdSpec struct {
 	FluentdElasticsearch FluentdElasticsearch `json:"elasticsearch,omitempty"`
-	NodeSelector         map[string]string    `json:"nodeSelector,omitempty"`
+	Image                string               `json:"image"`
+	ImagePullPolicy      corev1.PullPolicy    `json:"imagePullPolicy,omitempty"`
+	NodeSelector         *map[string]string   `json:"nodeSelector,omitempty"`
 	LogPrefix            *string              `json:"logPrefix,omitempty"`
 	CustomConfiguration  *string              `json:"customConfiguration,omitempty"`
-	Resources            Resources            `json:"resources,omitempty"`
+	Resources            *Resources           `json:"resources,omitempty"`
 }
 
 // FluentdElasticsearch is the struct for elasticsearch configuration for fluentd
@@ -34,7 +37,7 @@ type FluentdElasticsearch struct {
 	Host       string `json:"host,omitempty"`
 	Username   string `json:"username,omitempty"`
 	Password   string `json:"password,omitempty"`
-	TLSEnabled string `json:"tlsEnabled,omitempty"`
+	TLSEnabled bool   `json:"tlsEnabled,omitempty"`
 }
 
 // FluentdStatus defines the observed state of Fluentd
