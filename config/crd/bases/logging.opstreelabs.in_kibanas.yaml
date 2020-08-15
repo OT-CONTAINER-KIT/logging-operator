@@ -8,6 +8,13 @@ metadata:
   creationTimestamp: null
   name: kibanas.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.elasticsearch.host
+    name: Elasticsearch
+    type: string
+  - JSONPath: .spec.elasticsearch.tlsEnabled
+    name: TLS Enabled
+    type: boolean
   group: logging.opstreelabs.in
   names:
     kind: Kibana
@@ -608,6 +615,8 @@ spec:
                       type: array
                   type: object
               type: object
+            elasticSecretName:
+              type: string
             elasticsearch:
               description: KibanaElasticsearch is the struct for elasticsearch configuration
                 for fluentd
@@ -627,6 +636,9 @@ spec:
               description: PullPolicy describes a policy for if/when to pull a container
                 image
               type: string
+            replicas:
+              format: int32
+              type: integer
             resources:
               description: Resources describes requests and limits for the cluster
                 resouces.
@@ -658,6 +670,7 @@ spec:
               type: object
           required:
           - image
+          - replicas
           type: object
         status:
           description: KibanaStatus defines the observed state of Kibana
