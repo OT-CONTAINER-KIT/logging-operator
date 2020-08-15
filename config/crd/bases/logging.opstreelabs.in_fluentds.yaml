@@ -12,6 +12,9 @@ spec:
   - JSONPath: .spec.elasticsearch.host
     name: Elasticsearch
     type: string
+  - JSONPath: .spec.elasticsearch.tlsEnabled
+    name: TLS Enabled
+    type: boolean
   group: logging.opstreelabs.in
   names:
     kind: Fluentd
