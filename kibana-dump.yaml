@@ -12,11 +12,11 @@ spec:
   image: docker.elastic.co/kibana/kibana:7.8.0
   imagePullPolicy: "IfNotPresent"
   elasticsearch:
-    host: "http://elasticsearch-cluster-client:9200"
+    host: "https://elasticsearch-cluster-client:9200"
     username: elastic
     password: "Opstree@1234"
-    tlsEnabled: false
-  # elasticSecretName: elasticsearch-cluster-tls
+    tlsEnabled: true
+  elasticSecretName: elasticsearch-cluster-tls
   resources:
     requests:
       cpu: 1000m
