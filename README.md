@@ -37,3 +37,8 @@ The purpose behind creating this CRD operator was to provide an easy and yet pro
 
 > This operator blocks Elasticsearch, Fluentd, and Kibana are loosely-couples so they can be setup individually as well. For example:- If we need elasticsearch for application database we can setup only elasticsearch as well by using this operator.
 
+### Prerequisites
+
+The "Logging Operator" needs a Kubernetes/Openshift cluster of version `>=1.8.0`. If you have just started using Operatorss, its highly recommend to use latest version of Kubernetes.
+
+The cluster size selection should be done on the basis of requirement and resources.
