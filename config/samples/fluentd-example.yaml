@@ -14,7 +14,7 @@ spec:
     host: "elasticsearch-cluster-ingestion"
     username: elastic
     password: "Opstree@1234"
-    tlsEnabled: false
+    tlsEnabled: true
   # nodeSelector:
   #   kubernetesWorker: "true"
   logPrefix: namespace # namespace or podName

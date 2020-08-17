@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,17 +26,28 @@ import (
 
 // KibanaSpec defines the desired state of Kibana
 type KibanaSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Replicas            *int32              `json:"replicas"`
+	Image               string              `json:"image"`
+	ImagePullPolicy     corev1.PullPolicy   `json:"imagePullPolicy,omitempty"`
+	KibanaElasticsearch KibanaElasticsearch `json:"elasticsearch,omitempty"`
+	ElasticSecretName   *string             `json:"elasticSecretName,omitempty"`
+	Resources           *Resources          `json:"resources,omitempty"`
+	Affinity            *corev1.Affinity    `json:"affinity,omitempty"`
+}
 
-	// Foo is an example field of Kibana. Edit Kibana_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+// KibanaElasticsearch is the struct for elasticsearch configuration for fluentd
+type KibanaElasticsearch struct {
+	Host       string `json:"host,omitempty"`
+	Username   string `json:"username,omitempty"`
+	Password   string `json:"password,omitempty"`
+	TLSEnabled bool   `json:"tlsEnabled,omitempty"`
 }
 
 // KibanaStatus defines the observed state of Kibana
 type KibanaStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	Elasticsearch string `json:"elasticsearch,omitempty"`
 }
 
 // +kubebuilder:object:root=true

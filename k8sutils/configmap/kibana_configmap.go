@@ -24,39 +24,32 @@ import (
 	loggingv1alpha1 "logging-operator/api/v1alpha1"
 	"logging-operator/k8sutils/client"
 	"logging-operator/k8sutils/identifier"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var (
-	configmapData string
+	kibanaConfigMapData string
 )
 
-var log = logf.Log.WithName("configmap")
+func generateKibanaConfigMap(cr *loggingv1alpha1.Kibana, labels map[string]string) *corev1.ConfigMap {
 
-func generateConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *corev1.ConfigMap {
-
-	if *cr.Spec.LogPrefix == "namespace" {
-		configmapData = ConfigMapContentNamespace
+	if cr.Spec.KibanaElasticsearch.TLSEnabled != false {
+		kibanaConfigMapData = kiabanConfigTLSData
 	} else {
-		configmapData = ConfigMapContentPod
-	}
-
-	if cr.Spec.CustomConfiguration != nil {
-		configmapData = *cr.Spec.CustomConfiguration
+		kibanaConfigMapData = kiabanConfigData
 	}
 	config := &corev1.ConfigMap{
 		TypeMeta:   identifier.GenerateMetaInformation("ConfigMap", "v1"),
-		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
+		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateKibanaAnnotations()),
 		Data: map[string]string{
-			"fluent.conf": configmapData,
+			"kibana.yml": kibanaConfigMapData,
 		},
 	}
-	identifier.AddOwnerRefToObject(config, identifier.FluentdAsOwner(cr))
+	identifier.AddOwnerRefToObject(config, identifier.KibanaAsOwner(cr))
 	return config
 }
 
-// SyncConfigMap will sync the configmap in Kubernetes
-func SyncConfigMap(cr *loggingv1alpha1.Fluentd, config *corev1.ConfigMap) {
+// SyncKibanaConfigMap will sync the configmap in Kubernetes
+func SyncKibanaConfigMap(cr *loggingv1alpha1.Kibana, config *corev1.ConfigMap) {
 	reqLogger := log.WithValues(
 		"Request.Namespace", cr.Namespace,
 		"Request.Name", cr.ObjectMeta.Name,
@@ -72,27 +65,27 @@ func SyncConfigMap(cr *loggingv1alpha1.Fluentd, config *corev1.ConfigMap) {
 	configMapObject, err := k8sClient.CoreV1().ConfigMaps(cr.Namespace).Get(context.TODO(), configMapName, metav1.GetOptions{})
 
 	if err != nil {
-		reqLogger.Info("Creating configmap for fluentd", "Name", cr.ObjectMeta.Name)
+		reqLogger.Info("Creating configmap for kibana", "Name", cr.ObjectMeta.Name)
 		_, err := k8sClient.CoreV1().ConfigMaps(cr.Namespace).Create(context.TODO(), config, metav1.CreateOptions{})
 		if err != nil {
 			reqLogger.Error(err, "Got an error please check")
 		}
 	} else if configMapObject != config {
-		reqLogger.Info("Updating configmap for fluentd", "Name", cr.ObjectMeta.Name)
+		reqLogger.Info("Updating configmap for kibana", "Name", cr.ObjectMeta.Name)
 		k8sClient.CoreV1().ConfigMaps(cr.Namespace).Update(context.TODO(), config, metav1.UpdateOptions{})
 	} else {
-		reqLogger.Info("Fluentd configmap are in sync")
+		reqLogger.Info("Kibana configmap are in sync")
 	}
 }
 
-// CreateFluentdConfigMap creates the configmap for fluentd configuration
-func CreateFluentdConfigMap(cr *loggingv1alpha1.Fluentd) {
+// CreateKibanaConfigMap creates the configmap for kibana configuration
+func CreateKibanaConfigMap(cr *loggingv1alpha1.Kibana) {
 	labels := map[string]string{
 		"app":                         cr.ObjectMeta.Name,
 		"logging.opstreelabs.in":      "true",
-		"logging.opstreelabs.in/kind": "Fluentd",
+		"logging.opstreelabs.in/kind": "Kibana",
 	}
 
-	config := generateConfigMap(cr, labels)
-	SyncConfigMap(cr, config)
+	config := generateKibanaConfigMap(cr, labels)
+	SyncKibanaConfigMap(cr, config)
 }

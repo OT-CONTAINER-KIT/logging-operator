@@ -1,0 +1,36 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Kibana
+metadata:
+  name: kibana
+  labels:
+    organization: opstree
+    owned-by: Abhishek
+  namespace: logging-operator
+spec:
+  replicas: 1
+  image: docker.elastic.co/kibana/kibana:7.8.0
+  imagePullPolicy: "IfNotPresent"
+  elasticsearch:
+    host: "https://elasticsearch-cluster-client:9200"
+    username: elastic
+    password: "Opstree@1234"
+    tlsEnabled: true
+  elasticSecretName: elasticsearch-cluster-tls
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - "kibana"
+        topologyKey: kubernetes.io/hostname
