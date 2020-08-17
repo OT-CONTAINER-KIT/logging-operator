@@ -23,6 +23,7 @@ The "Logging Operator" includes these features:-
 - Kibana integration with elasticsearch for logs visulization
 - Seamless upgrade for Elasticsearch, Fluentd, and Kibana
 - Inculcated best practices for Kubernetes setup like `SecurityContext` and `Privilege Control`
+- Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana can be setup individually as well.
 
 ### Architecture
 
