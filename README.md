@@ -47,14 +47,39 @@ The cluster size selection should be done on the basis of requirement and resour
 
 For "Logging Operator" installation, we have categorized the steps in 3 parts:-
 
+- Namespace Setup for operator
 - CRD setup in kubernetes cluster
-- ClusterRoles and ClusterRolesBinding setup for operator
+- RBAC setup for operator to create resources in Kubernetes
 - Operator deployment and validation
+
+#### Namespace setup
+
+Since we are going to use pre-baked manifests of Kubernetes in that case we need to setup the namespace with a specific name called "logging-operator".
+
+```shell
+kubectl create ns logging-operator
+```
 
 #### CRD Setup
 
-So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run few magical `kubectl` commands.
+So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run a magical `kubectl` commands.
 
 ```shell
 kubectl apply -f config/crd/
+```
+
+#### RBAC setup
+
+Similar like CRD, we have pre-baked RBAC config files as well inside [config/crd](./config/rbac) which can be installed and configured by `kubectl`
+
+```shell
+kubectl apply -f config/rbac/
+```
+
+#### Operator Deployment and Validation
+
+Once all the initial steps are done, we can create the deployment for "Logging Operator". The deployment manifests for operator is present inside [config/manager/manager.yaml](./config/manager/manager.yaml) file.
+
+```shell
+kubectl apply -f config/manager/manager.yaml
 ```
