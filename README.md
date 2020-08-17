@@ -42,3 +42,19 @@ The purpose behind creating this CRD operator was to provide an easy and yet pro
 The "Logging Operator" needs a Kubernetes/Openshift cluster of version `>=1.8.0`. If you have just started using Operatorss, its highly recommend to use latest version of Kubernetes.
 
 The cluster size selection should be done on the basis of requirement and resources.
+
+### Logging Operator Installation
+
+For "Logging Operator" installation, we have categorized the steps in 3 parts:-
+
+- CRD setup in kubernetes cluster
+- ClusterRoles and ClusterRolesBinding setup for operator
+- Operator deployment and validation
+
+#### CRD Setup
+
+So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run few magical `kubectl` commands.
+
+```shell
+kubectl apply -f config/crd/
+```
