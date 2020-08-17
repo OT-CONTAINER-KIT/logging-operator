@@ -29,3 +29,10 @@ The "Logging Operator" includes these features:-
 <div align="center">
     <img src="./static/logging-operator-arch.png">
 </div>
+
+### Purpose
+
+The purpose behind creating this CRD operator was to provide an easy and yet production grade logging setup on Kubernetes. But it doesn't mean this can only be used for logging setup only.
+
+> This operator blocks Elasticsearch, Fluentd, and Kibana are loosely-couples so they can be setup individually as well. For example:- If we need elasticsearch for application database we can setup only elasticsearch as well by using this operator.
+
