@@ -8,7 +8,7 @@ A golang based CRD operator to setup and manage logging (Elasticsearch, Fluentd 
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
-Our roadmap can be founded in [ROADMAP](ROADMAP.md)
+Our roadmap is present in [ROADMAP](ROADMAP.md)
 
 ### Supported Features
 
