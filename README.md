@@ -24,3 +24,8 @@ The "Logging Operator" includes these features:-
 - Seamless upgrade for Elasticsearch, Fluentd, and Kibana
 - Inculcated best practices for Kubernetes setup like `SecurityContext` and `Privilege Control`
 
+### Architecture
+
+<div align="center">
+    <img src="./static/logging-operator-arch.png">
+</div>
