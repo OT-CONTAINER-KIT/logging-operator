@@ -8,6 +8,8 @@ A golang based CRD operator to setup and manage logging (Elasticsearch, Fluentd 
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
+Our roadmap can be founded in [ROADMAP](ROADMAP.md)
+
 ### Supported Features
 
 The "Logging Operator" includes these features:-
@@ -83,3 +85,11 @@ Once all the initial steps are done, we can create the deployment for "Logging O
 ```shell
 kubectl apply -f config/manager/manager.yaml
 ```
+
+### Examples
+
+All the examples are present inside the [config/samples/](./config/samples/) directory. These manifests can be applied by `kubectl` command line. These configuration have some dummy values which can be changed and customized by the individuals as per needs and requirements.
+
+### Contact Information
+
+This project is managed by [OpsTree Solutions](https://opstree.com). If you have any queries or suggestions, mail us at opensource@opstree.com
