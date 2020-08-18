@@ -1,0 +1,19 @@
+---
+name: logging-operator
+
+serviceAccountName: logging-operator
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 100Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
+
+image:
+  name: quay.io/opstree/logging-operator
+  tag: v0.1
+  imagePullPolicy: Always
+
+replicas: 1
