@@ -4,7 +4,7 @@
 
 ## Logging Operator
 
-A golang based CRD operator to setup and manage logging (Elasticsearch, Fluentd and Kibana) in Kubernetes cluster. It helps to setup each component of EFK stack separately.
+A golang based CRD operator to setup and manage logging stack (Elasticsearch, Fluentd, and Kibana) in the Kubernetes cluster. It helps to setup each component of the EFK stack separately.
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
@@ -18,11 +18,11 @@ The "Logging Operator" includes these features:-
   - Master Node
   - Data Node
   - Ingestion Node
-  - Client/Cordinator Node
+  - Client/Coordinator Node
 - Elasticsearch setup with/without TLS
 - Customizable elasticsearch configuration and Heap size
 - Fluentd as a log-shipper which already has JSON logs support
-- Kibana integration with elasticsearch for logs visulization
+- Kibana integration with elasticsearch for logs visualization
 - Seamless upgrade for Elasticsearch, Fluentd, and Kibana
 - Inculcated best practices for Kubernetes setup like `SecurityContext` and `Privilege Control`
 - Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana can be setup individually as well.
@@ -41,17 +41,17 @@ The purpose behind creating this CRD operator was to provide an easy and yet pro
 
 ### Prerequisites
 
-The "Logging Operator" needs a Kubernetes/Openshift cluster of version `>=1.8.0`. If you have just started using Operatorss, its highly recommend to use latest version of Kubernetes.
+The "Logging Operator" needs a Kubernetes/Openshift cluster of version `>=1.8.0`. If you have just started using Operatorss, it's highly recommended to use the latest version of Kubernetes.
 
-The cluster size selection should be done on the basis of requirement and resources.
+The cluster size selection should be done on the basis of requirements and resources.
 
 ### Logging Operator Installation
 
-For "Logging Operator" installation, we have categorized the steps in 3 parts:-
+For the "Logging Operator" installation, we have categorized the steps in 3 parts:-
 
 - Namespace Setup for operator
-- CRD setup in kubernetes cluster
-- RBAC setup for operator to create resources in Kubernetes
+- CRD setup in Kubernetes cluster
+- RBAC setup for an operator to create resources in Kubernetes
 - Operator deployment and validation
 
 #### Namespace setup
@@ -86,9 +86,27 @@ Once all the initial steps are done, we can create the deployment for "Logging O
 kubectl apply -f config/manager/manager.yaml
 ```
 
+### Deployment Using Helm
+
+For quick deployment, we have pre-baked helm charts for logging operator deployment and logging stack setup. In case you don't want to customize the manifests file and want to deploy the cluster with some minimal configuration change, in that case, "Helm" can be used.
+
+```shell
+helm upgrade logging-operator ./helm-charts/logging-operator/ \
+  -f ./helm-charts/logging-operator/values.yaml --namespace logging-operator --install
+```
+
+Once the logging operator setup is completed, we can create the logging stack for our requirement.
+
+```shell
+helm upgrade logging-stack ./helm-charts/logging-setup/ \
+  -f ./helm-charts/logging-setup/values.yaml --set elasticsearch.master.replicas=3 \
+  --set elasticsearch.data.replicas=3 --set elasticsearch.ingestion.replicas=1 \
+  --set elasticsearch.client.replicas=1 --namespace logging-operator --install
+```
+
 ### Examples
 
-All the examples are present inside the [config/samples/](./config/samples/) directory. These manifests can be applied by `kubectl` command line. These configuration have some dummy values which can be changed and customized by the individuals as per needs and requirements.
+All the examples are present inside the [config/samples/](./config/samples/) directory. These manifests can be applied by the `kubectl` command line. These configurations have some dummy values which can be changed and customized by the individuals as per needs and requirements.
 
 ### Contact Information
 
