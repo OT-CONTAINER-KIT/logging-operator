@@ -1,7 +1,7 @@
 # Current Operator version
 VERSION ?= 0.0.1
 # Default bundle image tag
-BUNDLE_IMG ?= controller-bundle:$(VERSION)
+BUNDLE_IMG ?= logging-operator:$(VERSION)
 # Options for 'bundle-build'
 ifneq ($(origin CHANNELS), undefined)
 BUNDLE_CHANNELS := --channels=$(CHANNELS)
@@ -115,3 +115,11 @@ bundle: manifests
 # Build the bundle image.
 bundle-build:
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+
+# Template the helm chart
+helm-template:
+	cd helm-charts && helm template logging-operator ./
+
+# Install using the helm chart
+helm-template:
+	cd helm-charts && helm upgrade logging-operator ./ -f values.yaml --namespace logging-operator --install

@@ -1,8 +1,8 @@
 ---
 apiVersion: v2
 appVersion: "0.1.0"
-description: "Logging Operator: EFK stack running on Kubernetes"
-name: logging-operator
+description: "Logging Setup: EFK stack running on Kubernetes"
+name: logging-setup
 version: 0.1.0
 icon: https://raw.githubusercontent.com/ot-container-kit/logging-operator/master/static/logging-operator-logo.svg
 keywords:
