@@ -1,0 +1,29 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Kibana
+metadata:
+  name: {{ .Values.kibana.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  replicas: {{ .Values.kibana.replicas }}
+  image: "{{ .Values.kibana.image.name }}:{{ .Values.kibana.image.tag }}"
+  imagePullPolicy: {{ .Values.kibana.image.imagePullPolicy }}
+  elasticsearch:
+    host: {{ .Values.kibana.elasticsearch.host }}
+    username: {{ .Values.kibana.elasticsearch.username }}
+    password: {{ .Values.kibana.elasticsearch.password }}
+    tlsEnabled: {{ .Values.kibana.elasticsearch.tlsEnabled }}
+  elasticSecretName: "{{ .Values.elasticsearch.name }}-tls"
+{{- if .Values.kibana.resources }}
+  resources:
+{{ toYaml .Values.kibana.resources | indent 4 }}
+{{- end }}
+{{- if .Values.kibana.affinity }}
+  affinity:
+{{ toYaml .Values.kibana.affinity | indent 4 }}
+{{- end }}

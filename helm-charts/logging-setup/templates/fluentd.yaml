@@ -1,0 +1,28 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: Fluentd
+metadata:
+  name: {{ .Values.fluentd.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  image: "{{ .Values.fluentd.image.name }}:{{ .Values.fluentd.image.tag }}"
+  imagePullPolicy: "{{ .Values.fluentd.image.imagePullPolicy }}"
+  elasticsearch:
+    host: {{ .Values.fluentd.elasticsearch.host }}
+    username: {{ .Values.fluentd.elasticsearch.username }}
+    password: {{ .Values.fluentd.elasticsearch.password }}
+    tlsEnabled: {{ .Values.fluentd.elasticsearch.tlsEnabled }}
+{{- if .Values.fluentd.nodeSelector }}
+  nodeSelector:
+{{ toYaml .Values.fluentd.nodeSelector | indent 4 }}
+{{- end }}
+  logPrefix: {{ .Values.fluentd.image.logPrefix }}
+{{- if .Values.fluentd.resources }}
+  resources:
+{{ toYaml .Values.fluentd.resources | indent 4 }}
+{{- end }}
