@@ -2,7 +2,7 @@
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: Elasticsearch
 metadata:
-  name: {{ .Values.elasticsearch.cluster_name }}
+  name: {{ .Values.elasticsearch.name }}
   labels:
     app.kubernetes.io/name: {{ .Values.name }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
