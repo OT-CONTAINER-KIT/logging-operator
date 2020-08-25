@@ -1,3 +1,4 @@
+{{- if .Values.elasticsearch.enabled }}
 ---
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: Elasticsearch
@@ -91,4 +92,5 @@ spec:
 {{- if .Values.elasticsearch.client.affinity }}
     affinity:
 {{ toYaml .Values.elasticsearch.client.affinity | indent 6 }}
+{{- end }}
 {{- end }}

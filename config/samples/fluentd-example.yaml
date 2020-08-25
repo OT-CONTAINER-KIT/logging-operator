@@ -15,14 +15,7 @@ spec:
     username: elastic
     password: "Opstree@1234"
     tlsEnabled: true
-  # nodeSelector:
-  #   kubernetesWorker: "true"
   logPrefix: namespace # namespace or podName
-  # customConfiguration: |-
-  #   <filter kubernetes.**>
-  #     @type kubernetes_metadata
-  #     verify_ssl false
-  #   </filter>
   resources:
     requests:
       cpu: 100m

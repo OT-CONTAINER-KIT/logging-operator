@@ -1,3 +1,4 @@
+{{- if .Values.kibana.enabled }}
 ---
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: Kibana
@@ -26,4 +27,5 @@ spec:
 {{- if .Values.kibana.affinity }}
   affinity:
 {{ toYaml .Values.kibana.affinity | indent 4 }}
+{{- end }}
 {{- end }}

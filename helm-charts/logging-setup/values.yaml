@@ -1,5 +1,6 @@
 ---
 elasticsearch:
+  enabled: false
   name: prod-cluster
 
   cluster_name: "production"
@@ -192,6 +193,7 @@ elasticsearch:
       #   selector: {}
 
 fluentd:
+  enabled: false
   name: fluentd
 
   image:
@@ -219,6 +221,7 @@ fluentd:
     tlsEnabled: true
 
 kibana:
+  enabled: false
   name: kibana
   
   replicas: 1
