@@ -52,41 +52,6 @@ elasticsearch:
       #         storage: 1Gi
       #   selector: {}
 
-  master:
-    enabled: true
-    replicas: 3
-
-    resources: {}
-      # requests:
-      #   cpu: 1000m
-      #   memory: 1Gi
-      # limits:
-      #   cpu: 1000m
-      #   memory: 1Gi
-    jvmMax: "1g"
-    jvmMin: "1g"
-
-    affinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: app
-              operator: In
-              values:
-              - "elasticsearch-cluster-master"
-          topologyKey: kubernetes.io/hostname
-
-    storageSpec: {}
-      # volumeClaimTemplate:
-      #   spec:
-      #     storageClassName: standard
-      #     accessModes: ["ReadWriteOnce"]
-      #     resources:
-      #       requests:
-      #         storage: 1Gi
-      #   selector: {}
-
   data:
     enabled: true
     replicas: 3
@@ -215,7 +180,7 @@ fluentd:
       memory: 200Mi
 
   elasticsearch:
-    host: elasticsearch-cluster-ingestion
+    host: prod-cluster-ingestion
     username: elastic
     password: Opstree@1234
     tlsEnabled: true
@@ -232,7 +197,7 @@ kibana:
     imagePullPolicy: IfNotPresent
 
   elasticsearch:
-    host: elasticsearch-cluster-ingestion
+    host: prod-cluster-client
     username: elastic
     password: Opstree@1234
     tlsEnabled: true

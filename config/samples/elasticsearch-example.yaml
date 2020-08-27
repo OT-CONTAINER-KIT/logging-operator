@@ -28,7 +28,6 @@ spec:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: csi-cephfs-sc
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -49,7 +48,7 @@ spec:
           topologyKey: kubernetes.io/hostname
   data:
     enabled: true
-    count: 3
+    count: 1
     resources:
       requests:
         cpu: 500m
@@ -60,7 +59,6 @@ spec:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: csi-cephfs-sc
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -80,7 +78,7 @@ spec:
               - "elasticsearch-cluster-data"
           topologyKey: kubernetes.io/hostname
   ingestion:
-    enabled: true
+    enabled: false
     count: 1
     resources:
       requests:
@@ -92,7 +90,6 @@ spec:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: csi-cephfs-sc
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -124,7 +121,6 @@ spec:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: csi-cephfs-sc
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:

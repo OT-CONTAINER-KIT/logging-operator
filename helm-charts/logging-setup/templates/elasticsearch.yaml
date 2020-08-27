@@ -34,7 +34,7 @@ spec:
 {{- end }}
     jvmOptions:
       Xmx: "{{ .Values.elasticsearch.master.jvmMax }}"
-      Xms: "{{ .Values.elasticsearch.master.jvmin }}"
+      Xms: "{{ .Values.elasticsearch.master.jvmMin }}"
 {{- if .Values.elasticsearch.master.affinity }}
     affinity:
 {{ toYaml .Values.elasticsearch.master.affinity | indent 6 }}
@@ -52,7 +52,7 @@ spec:
 {{- end }}
     jvmOptions:
       Xmx: "{{ .Values.elasticsearch.data.jvmMax }}"
-      Xms: "{{ .Values.elasticsearch.data.jvmin }}"
+      Xms: "{{ .Values.elasticsearch.data.jvmMin }}"
 {{- if .Values.elasticsearch.data.affinity }}
     affinity:
 {{ toYaml .Values.elasticsearch.data.affinity | indent 6 }}
@@ -70,7 +70,7 @@ spec:
 {{- end }}
     jvmOptions:
       Xmx: "{{ .Values.elasticsearch.ingestion.jvmMax }}"
-      Xms: "{{ .Values.elasticsearch.ingestion.jvmin }}"
+      Xms: "{{ .Values.elasticsearch.ingestion.jvmMin }}"
 {{- if .Values.elasticsearch.ingestion.affinity }}
     affinity:
 {{ toYaml .Values.elasticsearch.ingestion.affinity | indent 6 }}
@@ -88,7 +88,7 @@ spec:
 {{- end }}
     jvmOptions:
       Xmx: "{{ .Values.elasticsearch.client.jvmMax }}"
-      Xms: "{{ .Values.elasticsearch.client.jvmin }}"
+      Xms: "{{ .Values.elasticsearch.client.jvmMin }}"
 {{- if .Values.elasticsearch.client.affinity }}
     affinity:
 {{ toYaml .Values.elasticsearch.client.affinity | indent 6 }}

@@ -22,7 +22,7 @@ spec:
   nodeSelector:
 {{ toYaml .Values.fluentd.nodeSelector | indent 4 }}
 {{- end }}
-  logPrefix: {{ .Values.fluentd.image.logPrefix }}
+  logPrefix: {{ .Values.fluentd.logPrefix }}
 {{- if .Values.fluentd.resources }}
   resources:
 {{ toYaml .Values.fluentd.resources | indent 4 }}
