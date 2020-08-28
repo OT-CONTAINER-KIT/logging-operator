@@ -55,7 +55,7 @@ func generateConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *c
 func generateExtraConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *corev1.ConfigMap {
 	config := &corev1.ConfigMap{
 		TypeMeta:   identifier.GenerateMetaInformation("ConfigMap", "v1"),
-		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
+		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name+"-extra-config", cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
 		Data:       *cr.Spec.CustomConfiguration,
 	}
 	identifier.AddOwnerRefToObject(config, identifier.FluentdAsOwner(cr))
