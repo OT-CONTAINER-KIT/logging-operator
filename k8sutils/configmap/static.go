@@ -1,5 +1,6 @@
 package configmap
 
+// ConfigMapContentNamespace is static content for namespace
 const ConfigMapContentNamespace = `@include /fluentd/etc/conf.d/*.conf
 <match fluent.**>
 @type null
@@ -55,6 +56,7 @@ format json
 </match>
 `
 
+// ConfigMapContentPod is static content for pod
 const ConfigMapContentPod = `@include /fluentd/etc/conf.d/*.conf
 <match fluent.**>
 @type null

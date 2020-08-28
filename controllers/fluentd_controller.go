@@ -45,6 +45,7 @@ type FluentdReconciler struct {
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=fluentds,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=fluentds/status,verbs=get;update;patch
 
+// Reconcile will reconcile for fluentd
 func (r *FluentdReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := r.Log.WithValues("fluentd", req.NamespacedName)
 
@@ -75,6 +76,7 @@ func (r *FluentdReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
+// SetupWithManager will setup manager for fluentd
 func (r *FluentdReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&loggingv1alpha1.Fluentd{}).
