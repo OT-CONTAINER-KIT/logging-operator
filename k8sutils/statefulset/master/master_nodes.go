@@ -58,15 +58,15 @@ func generateMasterContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 	}
 
 	masterEnvVars := []corev1.EnvVar{
-		corev1.EnvVar{Name: "cluster.initial_master_nodes", Value: strings.Join(nodes, "")},
-		corev1.EnvVar{Name: "discovery.seed_hosts", Value: cr.ObjectMeta.Name + "-master-headless"},
-		corev1.EnvVar{Name: "network.host", Value: "0.0.0.0"},
-		corev1.EnvVar{Name: "cluster.name", Value: cr.Spec.ClusterName},
-		corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Master.JVMOptions.Max + " " + "-Xms" + cr.Spec.Master.JVMOptions.Min},
-		corev1.EnvVar{Name: "node.data", Value: "false"},
-		corev1.EnvVar{Name: "node.ingest", Value: "false"},
-		corev1.EnvVar{Name: "node.master", Value: "true"},
-		corev1.EnvVar{Name: "node.name", ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name"}}},
+		{Name: "cluster.initial_master_nodes", Value: strings.Join(nodes, "")},
+		{Name: "discovery.seed_hosts", Value: cr.ObjectMeta.Name + "-master-headless"},
+		{Name: "network.host", Value: "0.0.0.0"},
+		{Name: "cluster.name", Value: cr.Spec.ClusterName},
+		{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Master.JVMOptions.Max + " " + "-Xms" + cr.Spec.Master.JVMOptions.Min},
+		{Name: "node.data", Value: "false"},
+		{Name: "node.ingest", Value: "false"},
+		{Name: "node.master", Value: "true"},
+		{Name: "node.name", ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name"}}},
 	}
 
 	if *cr.Spec.Security.TLSEnabled != false {

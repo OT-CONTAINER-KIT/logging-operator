@@ -75,12 +75,12 @@ func generateKibanaContainer(cr *loggingv1alpha1.Kibana) *corev1.Container {
 	}
 
 	volumeMounts := []corev1.VolumeMount{
-		corev1.VolumeMount{Name: "kibanaconfig", MountPath: "/usr/share/kibana/config/kibana.yml", SubPath: "kibana.yml"},
+		{Name: "kibanaconfig", MountPath: "/usr/share/kibana/config/kibana.yml", SubPath: "kibana.yml"},
 	}
 
 	kibanaEnvVars := []corev1.EnvVar{
-		corev1.EnvVar{Name: "ELASTICSEARCH_HOSTS", Value: cr.Spec.KibanaElasticsearch.Host},
-		corev1.EnvVar{Name: "SERVER_HOST", Value: "0.0.0.0"},
+		{Name: "ELASTICSEARCH_HOSTS", Value: cr.Spec.KibanaElasticsearch.Host},
+		{Name: "SERVER_HOST", Value: "0.0.0.0"},
 	}
 
 	if cr.Spec.KibanaElasticsearch.TLSEnabled != false {
@@ -117,7 +117,7 @@ func generateKibanaDeployment(cr *loggingv1alpha1.Kibana, labels map[string]stri
 						*kibanaContainer,
 					},
 					Volumes: []corev1.Volume{
-						corev1.Volume{
+						{
 							Name: "kibanaconfig",
 							VolumeSource: corev1.VolumeSource{
 								ConfigMap: &corev1.ConfigMapVolumeSource{

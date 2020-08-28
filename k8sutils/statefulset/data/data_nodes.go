@@ -52,14 +52,14 @@ func generateDataContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container {
 	}
 
 	dataEnvVars := []corev1.EnvVar{
-		corev1.EnvVar{Name: "discovery.seed_hosts", Value: cr.ObjectMeta.Name + "-master-headless"},
-		corev1.EnvVar{Name: "network.host", Value: "0.0.0.0"},
-		corev1.EnvVar{Name: "cluster.name", Value: cr.Spec.ClusterName},
-		corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Data.JVMOptions.Max + " " + "-Xms" + cr.Spec.Data.JVMOptions.Min},
-		corev1.EnvVar{Name: "node.data", Value: "true"},
-		corev1.EnvVar{Name: "node.ingest", Value: "false"},
-		corev1.EnvVar{Name: "node.master", Value: "false"},
-		corev1.EnvVar{Name: "node.name", ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name"}}},
+		{Name: "discovery.seed_hosts", Value: cr.ObjectMeta.Name + "-master-headless"},
+		{Name: "network.host", Value: "0.0.0.0"},
+		{Name: "cluster.name", Value: cr.Spec.ClusterName},
+		{Name: "ES_JAVA_OPTS", Value: "-Xmx" + cr.Spec.Data.JVMOptions.Max + " " + "-Xms" + cr.Spec.Data.JVMOptions.Min},
+		{Name: "node.data", Value: "true"},
+		{Name: "node.ingest", Value: "false"},
+		{Name: "node.master", Value: "false"},
+		{Name: "node.name", ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.name"}}},
 	}
 
 	if *cr.Spec.Security.TLSEnabled != false {

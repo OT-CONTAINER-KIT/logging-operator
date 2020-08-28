@@ -134,7 +134,7 @@ func PluginsInitContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container {
 			RunAsUser:  &runasUser,
 		},
 		VolumeMounts: []corev1.VolumeMount{
-			corev1.VolumeMount{
+			{
 				Name:      "plugin-volume",
 				MountPath: "/usr/share/elasticsearch/plugins",
 			},
@@ -205,7 +205,7 @@ func StatefulSetObject(cr *loggingv1alpha1.Elasticsearch, nodeType string, label
 					},
 					EnableServiceLinks: &serviceLink,
 					Volumes: []corev1.Volume{
-						corev1.Volume{
+						{
 							Name: "plugin-volume",
 							VolumeSource: corev1.VolumeSource{
 								EmptyDir: &corev1.EmptyDirVolumeSource{},

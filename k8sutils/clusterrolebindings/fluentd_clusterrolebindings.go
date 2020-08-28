@@ -40,7 +40,7 @@ func generateClusterRoleBindings(cr *loggingv1alpha1.Fluentd, labels map[string]
 			Name:     cr.ObjectMeta.Name,
 		},
 		Subjects: []rbacv1.Subject{
-			rbacv1.Subject{
+			{
 				Kind:      "ServiceAccount",
 				Name:      cr.ObjectMeta.Name,
 				Namespace: cr.Namespace,
