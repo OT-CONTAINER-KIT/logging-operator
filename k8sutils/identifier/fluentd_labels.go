@@ -6,7 +6,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// FluentdAsOwner generates and returns object refernece
+// FluentdAsOwner generates and returns object reference
 func FluentdAsOwner(cr *loggingv1alpha1.Fluentd) metav1.OwnerReference {
 	trueVar := true
 	return metav1.OwnerReference{
