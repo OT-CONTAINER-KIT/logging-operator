@@ -28,7 +28,7 @@ type FluentdSpec struct {
 	ImagePullPolicy      corev1.PullPolicy    `json:"imagePullPolicy,omitempty"`
 	NodeSelector         *map[string]string   `json:"nodeSelector,omitempty"`
 	LogPrefix            *string              `json:"logPrefix,omitempty"`
-	CustomConfiguration  *string              `json:"customConfiguration,omitempty"`
+	CustomConfiguration  *map[string]string   `json:"customConfiguration,omitempty"`
 	Resources            *Resources           `json:"resources,omitempty"`
 }
 

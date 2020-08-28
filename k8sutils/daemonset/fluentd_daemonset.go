@@ -57,6 +57,13 @@ func generateFluentdContainer(cr *loggingv1alpha1.Fluentd) *corev1.Container {
 		corev1.VolumeMount{Name: "fluentd", MountPath: "/fluentd/etc/fluent.conf", SubPath: "fluent.conf"},
 	}
 
+	if cr.Spec.CustomConfiguration != nil {
+		volumeMounts = append(volumeMounts, corev1.VolumeMount{
+			Name:      "fluentd-extra-config",
+			MountPath: "/fluentd/etc/conf.d",
+		})
+	}
+
 	fluentdEnvVars := []corev1.EnvVar{
 		corev1.EnvVar{Name: "FLUENT_ELASTICSEARCH_HOST", Value: cr.Spec.FluentdElasticsearch.Host},
 		corev1.EnvVar{Name: "FLUENT_ELASTICSEARCH_PORT", Value: "9200"},
@@ -130,6 +137,19 @@ func generateDaemonSet(cr *loggingv1alpha1.Fluentd, labels map[string]string) *a
 
 	if cr.Spec.NodeSelector != nil {
 		daemonsetObject.Spec.Template.Spec.NodeSelector = *cr.Spec.NodeSelector
+	}
+
+	if cr.Spec.CustomConfiguration != nil {
+		daemonsetObject.Spec.Template.Spec.Volumes = append(daemonsetObject.Spec.Template.Spec.Volumes, corev1.Volume{
+			Name: "fluentd-extra-config",
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: cr.ObjectMeta.Name + "-extra-config",
+					},
+				},
+			},
+		})
 	}
 	identifier.AddOwnerRefToObject(daemonsetObject, identifier.FluentdAsOwner(cr))
 

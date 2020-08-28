@@ -246,8 +246,14 @@ func (in *FluentdSpec) DeepCopyInto(out *FluentdSpec) {
 	}
 	if in.CustomConfiguration != nil {
 		in, out := &in.CustomConfiguration, &out.CustomConfiguration
-		*out = new(string)
-		**out = **in
+		*out = new(map[string]string)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[string]string, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val
+			}
+		}
 	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources

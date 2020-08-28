@@ -41,9 +41,6 @@ func generateConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *c
 		configmapData = ConfigMapContentPod
 	}
 
-	if cr.Spec.CustomConfiguration != nil {
-		configmapData = *cr.Spec.CustomConfiguration
-	}
 	config := &corev1.ConfigMap{
 		TypeMeta:   identifier.GenerateMetaInformation("ConfigMap", "v1"),
 		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
@@ -55,15 +52,24 @@ func generateConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *c
 	return config
 }
 
+func generateExtraConfigMap(cr *loggingv1alpha1.Fluentd, labels map[string]string) *corev1.ConfigMap {
+	config := &corev1.ConfigMap{
+		TypeMeta:   identifier.GenerateMetaInformation("ConfigMap", "v1"),
+		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name+"-extra-config", cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
+		Data:       *cr.Spec.CustomConfiguration,
+	}
+	identifier.AddOwnerRefToObject(config, identifier.FluentdAsOwner(cr))
+	return config
+}
+
 // SyncConfigMap will sync the configmap in Kubernetes
-func SyncConfigMap(cr *loggingv1alpha1.Fluentd, config *corev1.ConfigMap) {
+func SyncConfigMap(cr *loggingv1alpha1.Fluentd, config *corev1.ConfigMap, configMapName string) {
 	reqLogger := log.WithValues(
 		"Request.Namespace", cr.Namespace,
 		"Request.Name", cr.ObjectMeta.Name,
 		"Service.Type", "configmap",
 	)
 
-	configMapName := cr.ObjectMeta.Name
 	k8sClient, err := client.GenerateK8sClient()
 	if err != nil {
 		reqLogger.Error(err, "Unable to generate K8s client for configmap")
@@ -94,5 +100,18 @@ func CreateFluentdConfigMap(cr *loggingv1alpha1.Fluentd) {
 	}
 
 	config := generateConfigMap(cr, labels)
-	SyncConfigMap(cr, config)
+	SyncConfigMap(cr, config, cr.ObjectMeta.Name)
+}
+
+// CreateFluentdExtraConfigMap will create the extra configurations for fluentd
+func CreateFluentdExtraConfigMap(cr *loggingv1alpha1.Fluentd) {
+
+	configName := cr.ObjectMeta.Name + "-extra-config"
+	labels := map[string]string{
+		"app":                         configName,
+		"logging.opstreelabs.in":      "true",
+		"logging.opstreelabs.in/kind": "Fluentd",
+	}
+	config := generateExtraConfigMap(cr, labels)
+	SyncConfigMap(cr, config, configName)
 }

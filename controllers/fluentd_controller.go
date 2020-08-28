@@ -62,6 +62,10 @@ func (r *FluentdReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	configmap.CreateFluentdConfigMap(instance)
+
+	if instance.Spec.CustomConfiguration != nil {
+		configmap.CreateFluentdExtraConfigMap(instance)
+	}
 	serviceaccount.CreateFluentdServiceAccount(instance)
 	clusterrole.CreateFluentdClusterRole(instance)
 	clusterrolebindings.CreateFluentdClusterRoleBinding(instance)

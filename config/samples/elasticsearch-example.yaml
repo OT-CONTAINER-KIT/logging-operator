@@ -48,7 +48,7 @@ spec:
           topologyKey: kubernetes.io/hostname
   data:
     enabled: true
-    count: 1
+    count: 2
     resources:
       requests:
         cpu: 500m
@@ -78,7 +78,7 @@ spec:
               - "elasticsearch-cluster-data"
           topologyKey: kubernetes.io/hostname
   ingestion:
-    enabled: false
+    enabled: true
     count: 1
     resources:
       requests:

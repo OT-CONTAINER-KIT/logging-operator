@@ -20,7 +20,7 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: quay.io/opstree/logging-operator:v0.1
+        image: quay.io/opstree/logging-operator:v0.2.0
         imagePullPolicy: Always
         name: logging-operator
         resources:

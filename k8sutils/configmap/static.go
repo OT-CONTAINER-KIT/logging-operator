@@ -1,6 +1,7 @@
 package configmap
 
-const ConfigMapContentNamespace = `<match fluent.**>
+const ConfigMapContentNamespace = `@include /fluentd/etc/conf.d/*.conf
+<match fluent.**>
 @type null
 </match>
 <source>
@@ -54,7 +55,8 @@ format json
 </match>
 `
 
-const ConfigMapContentPod = `<match fluent.**>
+const ConfigMapContentPod = `@include /fluentd/etc/conf.d/*.conf
+<match fluent.**>
 @type null
 </match>
 <source>

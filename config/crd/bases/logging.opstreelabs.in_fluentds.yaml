@@ -44,7 +44,9 @@ spec:
           description: FluentdSpec defines the desired state of Fluentd
           properties:
             customConfiguration:
-              type: string
+              additionalProperties:
+                type: string
+              type: object
             elasticsearch:
               description: FluentdElasticsearch is the struct for elasticsearch configuration
                 for fluentd
