@@ -52,6 +52,7 @@ type ElasticsearchReconciler struct {
 
 func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	// _ = context.Background()
+	var defaultCountForNode int32 = 0
 	reqLogger := r.Log.WithValues("elasticsearch", req.NamespacedName)
 
 	instance := &loggingv1alpha1.Elasticsearch{}
@@ -79,25 +80,34 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 		master.ElasticSearchMaster(instance)
 		masterservice.MasterElasticSearchService(instance)
 		instance.Status.Master = instance.Spec.Master.Count
+	} else {
+		instance.Status.Master = &defaultCountForNode
 	}
 
 	if instance.Spec.Data.Enabled != false {
 		data.ElasticSearchData(instance)
 		dataservice.DataElasticSearchService(instance)
 		instance.Status.Data = instance.Spec.Data.Count
+	} else {
+		instance.Status.Data = &defaultCountForNode
 	}
 
 	if instance.Spec.Ingestion.Enabled != false {
 		ingestion.ElasticSearchIngestion(instance)
 		ingestionservice.IngestionElasticSearchService(instance)
 		instance.Status.Ingestion = instance.Spec.Ingestion.Count
+	} else {
+		instance.Status.Ingestion = &defaultCountForNode
 	}
 
 	if instance.Spec.Client.Enabled != false {
 		clientnode.ElasticSearchClient(instance)
 		clientservice.ClientElasticSearchService(instance)
 		instance.Status.Client = instance.Spec.Client.Count
+	} else {
+		instance.Status.Client = &defaultCountForNode
 	}
+
 	instance.Status.ClusterName = instance.Spec.ClusterName
 
 	clusterStatus, err := elasticutils.GetElasticHealth(instance)
