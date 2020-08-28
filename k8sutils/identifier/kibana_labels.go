@@ -6,7 +6,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KibanaAsOwner generates and returns object refernece
+// KibanaAsOwner generates and returns object reference
 func KibanaAsOwner(cr *loggingv1alpha1.Kibana) metav1.OwnerReference {
 	trueVar := true
 	return metav1.OwnerReference{

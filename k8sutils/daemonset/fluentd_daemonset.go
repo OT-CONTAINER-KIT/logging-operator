@@ -52,9 +52,9 @@ func generateFluentdContainer(cr *loggingv1alpha1.Fluentd) *corev1.Container {
 	}
 
 	volumeMounts := []corev1.VolumeMount{
-		corev1.VolumeMount{Name: "varlogs", MountPath: "/var/log"},
-		corev1.VolumeMount{Name: "varlibdockercontainers", MountPath: "/var/lib/docker/containers", ReadOnly: true},
-		corev1.VolumeMount{Name: "fluentd", MountPath: "/fluentd/etc/fluent.conf", SubPath: "fluent.conf"},
+		{Name: "varlogs", MountPath: "/var/log"},
+		{Name: "varlibdockercontainers", MountPath: "/var/lib/docker/containers", ReadOnly: true},
+		{Name: "fluentd", MountPath: "/fluentd/etc/fluent.conf", SubPath: "fluent.conf"},
 	}
 
 	if cr.Spec.CustomConfiguration != nil {
@@ -65,9 +65,9 @@ func generateFluentdContainer(cr *loggingv1alpha1.Fluentd) *corev1.Container {
 	}
 
 	fluentdEnvVars := []corev1.EnvVar{
-		corev1.EnvVar{Name: "FLUENT_ELASTICSEARCH_HOST", Value: cr.Spec.FluentdElasticsearch.Host},
-		corev1.EnvVar{Name: "FLUENT_ELASTICSEARCH_PORT", Value: "9200"},
-		corev1.EnvVar{Name: "FLUENT_ELASTICSEARCH_SED_DISABLE", Value: "true"},
+		{Name: "FLUENT_ELASTICSEARCH_HOST", Value: cr.Spec.FluentdElasticsearch.Host},
+		{Name: "FLUENT_ELASTICSEARCH_PORT", Value: "9200"},
+		{Name: "FLUENT_ELASTICSEARCH_SED_DISABLE", Value: "true"},
 	}
 
 	if cr.Spec.FluentdElasticsearch.TLSEnabled != false {
@@ -103,7 +103,7 @@ func generateDaemonSet(cr *loggingv1alpha1.Fluentd, labels map[string]string) *a
 						*fluentdContainer,
 					},
 					Volumes: []corev1.Volume{
-						corev1.Volume{
+						{
 							Name: "varlogs",
 							VolumeSource: corev1.VolumeSource{
 								HostPath: &corev1.HostPathVolumeSource{
@@ -111,7 +111,7 @@ func generateDaemonSet(cr *loggingv1alpha1.Fluentd, labels map[string]string) *a
 								},
 							},
 						},
-						corev1.Volume{
+						{
 							Name: "varlibdockercontainers",
 							VolumeSource: corev1.VolumeSource{
 								HostPath: &corev1.HostPathVolumeSource{
@@ -119,7 +119,7 @@ func generateDaemonSet(cr *loggingv1alpha1.Fluentd, labels map[string]string) *a
 								},
 							},
 						},
-						corev1.Volume{
+						{
 							Name: "fluentd",
 							VolumeSource: corev1.VolumeSource{
 								ConfigMap: &corev1.ConfigMapVolumeSource{

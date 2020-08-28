@@ -35,7 +35,7 @@ func generateClusterRole(cr *loggingv1alpha1.Fluentd, labels map[string]string) 
 		TypeMeta:   identifier.GenerateMetaInformation("ClusterRole", "rbac.authorization.k8s.io/v1beta1"),
 		ObjectMeta: identifier.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, identifier.GenerateFluentdAnnotations()),
 		Rules: []rbacv1.PolicyRule{
-			rbacv1.PolicyRule{
+			{
 				APIGroups: []string{"*"},
 				Resources: []string{"pods", "namespaces"},
 				Verbs:     []string{"get", "list", "watch"},

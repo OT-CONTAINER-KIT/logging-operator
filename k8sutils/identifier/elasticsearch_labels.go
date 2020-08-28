@@ -40,7 +40,7 @@ func GenerateObjectMetaInformation(name string, namespace string, labels map[str
 	}
 }
 
-// ElasticAsOwner generates and returns object refernece
+// ElasticAsOwner generates and returns object reference
 func ElasticAsOwner(cr *loggingv1alpha1.Elasticsearch) metav1.OwnerReference {
 	trueVar := true
 	return metav1.OwnerReference{

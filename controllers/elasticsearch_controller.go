@@ -50,6 +50,7 @@ type ElasticsearchReconciler struct {
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=elasticsearches,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=elasticsearches/status,verbs=get;update;patch
 
+// Reconcile will reconcile for elasticsearch
 func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	// _ = context.Background()
 	var defaultCountForNode int32 = 0
@@ -129,6 +130,7 @@ func (r *ElasticsearchReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
+// SetupWithManager will setup manager for elasticsearch
 func (r *ElasticsearchReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&loggingv1alpha1.Elasticsearch{}).

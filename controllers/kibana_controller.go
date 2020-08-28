@@ -43,6 +43,7 @@ type KibanaReconciler struct {
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=kibanas,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=kibanas/status,verbs=get;update;patch
 
+// Reconcile will reconcile for kibana
 func (r *KibanaReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := r.Log.WithValues("kibana", req.NamespacedName)
 
@@ -67,6 +68,7 @@ func (r *KibanaReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
+// SetupWithManager will setup manager for kibana
 func (r *KibanaReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&loggingv1alpha1.Kibana{}).
