@@ -27,7 +27,7 @@ jobs:
       - setup_remote_docker
       - run: make docker-build
 
-  k8s Validation:
+  k8s-validation:
     machine:
       image: circleci/classic:201808-01
     environment:

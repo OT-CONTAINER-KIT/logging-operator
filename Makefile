@@ -121,5 +121,5 @@ helm-template:
 	cd helm-charts && helm template logging-operator ./
 
 # Install using the helm chart
-helm-template:
+helm-install:
 	cd helm-charts && helm upgrade logging-operator ./ -f values.yaml --namespace logging-operator --install
