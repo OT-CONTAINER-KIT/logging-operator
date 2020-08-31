@@ -4,7 +4,10 @@
 
 [![CircleCI](https://circleci.com/gh/OT-CONTAINER-KIT/logging-operator/tree/master.svg?style=shield)](https://circleci.com/gh/OT-CONTAINER-KIT/logging-operator/tree/master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/OT-CONTAINER-KIT/logging-operator)](https://goreportcard.com/report/github.com/OT-CONTAINER-KIT/logging-operator)
-
+[![Docker Repository on Quay](https://img.shields.io/badge/container-ready-green "Docker Repository on Quay")](https://quay.io/repository/opstree/logging-operator)
+[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f9e99ffcba997de51eaa/maintainability)](https://codeclimate.com/github/OT-CONTAINER-KIT/logging-operator/maintainability)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/OT-CONTAINER-KIT/logging-operator)
 
 ## Logging Operator
 
