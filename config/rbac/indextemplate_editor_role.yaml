@@ -1,0 +1,24 @@
+# permissions for end users to edit indextemplates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: indextemplate-editor-role
+rules:
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indextemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indextemplates/status
+  verbs:
+  - get
