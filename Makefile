@@ -114,12 +114,12 @@ bundle: manifests
 
 # Build the bundle image.
 bundle-build:
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	docker build -f Dockerfile -t $(BUNDLE_IMG) .
 
 # Template the helm chart
 helm-template:
 	cd helm-charts && helm template logging-operator ./
 
 # Install using the helm chart
-helm-template:
+helm-install:
 	cd helm-charts && helm upgrade logging-operator ./ -f values.yaml --namespace logging-operator --install
