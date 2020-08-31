@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: make docker-build
+      - run: make bundle-build
 
   k8s-validation:
     machine:
