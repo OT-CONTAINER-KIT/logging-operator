@@ -25,17 +25,25 @@ import (
 
 // IndexLifecycleSpec defines the desired state of IndexLifecycle
 type IndexLifecycleSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Rollover Rollover `json:"rollover,omitempty"`
+	Delete   Delete   `json:"delete,omitempty"`
+}
 
-	// Foo is an example field of IndexLifecycle. Edit IndexLifecycle_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+// Rollover is the struct for index roll overing
+type Rollover struct {
+	MaxSize string `json:"maxSize,omitempty"`
+	MaxAge  string `json:"maxAge,omitempty"`
+}
+
+// Delete is the struct for index deletion
+type Delete struct {
+	MinAge string `json:"minAge,omitempty"`
 }
 
 // IndexLifecycleStatus defines the observed state of IndexLifecycle
 type IndexLifecycleStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Rollover Rollover `json:"rollover,omitempty"`
+	Delete   Delete   `json:"delete,omitempty"`
 }
 
 // +kubebuilder:object:root=true
