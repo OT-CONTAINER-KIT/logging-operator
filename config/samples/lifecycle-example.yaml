@@ -1,0 +1,11 @@
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: IndexLifecycle
+metadata:
+  name: indexlifecycle-index
+spec:
+  enabled: true
+  rollover:
+    maxSize: 2GB
+    maxAge: 30d
+  delete:
+    minAge: 15d

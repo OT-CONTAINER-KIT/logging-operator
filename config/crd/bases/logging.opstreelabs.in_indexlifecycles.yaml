@@ -42,6 +42,8 @@ spec:
                   minAge:
                     type: string
                 type: object
+              enabled:
+                type: boolean
               rollover:
                 description: Rollover is the struct for index roll overing
                 properties:
