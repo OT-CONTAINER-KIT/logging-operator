@@ -22,15 +22,23 @@ import (
 
 // IndexLifecycleSpec defines the desired state of IndexLifecycle
 type IndexLifecycleSpec struct {
-	Rollover Rollover `json:"rollover,omitempty"`
-	Delete   Delete   `json:"delete,omitempty"`
-	Enabled  *bool    `json:"enabled,omitempty"`
+	Rollover      Rollover                `json:"rollover,omitempty"`
+	Delete        Delete                  `json:"delete,omitempty"`
+	Enabled       *bool                   `json:"enabled,omitempty"`
+	Elasticsearch ManagementElasticsearch `json:"elasticsearch,omitempty"`
 }
 
 // Rollover is the struct for index roll overing
 type Rollover struct {
 	MaxSize string `json:"maxSize,omitempty"`
 	MaxAge  string `json:"maxAge,omitempty"`
+}
+
+// ManagementElasticsearch is the struct for elasticsearch configuration for fluentd
+type ManagementElasticsearch struct {
+	Host     *string `json:"host,omitempty"`
+	Username *string `json:"username,omitempty"`
+	Password *string `json:"password,omitempty"`
 }
 
 // Delete is the struct for index deletion

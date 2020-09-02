@@ -18,9 +18,14 @@ package controllers
 
 import (
 	"context"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"time"
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
+
+	elasticutils "logging-operator/utils/elasticsearch"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -39,9 +44,28 @@ type IndexLifecycleReconciler struct {
 
 func (r *IndexLifecycleReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
-	_ = r.Log.WithValues("indexlifecycle", req.NamespacedName)
+	reqLogger := r.Log.WithValues("index-lifecycle", req.NamespacedName)
 
-	// your logic here
+	instance := &loggingv1alpha1.IndexLifecycle{}
+	err := r.Get(context.TODO(), req.NamespacedName, instance)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	if instance.Spec.Enabled != nil && *instance.Spec.Enabled != false {
+		elasticutils.CompareandUpdatePolicy(instance)
+	} else {
+		elasticutils.DeleteIndexLifeCyclePolicy(instance)
+	}
+
+	reqLogger.Info("Will reconcile after 10 seconds", "IndexLifeCycle.Namespace", instance.Namespace, "IndexLifeCycle.Name", instance.Name)
 
 	return ctrl.Result{}, nil
 }

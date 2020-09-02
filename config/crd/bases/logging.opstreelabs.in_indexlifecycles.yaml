@@ -42,6 +42,17 @@ spec:
                   minAge:
                     type: string
                 type: object
+              elasticsearch:
+                description: ManagementElasticsearch is the struct for elasticsearch
+                  configuration for fluentd
+                properties:
+                  host:
+                    type: string
+                  password:
+                    type: string
+                  username:
+                    type: string
+                type: object
               enabled:
                 type: boolean
               rollover:

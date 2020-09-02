@@ -1,7 +1,7 @@
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: IndexLifecycle
 metadata:
-  name: indexlifecycle-index
+  name: indexlifecycle-example
 spec:
   enabled: true
   rollover:
@@ -9,3 +9,7 @@ spec:
     maxAge: 30d
   delete:
     minAge: 15d
+  elasticsearch:
+    host: "http://elasticsearch-cluster-ingestion:9200"
+    username: elastic
+    password: "Opstree@1234"
