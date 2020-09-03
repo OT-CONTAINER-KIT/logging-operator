@@ -1,0 +1,24 @@
+# permissions for end users to edit indexlifecycles.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: indexlifecycle-editor-role
+rules:
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indexlifecycles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indexlifecycles/status
+  verbs:
+  - get

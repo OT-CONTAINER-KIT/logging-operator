@@ -11,6 +11,12 @@ resources:
 - group: logging
   kind: Fluentd
   version: v1alpha1
+- group: logging
+  kind: IndexLifecycle
+  version: v1alpha1
+- group: logging
+  kind: IndexTemplate
+  version: v1alpha1
 version: 3-alpha
 plugins:
   go.operator-sdk.io/v2-alpha: {}

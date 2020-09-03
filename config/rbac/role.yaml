@@ -49,6 +49,46 @@ rules:
 - apiGroups:
   - logging.opstreelabs.in
   resources:
+  - indexlifecycles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indexlifecycles/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indextemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
+  - indextemplates/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - logging.opstreelabs.in
+  resources:
   - kibanas
   verbs:
   - create
@@ -66,24 +106,3 @@ rules:
   - get
   - patch
   - update
-- apiGroups:
-  - ""
-  resources:
-  - "*"
-  verbs:
-  - "*"
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - daemonsets
-  - replicasets
-  - statefulsets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch

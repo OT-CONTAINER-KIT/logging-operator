@@ -3,3 +3,5 @@ resources:
 - logging_v1alpha1_elasticsearch.yaml
 - logging_v1alpha1_kibana.yaml
 - logging_v1alpha1_fluentd.yaml
+- logging_v1alpha1_indexlifecycle.yaml
+- logging_v1alpha1_indextemplate.yaml
