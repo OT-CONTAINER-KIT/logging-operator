@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="./static/logging-operator-logo.png" height="180" width="180">
+  <img src="./static/logging-operator-logo2.svg" height="220" width="220">
 </p>
 
 [![CircleCI](https://circleci.com/gh/OT-CONTAINER-KIT/logging-operator/tree/master.svg?style=shield)](https://circleci.com/gh/OT-CONTAINER-KIT/logging-operator/tree/master)
