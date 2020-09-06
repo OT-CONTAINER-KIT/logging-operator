@@ -34,7 +34,7 @@ A golang based CRD operator to setup and manage logging stack (Elasticsearch, Fl
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
-Our roadmap is present in [ROADMAP](ROADMAP.md)
+[Documentation](https://docs.opstreelabs.in/logging-operator)
 
 ### Supported Features
 
@@ -44,14 +44,16 @@ The "Logging Operator" includes these features:-
   - Master Node
   - Data Node
   - Ingestion Node
-  - Client/Coordinator Node
-- Elasticsearch setup with/without TLS
-- Customizable elasticsearch configuration and Heap size
-- Fluentd as a log-shipper which already has JSON logs support
+  - Client or Coordinator Node
+- Elasticsearch setup with or without TLS on Transport and HTTP Layer
+- Customizable elasticsearch configuration and configurable heap size
+- Fluentd as a lightweight log-shipper and JSON field seperation support
 - Kibana integration with elasticsearch for logs visualization
-- Seamless upgrade for Elasticsearch, Fluentd, and Kibana
+- Seamless upgrade for Elasticsearch, Fluentd, and Kibana stack
 - Inculcated best practices for Kubernetes setup like `SecurityContext` and `Privilege Control`
-- Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana can be setup individually as well.
+- Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana setup can be done individually as well
+- Index Lifecycle support to manage rollover and cleanup of indexes
+- Index template support for configuring index settings like:- policy, replicas, shards etc.
 
 ### Architecture
 
