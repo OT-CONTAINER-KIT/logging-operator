@@ -8,6 +8,16 @@ metadata:
   creationTimestamp: null
   name: indexlifecycles.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.rollover.maxSize
+    name: Rollover Size
+    type: string
+  - JSONPath: .spec.rollover.maxAge
+    name: Rollover Age
+    type: string
+  - JSONPath: .spec.delete.minAge
+    name: Deletion Age
+    type: string
   group: logging.opstreelabs.in
   names:
     kind: IndexLifecycle
