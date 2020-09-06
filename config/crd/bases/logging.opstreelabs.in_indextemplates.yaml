@@ -47,10 +47,12 @@ spec:
                   indexLifeCycleName:
                     type: string
                   replicas:
+                    format: int32
                     type: integer
                   rolloverAlias:
                     type: string
                   shards:
+                    format: int32
                     type: integer
                 type: object
             type: object
@@ -68,10 +70,12 @@ spec:
                   indexLifeCycleName:
                     type: string
                   replicas:
+                    format: int32
                     type: integer
                   rolloverAlias:
                     type: string
                   shards:
+                    format: int32
                     type: integer
                 type: object
             type: object
