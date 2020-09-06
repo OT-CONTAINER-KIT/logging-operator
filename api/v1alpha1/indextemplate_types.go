@@ -22,9 +22,10 @@ import (
 
 // IndexTemplateSpec defines the desired state of IndexTemplate
 type IndexTemplateSpec struct {
-	Enabled               *bool                 `json:"enabled,omitempty"`
-	IndexPatterns         []string              `json:"indexPatterns,omitempty"`
-	IndexTemplateSettings IndexTemplateSettings `json:"settings,omitempty"`
+	Enabled               *bool                   `json:"enabled,omitempty"`
+	IndexPatterns         []string                `json:"indexPatterns,omitempty"`
+	IndexTemplateSettings IndexTemplateSettings   `json:"settings,omitempty"`
+	Elasticsearch         ManagementElasticsearch `json:"elasticsearch,omitempty"`
 }
 
 // IndexTemplateSettings defines the desired state for settings of index

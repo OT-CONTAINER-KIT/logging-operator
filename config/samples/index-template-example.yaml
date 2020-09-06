@@ -11,3 +11,7 @@ spec:
     replicas: 1
     indexLifeCycleName: indexlifecycle-example
     rolloverAlias: "kubernetes"
+  elasticsearch:
+    host: "https://elasticsearch-cluster-ingestion:9200"
+    username: elastic
+    password: "Opstree@1234"
