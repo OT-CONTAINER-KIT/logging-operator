@@ -41,10 +41,10 @@ A golang based CRD operator to setup and manage logging stack (Elasticsearch, Fl
 The "Logging Operator" includes these features:-
 
 - Elasticsearch different node types, like:-
-  - Master Node
-  - Data Node
-  - Ingestion Node
-  - Client or Coordinator Node
+  - Master Node => A node that has the master role (default), which makes it eligible to be elected as the master node, which controls the cluster.
+  - Data Node => A node that has the data role (default). Data nodes hold data and perform data related operations such as CRUD, search, and aggregations.
+  - Ingestion Node => A node that has the ingest role (default). Ingest nodes are able to apply an ingest pipeline to a document in order to transform and enrich the document before indexing. With a heavy ingest load, it makes sense to use dedicated ingest nodes and to not include the ingest role from nodes that have the master or data roles.
+  - Client or Coordinator Node => Requests like search requests or bulk-indexing requests may involve data held on different data nodes. A search request, for example, is executed in two phases which are coordinated by the node which receives the client request — the coordinating node.
 - Elasticsearch setup with or without TLS on Transport and HTTP Layer
 - Customizable elasticsearch configuration and configurable heap size
 - Fluentd as a lightweight log-shipper and JSON field seperation support
@@ -95,7 +95,7 @@ kubectl create ns logging-operator
 So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run a magical `kubectl` commands.
 
 ```shell
-kubectl apply -f config/crd/
+kubectl apply -f config/crd/bases/
 ```
 
 #### RBAC setup
