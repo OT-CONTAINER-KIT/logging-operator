@@ -36,37 +36,43 @@ spec:
           spec:
             description: IndexTemplateSpec defines the desired state of IndexTemplate
             properties:
-              delete:
-                description: Delete is the struct for index deletion
+              indexPatterns:
+                items:
+                  type: string
+                type: array
+              settings:
+                description: IndexTemplateSettings defines the desired state for settings
+                  of index
                 properties:
-                  minAge:
+                  indexLifeCycleName:
                     type: string
-                type: object
-              rollover:
-                description: Rollover is the struct for index roll overing
-                properties:
-                  maxAge:
+                  replicas:
+                    type: integer
+                  rolloverAlias:
                     type: string
-                  maxSize:
-                    type: string
+                  shards:
+                    type: integer
                 type: object
             type: object
           status:
             description: IndexTemplateStatus defines the observed state of IndexTemplate
             properties:
-              delete:
-                description: Delete is the struct for index deletion
+              indexPatterns:
+                items:
+                  type: string
+                type: array
+              settings:
+                description: IndexTemplateSettings defines the desired state for settings
+                  of index
                 properties:
-                  minAge:
+                  indexLifeCycleName:
                     type: string
-                type: object
-              rollover:
-                description: Rollover is the struct for index roll overing
-                properties:
-                  maxAge:
+                  replicas:
+                    type: integer
+                  rolloverAlias:
                     type: string
-                  maxSize:
-                    type: string
+                  shards:
+                    type: integer
                 type: object
             type: object
         type: object
