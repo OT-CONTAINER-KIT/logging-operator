@@ -22,6 +22,7 @@ import (
 
 // IndexTemplateSpec defines the desired state of IndexTemplate
 type IndexTemplateSpec struct {
+	Enabled               *bool                 `json:"enabled,omitempty"`
 	IndexPatterns         []string              `json:"indexPatterns,omitempty"`
 	IndexTemplateSettings IndexTemplateSettings `json:"settings,omitempty"`
 }

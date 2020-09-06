@@ -36,6 +36,8 @@ spec:
           spec:
             description: IndexTemplateSpec defines the desired state of IndexTemplate
             properties:
+              enabled:
+                type: boolean
               indexPatterns:
                 items:
                   type: string

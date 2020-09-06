@@ -4,6 +4,7 @@ kind: IndexTemplate
 metadata:
   name: indextemplate-sample
 spec:
+  enabled: true
   indexPatterns: ["kubernetes-default-*", "kubernetes-istio-system-*"]
   settings:
     shards: 1
