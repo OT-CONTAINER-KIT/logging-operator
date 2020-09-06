@@ -1,3 +1,4 @@
+---
 apiVersion: logging.opstreelabs.in/v1alpha1
 kind: IndexLifecycle
 metadata:

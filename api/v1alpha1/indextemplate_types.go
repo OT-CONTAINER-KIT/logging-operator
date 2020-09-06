@@ -28,8 +28,8 @@ type IndexTemplateSpec struct {
 
 // IndexTemplateSettings defines the desired state for settings of index
 type IndexTemplateSettings struct {
-	Shards             int    `json:"shards,omitempty"`
-	Replicas           int    `json:"replicas,omitempty"`
+	Shards             int32  `json:"shards,omitempty"`
+	Replicas           int32  `json:"replicas,omitempty"`
 	IndexLifecycleName string `json:"indexLifeCycleName,omitempty"`
 	RollOverAlias      string `json:"rolloverAlias,omitempty"`
 }
