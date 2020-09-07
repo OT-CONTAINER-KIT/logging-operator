@@ -197,7 +197,7 @@ kibana:
     imagePullPolicy: IfNotPresent
 
   elasticsearch:
-    host: prod-cluster-client
+    host: https://prod-cluster-client:9200
     username: elastic
     password: Opstree@1234
     tlsEnabled: true
@@ -220,3 +220,34 @@ kibana:
             values:
             - "kibana"
         topologyKey: kubernetes.io/hostname
+
+lifecycle:
+  enabled: false
+  policies:
+  - name: prod-lifecycle
+    status: true
+    maxSize: 2GB
+    maxAge: 30d
+    deletionAge: 15d
+  elasticsearch:
+    host: https://prod-cluster-ingestion:9200
+    username: elastic
+    password: Opstree@1234
+
+indexTemplate:
+  enabled: false
+  templates:
+  - name: prod-template
+    status: true
+    shards: 1
+    replicas: 1
+    indexLifeCycleName: prod-lifecycle
+    rolloverAlias: kubernetes
+    indexPatterns:
+    - "kubernetes-default-*"
+    - "kubernetes-istio-system-*"
+  elasticsearch:
+    host: https://prod-cluster-ingestion:9200
+    username: elastic
+    password: Opstree@1234
+
