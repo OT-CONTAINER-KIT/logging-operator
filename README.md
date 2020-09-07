@@ -84,6 +84,8 @@ For the "Logging Operator" installation, we have categorized the steps in 3 part
 - RBAC setup for an operator to create resources in Kubernetes
 - Operator deployment and validation
 
+The detailed installation steps are present in [Documentation Guide](https://docs.opstreelabs.in/logging-operator)
+
 ### Examples
 
 All the examples are present inside the [config/samples/](./config/samples/) directory. These manifests can be applied by the `kubectl` command line. These configurations have some dummy values which can be changed and customized by the individuals as per needs and requirements.
