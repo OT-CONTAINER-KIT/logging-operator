@@ -34,6 +34,8 @@ A golang based CRD operator to setup and manage logging stack (Elasticsearch, Fl
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
+### Documentation
+
 [Documentation](https://docs.opstreelabs.in/logging-operator)
 
 ### Supported Features
@@ -81,56 +83,6 @@ For the "Logging Operator" installation, we have categorized the steps in 3 part
 - CRD setup in Kubernetes cluster
 - RBAC setup for an operator to create resources in Kubernetes
 - Operator deployment and validation
-
-#### Namespace setup
-
-Since we are going to use pre-baked manifests of Kubernetes in that case we need to setup the namespace with a specific name called "logging-operator".
-
-```shell
-kubectl create ns logging-operator
-```
-
-#### CRD Setup
-
-So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run a magical `kubectl` commands.
-
-```shell
-kubectl apply -f config/crd/bases/
-```
-
-#### RBAC setup
-
-Similar like CRD, we have pre-baked RBAC config files as well inside [config/crd](./config/rbac) which can be installed and configured by `kubectl`
-
-```shell
-kubectl apply -f config/rbac/
-```
-
-#### Operator Deployment and Validation
-
-Once all the initial steps are done, we can create the deployment for "Logging Operator". The deployment manifests for operator is present inside [config/manager/manager.yaml](./config/manager/manager.yaml) file.
-
-```shell
-kubectl apply -f config/manager/manager.yaml
-```
-
-### Deployment Using Helm
-
-For quick deployment, we have pre-baked helm charts for logging operator deployment and logging stack setup. In case you don't want to customize the manifests file and want to deploy the cluster with some minimal configuration change, in that case, "Helm" can be used.
-
-```shell
-helm upgrade logging-operator ./helm-charts/logging-operator/ \
-  -f ./helm-charts/logging-operator/values.yaml --namespace logging-operator --install
-```
-
-Once the logging operator setup is completed, we can create the logging stack for our requirement.
-
-```shell
-helm upgrade logging-stack ./helm-charts/logging-setup/ \
-  -f ./helm-charts/logging-setup/values.yaml --set elasticsearch.master.replicas=3 \
-  --set elasticsearch.data.replicas=3 --set elasticsearch.ingestion.replicas=1 \
-  --set elasticsearch.client.replicas=1 --namespace logging-operator --install
-```
 
 ### Examples
 

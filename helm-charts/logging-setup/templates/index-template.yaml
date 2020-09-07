@@ -1,0 +1,21 @@
+{{- if .Values.indexTemplate.enabled }}
+{{- range .Values.indexTemplate.templates }}
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: IndexTemplate
+metadata:
+  name: {{ .name }}
+spec:
+  enabled: {{ .status }}
+  indexPatterns: {{ .indexPatterns }}
+  settings:
+    shards: {{ .shards }}
+    replicas: {{ .replicas }}
+    indexLifeCycleName: {{ .indexLifeCycleName }}
+    rolloverAlias: {{ .rolloverAlias }}
+  elasticsearch:
+    host: {{ $.Values.indexTemplate.elasticsearch.host }}
+    username: {{ $.Values.indexTemplate.elasticsearch.username }}
+    password: {{ $.Values.indexTemplate.elasticsearch.password }}
+{{- end }}
+{{- end }}
