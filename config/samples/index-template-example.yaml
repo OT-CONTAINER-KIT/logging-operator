@@ -1,0 +1,17 @@
+---
+apiVersion: logging.opstreelabs.in/v1alpha1
+kind: IndexTemplate
+metadata:
+  name: indextemplate-sample
+spec:
+  enabled: true
+  indexPatterns: ["kubernetes-default-*", "kubernetes-istio-system-*"]
+  settings:
+    shards: 1
+    replicas: 1
+    indexLifeCycleName: indexlifecycle-example
+    rolloverAlias: "kubernetes"
+  elasticsearch:
+    host: "https://elasticsearch-cluster-ingestion:9200"
+    username: elastic
+    password: "Opstree@1234"

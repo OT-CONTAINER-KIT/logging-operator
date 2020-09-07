@@ -34,24 +34,28 @@ A golang based CRD operator to setup and manage logging stack (Elasticsearch, Fl
 
 > The K8s API name is "logging.opstreelabs.in/v1alpha1"
 
-Our roadmap is present in [ROADMAP](ROADMAP.md)
+### Documentation
+
+[Documentation](https://docs.opstreelabs.in/logging-operator)
 
 ### Supported Features
 
 The "Logging Operator" includes these features:-
 
 - Elasticsearch different node types, like:-
-  - Master Node
-  - Data Node
-  - Ingestion Node
-  - Client/Coordinator Node
-- Elasticsearch setup with/without TLS
-- Customizable elasticsearch configuration and Heap size
-- Fluentd as a log-shipper which already has JSON logs support
+  - **Master Node** => A node that has the master role (default), which makes it eligible to be elected as the master node, which controls the cluster.
+  - **Data Node** => A node that has the data role (default). Data nodes hold data and perform data related operations such as CRUD, search, and aggregations.
+  - **Ingestion Node** => A node that has the ingest role (default). Ingest nodes are able to apply an ingest pipeline to a document in order to transform and enrich the document before indexing. With a heavy ingest load, it makes sense to use dedicated ingest nodes and to not include the ingest role from nodes that have the master or data roles.
+  - **Client or Coordinator Node** => Requests like search requests or bulk-indexing requests may involve data held on different data nodes. A search request, for example, is executed in two phases which are coordinated by the node which receives the client request — the coordinating node.
+- Elasticsearch setup with or without TLS on Transport and HTTP Layer
+- Customizable elasticsearch configuration and configurable heap size
+- Fluentd as a lightweight log-shipper and JSON field seperation support
 - Kibana integration with elasticsearch for logs visualization
-- Seamless upgrade for Elasticsearch, Fluentd, and Kibana
+- Seamless upgrade for Elasticsearch, Fluentd, and Kibana stack
 - Inculcated best practices for Kubernetes setup like `SecurityContext` and `Privilege Control`
-- Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana can be setup individually as well.
+- Loosely coupled setup, i.e. Elasticsearch, Fluentd, and Kibana setup can be done individually as well
+- Index Lifecycle support to manage rollover and cleanup of indexes
+- Index template support for configuring index settings like:- policy, replicas, shards etc.
 
 ### Architecture
 
@@ -80,55 +84,7 @@ For the "Logging Operator" installation, we have categorized the steps in 3 part
 - RBAC setup for an operator to create resources in Kubernetes
 - Operator deployment and validation
 
-#### Namespace setup
-
-Since we are going to use pre-baked manifests of Kubernetes in that case we need to setup the namespace with a specific name called "logging-operator".
-
-```shell
-kubectl create ns logging-operator
-```
-
-#### CRD Setup
-
-So we have already pre-configured CRD in [config/crd](./config/crd) directory. We just have to run a magical `kubectl` commands.
-
-```shell
-kubectl apply -f config/crd/
-```
-
-#### RBAC setup
-
-Similar like CRD, we have pre-baked RBAC config files as well inside [config/crd](./config/rbac) which can be installed and configured by `kubectl`
-
-```shell
-kubectl apply -f config/rbac/
-```
-
-#### Operator Deployment and Validation
-
-Once all the initial steps are done, we can create the deployment for "Logging Operator". The deployment manifests for operator is present inside [config/manager/manager.yaml](./config/manager/manager.yaml) file.
-
-```shell
-kubectl apply -f config/manager/manager.yaml
-```
-
-### Deployment Using Helm
-
-For quick deployment, we have pre-baked helm charts for logging operator deployment and logging stack setup. In case you don't want to customize the manifests file and want to deploy the cluster with some minimal configuration change, in that case, "Helm" can be used.
-
-```shell
-helm upgrade logging-operator ./helm-charts/logging-operator/ \
-  -f ./helm-charts/logging-operator/values.yaml --namespace logging-operator --install
-```
-
-Once the logging operator setup is completed, we can create the logging stack for our requirement.
-
-```shell
-helm upgrade logging-stack ./helm-charts/logging-setup/ \
-  -f ./helm-charts/logging-setup/values.yaml --set elasticsearch.master.replicas=3 \
-  --set elasticsearch.data.replicas=3 --set elasticsearch.ingestion.replicas=1 \
-  --set elasticsearch.client.replicas=1 --namespace logging-operator --install
-```
+The detailed installation steps are present in [Documentation Guide](https://docs.opstreelabs.in/logging-operator)
 
 ### Examples
 

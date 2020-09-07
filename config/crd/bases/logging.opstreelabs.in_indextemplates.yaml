@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.3.0
   creationTimestamp: null
   name: indextemplates.logging.opstreelabs.in
 spec:
@@ -36,40 +36,75 @@ spec:
           spec:
             description: IndexTemplateSpec defines the desired state of IndexTemplate
             properties:
-              delete:
-                description: Delete is the struct for index deletion
+              elasticsearch:
+                description: ManagementElasticsearch is the struct for elasticsearch
+                  configuration for fluentd
                 properties:
-                  minAge:
+                  host:
+                    type: string
+                  password:
+                    type: string
+                  username:
                     type: string
                 type: object
-              rollover:
-                description: Rollover is the struct for index roll overing
+              enabled:
+                type: boolean
+              indexPatterns:
+                items:
+                  type: string
+                type: array
+              settings:
+                description: IndexTemplateSettings defines the desired state for settings
+                  of index
                 properties:
-                  maxAge:
+                  indexLifeCycleName:
                     type: string
-                  maxSize:
+                  replicas:
+                    format: int32
+                    type: integer
+                  rolloverAlias:
                     type: string
+                  shards:
+                    format: int32
+                    type: integer
                 type: object
             type: object
           status:
             description: IndexTemplateStatus defines the observed state of IndexTemplate
             properties:
-              delete:
-                description: Delete is the struct for index deletion
+              indexPatterns:
+                items:
+                  type: string
+                type: array
+              settings:
+                description: IndexTemplateSettings defines the desired state for settings
+                  of index
                 properties:
-                  minAge:
+                  indexLifeCycleName:
                     type: string
-                type: object
-              rollover:
-                description: Rollover is the struct for index roll overing
-                properties:
-                  maxAge:
+                  replicas:
+                    format: int32
+                    type: integer
+                  rolloverAlias:
                     type: string
-                  maxSize:
-                    type: string
+                  shards:
+                    format: int32
+                    type: integer
                 type: object
             type: object
         type: object
+    additionalPrinterColumns:
+    - jsonPath: .spec.settings.shards
+      name: Shards
+      type: integer
+      format: int32
+    - jsonPath: .spec.settings.replicas
+      name: Replicas
+      type: integer
+      format: int32
+    - jsonPath: .spec.settings.indexLifeCycleName
+      name: Lifecycle Policy
+      type: string
     served: true
     storage: true
     subresources:

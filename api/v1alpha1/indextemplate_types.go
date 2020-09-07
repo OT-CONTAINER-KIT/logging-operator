@@ -22,14 +22,24 @@ import (
 
 // IndexTemplateSpec defines the desired state of IndexTemplate
 type IndexTemplateSpec struct {
-	Rollover Rollover `json:"rollover,omitempty"`
-	Delete   Delete   `json:"delete,omitempty"`
+	Enabled               *bool                   `json:"enabled,omitempty"`
+	IndexPatterns         []string                `json:"indexPatterns,omitempty"`
+	IndexTemplateSettings IndexTemplateSettings   `json:"settings,omitempty"`
+	Elasticsearch         ManagementElasticsearch `json:"elasticsearch,omitempty"`
+}
+
+// IndexTemplateSettings defines the desired state for settings of index
+type IndexTemplateSettings struct {
+	Shards             int32  `json:"shards,omitempty"`
+	Replicas           int32  `json:"replicas,omitempty"`
+	IndexLifecycleName string `json:"indexLifeCycleName,omitempty"`
+	RollOverAlias      string `json:"rolloverAlias,omitempty"`
 }
 
 // IndexTemplateStatus defines the observed state of IndexTemplate
 type IndexTemplateStatus struct {
-	Rollover Rollover `json:"rollover,omitempty"`
-	Delete   Delete   `json:"delete,omitempty"`
+	IndexPatterns         []string              `json:"indexPatterns,omitempty"`
+	IndexTemplateSettings IndexTemplateSettings `json:"settings,omitempty"`
 }
 
 // +kubebuilder:object:root=true
