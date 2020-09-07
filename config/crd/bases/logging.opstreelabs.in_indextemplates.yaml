@@ -8,6 +8,18 @@ metadata:
   creationTimestamp: null
   name: indextemplates.logging.opstreelabs.in
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.settings.shards
+    name: Shards
+    type: integer
+    format: int32
+  - JSONPath: .spec.settings.replicas
+    name: Replicas
+    type: integer
+    format: int32
+  - JSONPath: .spec.settings.indexLifeCycleName
+    name: Lifecycle Policy
+    type: string
   group: logging.opstreelabs.in
   names:
     kind: IndexTemplate
