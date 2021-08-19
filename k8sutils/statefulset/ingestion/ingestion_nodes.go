@@ -19,6 +19,7 @@ package ingestion
 import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"sort"
 
 	loggingv1alpha1 "logging-operator/api/v1alpha1"
 	"logging-operator/k8sutils/statefulset"
@@ -84,6 +85,9 @@ func generateIngestionContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Contai
 		}
 	}
 
+	sort.SliceStable(ingestionEnvVars, func(i, j int) bool {
+		return ingestionEnvVars[i].Name < ingestionEnvVars[j].Name
+	})
 	containerDefinition.Env = ingestionEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch ingestion")

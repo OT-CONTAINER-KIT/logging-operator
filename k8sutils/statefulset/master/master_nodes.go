@@ -19,6 +19,7 @@ package master
 import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -90,6 +91,9 @@ func generateMasterContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 			masterEnvVars = append(masterEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
 		}
 	}
+	sort.SliceStable(masterEnvVars, func(i, j int) bool {
+		return masterEnvVars[i].Name < masterEnvVars[j].Name
+	})
 	containerDefinition.Env = masterEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch master")

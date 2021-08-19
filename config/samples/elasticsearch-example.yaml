@@ -18,6 +18,8 @@ spec:
   master:
     enabled: true
     count: 3
+    # extraEnvVariables:
+    #   foo: bar
     resources:
       requests:
         cpu: 500m

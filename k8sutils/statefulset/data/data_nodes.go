@@ -19,6 +19,7 @@ package data
 import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"sort"
 
 	loggingv1alpha1 "logging-operator/api/v1alpha1"
 	"logging-operator/k8sutils/statefulset"
@@ -83,7 +84,9 @@ func generateDataContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container {
 			dataEnvVars = append(dataEnvVars, corev1.EnvVar{Name: envName, Value: envValue})
 		}
 	}
-
+	sort.SliceStable(dataEnvVars, func(i, j int) bool {
+		return dataEnvVars[i].Name < dataEnvVars[j].Name
+	})
 	containerDefinition.Env = dataEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch data")

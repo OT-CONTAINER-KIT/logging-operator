@@ -19,6 +19,7 @@ package clientnode
 import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"sort"
 
 	loggingv1alpha1 "logging-operator/api/v1alpha1"
 	"logging-operator/k8sutils/statefulset"
@@ -84,6 +85,9 @@ func generateClientContainer(cr *loggingv1alpha1.Elasticsearch) corev1.Container
 		}
 	}
 
+	sort.SliceStable(clienNodeEnvVars, func(i, j int) bool {
+		return clienNodeEnvVars[i].Name < clienNodeEnvVars[j].Name
+	})
 	containerDefinition.Env = clienNodeEnvVars
 
 	reqLogger.Info("Successfully generated the contiainer definition for elasticsearch client")
