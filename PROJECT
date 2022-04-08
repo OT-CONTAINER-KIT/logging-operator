@@ -1,22 +1,22 @@
 domain: opstreelabs.in
-layout: go.kubebuilder.io/v2
-repo: logging-operator
+repo: github.com/ot-container-kit/logging-operator
 resources:
 - group: logging
   kind: Elasticsearch
-  version: v1alpha1
+  version: v1beta1
+- group: logging
+  kind: FluentD
+  version: v1beta1
+- group: logging
+  kind: FluentBit
+  version: v1beta1
 - group: logging
   kind: Kibana
-  version: v1alpha1
-- group: logging
-  kind: Fluentd
-  version: v1alpha1
-- group: logging
-  kind: IndexLifecycle
-  version: v1alpha1
+  version: v1beta1
 - group: logging
   kind: IndexTemplate
-  version: v1alpha1
-version: 3-alpha
-plugins:
-  go.operator-sdk.io/v2-alpha: {}
+  version: v1beta1
+- group: logging
+  kind: IndexLifeCycle
+  version: v1beta1
+version: "2"

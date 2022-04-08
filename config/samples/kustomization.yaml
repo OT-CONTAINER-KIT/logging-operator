@@ -1,7 +1,9 @@
-## This file is auto-generated, do not modify ##
+## Append samples you want in your CSV to this file as resources ##
 resources:
-- logging_v1alpha1_elasticsearch.yaml
-- logging_v1alpha1_kibana.yaml
-- logging_v1alpha1_fluentd.yaml
-- logging_v1alpha1_indexlifecycle.yaml
-- logging_v1alpha1_indextemplate.yaml
+- logging_v1beta1_elasticsearch.yaml
+- logging_v1beta1_fluentd.yaml
+- logging_v1beta1_fluentbit.yaml
+- logging_v1beta1_kibana.yaml
+- logging_v1beta1_indextemplate.yaml
+- logging_v1beta1_indexlifecycle.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

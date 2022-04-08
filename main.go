@@ -1,5 +1,5 @@
 /*
-Copyright 2020 Opstree Solutions.
+Copyright 2022 Opstree Solutions.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	loggingv1alpha1 "logging-operator/api/v1alpha1"
-	"logging-operator/controllers"
-	// +kubebuilder:scaffold:imports
+	loggingv1beta1 "github.com/ot-container-kit/logging-operator/api/v1beta1"
+	"github.com/ot-container-kit/logging-operator/controllers"
+	//+kubebuilder:scaffold:imports
 )
 
 var (
@@ -40,8 +40,8 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(loggingv1alpha1.AddToScheme(scheme))
-	// +kubebuilder:scaffold:scheme
+	utilruntime.Must(loggingv1beta1.AddToScheme(scheme))
+	//+kubebuilder:scaffold:scheme
 }
 
 func main() {
@@ -60,7 +60,7 @@ func main() {
 		MetricsBindAddress: metricsAddr,
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
-		LeaderElectionID:   "c5f74071.opstreelabs.in",
+		LeaderElectionID:   "595d4853.opstreelabs.in",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -75,28 +75,28 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Elasticsearch")
 		os.Exit(1)
 	}
+	if err = (&controllers.FluentDReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("FluentD"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "FluentD")
+		os.Exit(1)
+	}
+	if err = (&controllers.FluentBitReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("FluentBit"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "FluentBit")
+		os.Exit(1)
+	}
 	if err = (&controllers.KibanaReconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("controllers").WithName("Kibana"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Kibana")
-		os.Exit(1)
-	}
-	if err = (&controllers.FluentdReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("Fluentd"),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Fluentd")
-		os.Exit(1)
-	}
-	if err = (&controllers.IndexLifecycleReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("IndexLifecycle"),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "IndexLifecycle")
 		os.Exit(1)
 	}
 	if err = (&controllers.IndexTemplateReconciler{
@@ -107,7 +107,15 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "IndexTemplate")
 		os.Exit(1)
 	}
-	// +kubebuilder:scaffold:builder
+	if err = (&controllers.IndexLifeCycleReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("IndexLifeCycle"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "IndexLifeCycle")
+		os.Exit(1)
+	}
+	//+kubebuilder:scaffold:builder
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {

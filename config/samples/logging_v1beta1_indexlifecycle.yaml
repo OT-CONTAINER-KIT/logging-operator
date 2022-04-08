@@ -1,0 +1,6 @@
+apiVersion: logging.opstreelabs.in/v1beta1
+kind: IndexLifeCycle
+metadata:
+  name: indexlifecycle-sample
+spec:
+  # TODO(user): Add fields here
