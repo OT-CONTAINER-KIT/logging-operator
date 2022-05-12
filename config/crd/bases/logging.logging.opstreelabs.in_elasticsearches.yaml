@@ -44,8 +44,10 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
+                    default: 1g
                     type: string
                   jvmMinMemory:
+                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -1208,6 +1210,10 @@ spec:
                     format: int32
                     type: integer
                   storage:
+                    default:
+                      storage:
+                        accessModes: '[ReadWriteOnce]'
+                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -1232,8 +1238,10 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
+                    default: 1g
                     type: string
                   jvmMinMemory:
+                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -2396,6 +2404,10 @@ spec:
                     format: int32
                     type: integer
                   storage:
+                    default:
+                      storage:
+                        accessModes: '[ReadWriteOnce]'
+                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -2418,8 +2430,10 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
+                    default: 1g
                     type: string
                   jvmMinMemory:
+                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -3582,6 +3596,10 @@ spec:
                     format: int32
                     type: integer
                   storage:
+                    default:
+                      storage:
+                        accessModes: '[ReadWriteOnce]'
+                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -3596,6 +3614,9 @@ spec:
                     type: object
                 type: object
               esMaster:
+                default:
+                  esMaster:
+                    replicas: 3
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
@@ -3604,8 +3625,10 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
+                    default: 1g
                     type: string
                   jvmMinMemory:
+                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -4768,6 +4791,10 @@ spec:
                     format: int32
                     type: integer
                   storage:
+                    default:
+                      storage:
+                        accessModes: '[ReadWriteOnce]'
+                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
