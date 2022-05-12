@@ -2,8 +2,7 @@
 resources:
 - logging_v1beta1_elasticsearch.yaml
 - logging_v1beta1_fluentd.yaml
-- logging_v1beta1_fluentbit.yaml
 - logging_v1beta1_kibana.yaml
-- logging_v1beta1_indextemplate.yaml
 - logging_v1beta1_indexlifecycle.yaml
+- logging_v1beta1_indextemplate.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

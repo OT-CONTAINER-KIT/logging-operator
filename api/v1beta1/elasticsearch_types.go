@@ -20,22 +20,38 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ElasticsearchSpec defines the desired state of Elasticsearch
 type ElasticsearchSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	ClusterName string              `json:"esClusterName"`
+	ESVersion   string              `json:"esVersion"`
+	Security    *Security           `json:"esSecurity"`
+	ESMaster    *NodeSpecificConfig `json:"esMaster,omitempty"`
+	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
+	ESIngestion *NodeSpecificConfig `json:"esIngestion,omitempty"`
+	ESClient    *NodeSpecificConfig `json:"esClient,omitempty"`
+}
 
-	// Foo is an example field of Elasticsearch. Edit elasticsearch_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+// NodeSpecificConfig defines the properties for elasticsearch nodes
+type NodeSpecificConfig struct {
+	KubernetesConfig   *KubernetesConfig  `json:"kubernetesConfig,omitempty"`
+	Replicas           *int32             `json:"replicas,omitempty" default=3`
+	CustomEnvVariables *map[string]string `json:"customEnvVariables,omitempty"`
+	Storage            *Storage           `json:"storage,omitempty"`
+// +kubebuilder:default:=1g
+	JvmMaxMemory       *string            `json:"jvmMaxMemory,omitempty" default="1g"`
+// +kubebuilder:default:=1g
+	JvmMinMemory       *string            `json:"jvmMinMemory,omitempty" default="1g"`
+}
+
+// Security defines the security config of Elasticsearch
+type Security struct {
+	ExistingSecret       *string `json:"existingSecret,omitempty"`
+	TLSEnabled           *bool   `json:"tlsEnabled,omitempty"`
+	AutoGeneratePassword *bool   `json:"autoGeneratePassword,omitempty"`
 }
 
 // ElasticsearchStatus defines the observed state of Elasticsearch
 type ElasticsearchStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true

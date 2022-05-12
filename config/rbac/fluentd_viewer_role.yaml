@@ -5,7 +5,7 @@ metadata:
   name: fluentd-viewer-role
 rules:
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - fluentds
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - fluentds/status
   verbs:

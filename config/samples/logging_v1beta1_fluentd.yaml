@@ -1,5 +1,5 @@
-apiVersion: logging.opstreelabs.in/v1beta1
-kind: FluentD
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Fluentd
 metadata:
   name: fluentd-sample
 spec:

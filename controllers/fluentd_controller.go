@@ -19,36 +19,35 @@ package controllers
 import (
 	"context"
 
-	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	loggingv1beta1 "github.com/ot-container-kit/logging-operator/api/v1beta1"
+	loggingv1beta1 "logging-operator/api/v1beta1"
 )
 
-// FluentDReconciler reconciles a FluentD object
-type FluentDReconciler struct {
+// FluentdReconciler reconciles a Fluentd object
+type FluentdReconciler struct {
 	client.Client
-	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=fluentds,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=fluentds/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the FluentD object against the actual cluster state, and then
+// the Fluentd object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.6.4/pkg/reconcile
-func (r *FluentDReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
-	_ = r.Log.WithValues("fluentd", req.NamespacedName)
+// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
+func (r *FluentdReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
 
@@ -56,8 +55,8 @@ func (r *FluentDReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *FluentDReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *FluentdReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&loggingv1beta1.FluentD{}).
+		For(&loggingv1beta1.Fluentd{}).
 		Complete(r)
 }

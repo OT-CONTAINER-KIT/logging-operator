@@ -1,4 +1,4 @@
-apiVersion: logging.opstreelabs.in/v1beta1
+apiVersion: logging.logging.opstreelabs.in/v1beta1
 kind: IndexLifeCycle
 metadata:
   name: indexlifecycle-sample

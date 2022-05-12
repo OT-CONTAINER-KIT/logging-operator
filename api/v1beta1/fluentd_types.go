@@ -23,17 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// FluentDSpec defines the desired state of FluentD
-type FluentDSpec struct {
+// FluentdSpec defines the desired state of Fluentd
+type FluentdSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of FluentD. Edit fluentd_types.go to remove/update
+	// Foo is an example field of Fluentd. Edit fluentd_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// FluentDStatus defines the observed state of FluentD
-type FluentDStatus struct {
+// FluentdStatus defines the observed state of Fluentd
+type FluentdStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -41,24 +41,24 @@ type FluentDStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// FluentD is the Schema for the fluentds API
-type FluentD struct {
+// Fluentd is the Schema for the fluentds API
+type Fluentd struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   FluentDSpec   `json:"spec,omitempty"`
-	Status FluentDStatus `json:"status,omitempty"`
+	Spec   FluentdSpec   `json:"spec,omitempty"`
+	Status FluentdStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// FluentDList contains a list of FluentD
-type FluentDList struct {
+// FluentdList contains a list of Fluentd
+type FluentdList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []FluentD `json:"items"`
+	Items           []Fluentd `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&FluentD{}, &FluentDList{})
+	SchemeBuilder.Register(&Fluentd{}, &FluentdList{})
 }

@@ -19,23 +19,23 @@ package controllers
 import (
 	"context"
 
-	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	loggingv1beta1 "github.com/ot-container-kit/logging-operator/api/v1beta1"
+	loggingv1beta1 "logging-operator/api/v1beta1"
 )
 
 // IndexLifeCycleReconciler reconciles a IndexLifeCycle object
 type IndexLifeCycleReconciler struct {
 	client.Client
-	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=indexlifecycles,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=indexlifecycles/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indexlifecycles,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indexlifecycles/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indexlifecycles/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -45,10 +45,9 @@ type IndexLifeCycleReconciler struct {
 // the user.
 //
 // For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.6.4/pkg/reconcile
-func (r *IndexLifeCycleReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
-	_ = r.Log.WithValues("indexlifecycle", req.NamespacedName)
+// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
+func (r *IndexLifeCycleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
 

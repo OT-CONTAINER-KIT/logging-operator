@@ -19,23 +19,23 @@ package controllers
 import (
 	"context"
 
-	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	loggingv1beta1 "github.com/ot-container-kit/logging-operator/api/v1beta1"
+	loggingv1beta1 "logging-operator/api/v1beta1"
 )
 
 // IndexTemplateReconciler reconciles a IndexTemplate object
 type IndexTemplateReconciler struct {
 	client.Client
-	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=indextemplates,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=logging.opstreelabs.in,resources=indextemplates/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indextemplates,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indextemplates/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=indextemplates/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -45,10 +45,9 @@ type IndexTemplateReconciler struct {
 // the user.
 //
 // For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.6.4/pkg/reconcile
-func (r *IndexTemplateReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
-	_ = r.Log.WithValues("indextemplate", req.NamespacedName)
+// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
+func (r *IndexTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
 

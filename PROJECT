@@ -1,22 +1,55 @@
-domain: opstreelabs.in
-repo: github.com/ot-container-kit/logging-operator
+domain: logging.opstreelabs.in
+layout:
+- go.kubebuilder.io/v3
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
+projectName: logging-operator
+repo: logging-operator
 resources:
-- group: logging
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: logging.opstreelabs.in
+  group: logging
   kind: Elasticsearch
+  path: logging-operator/api/v1beta1
   version: v1beta1
-- group: logging
-  kind: FluentD
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: logging.opstreelabs.in
+  group: logging
+  kind: Fluentd
+  path: logging-operator/api/v1beta1
   version: v1beta1
-- group: logging
-  kind: FluentBit
-  version: v1beta1
-- group: logging
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: logging.opstreelabs.in
+  group: logging
   kind: Kibana
+  path: logging-operator/api/v1beta1
   version: v1beta1
-- group: logging
-  kind: IndexTemplate
-  version: v1beta1
-- group: logging
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: logging.opstreelabs.in
+  group: logging
   kind: IndexLifeCycle
+  path: logging-operator/api/v1beta1
   version: v1beta1
-version: "2"
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: logging.opstreelabs.in
+  group: logging
+  kind: IndexTemplate
+  path: logging-operator/api/v1beta1
+  version: v1beta1
+version: "3"
