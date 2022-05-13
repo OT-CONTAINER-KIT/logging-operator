@@ -18,13 +18,19 @@ package controllers
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	// 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/k8sgo"
+	"logging-operator/k8sgo/elasticsearch"
 )
 
 // ElasticsearchReconciler reconciles a Elasticsearch object
@@ -36,22 +42,41 @@ type ElasticsearchReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches/finalizers,verbs=update
+//+kubebuilder:rbac:groups="",resources=configmaps;events;services;secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Elasticsearch object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	instance := &loggingv1beta1.Elasticsearch{}
+	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
 
-	// TODO(user): your logic here
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
 
-	return ctrl.Result{}, nil
+	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	secretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "password")
+	tlsSecretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "tls-cert")
+
+	_, err = k8sgo.GetSecret(secretName, instance.ObjectMeta.Name)
+
+	if err != nil {
+		k8selastic.CreateElasticAutoSecret(instance)
+	}
+
+	_, err = k8sgo.GetSecret(tlsSecretName, instance.ObjectMeta.Name)
+
+	if err != nil {
+		k8selastic.CreateElasticTLSSecret(instance)
+	}
+
+	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

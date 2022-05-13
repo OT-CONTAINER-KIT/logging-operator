@@ -45,11 +45,9 @@ func LabelSelectors(labels map[string]string) *metav1.LabelSelector {
 	return &metav1.LabelSelector{MatchLabels: labels}
 }
 
-// generateAnnotations generates and returns annotations
-func generateAnnotations() map[string]string {
+// GenerateAnnotations generates and returns annotations
+func GenerateAnnotations() map[string]string {
 	return map[string]string{
-		"mongodb.opstreelabs.in": "true",
-		"prometheus.io/scrape":   "true",
-		"prometheus.io/port":     "9216",
+		"logging.opstreelabs.in": "true",
 	}
 }
