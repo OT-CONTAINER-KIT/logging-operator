@@ -61,19 +61,22 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 
-	secretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "password")
-	tlsSecretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "tls-cert")
+	if instance.Spec.Security.AutoGeneratePassword != nil && *instance.Spec.Security.AutoGeneratePassword {
+		secretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "password")
+		_, err = k8sgo.GetSecret(secretName, instance.ObjectMeta.Name)
 
-	_, err = k8sgo.GetSecret(secretName, instance.ObjectMeta.Name)
-
-	if err != nil {
-		k8selastic.CreateElasticAutoSecret(instance)
+		if err != nil {
+			k8selastic.CreateElasticAutoSecret(instance)
+		}
 	}
 
-	_, err = k8sgo.GetSecret(tlsSecretName, instance.ObjectMeta.Name)
+	if instance.Spec.Security.TLSEnabled != nil && *instance.Spec.Security.TLSEnabled {
+		tlsSecretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "tls-cert")
+		_, err = k8sgo.GetSecret(tlsSecretName, instance.ObjectMeta.Name)
 
-	if err != nil {
-		k8selastic.CreateElasticTLSSecret(instance)
+		if err != nil {
+			k8selastic.CreateElasticTLSSecret(instance)
+		}
 	}
 
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
