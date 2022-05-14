@@ -5,6 +5,6 @@ metadata:
 spec:
   esClusterName: "prod"
   esVersion: "7.16.0"
-  security:
+  esSecurity:
     autoGeneratePassword: true
     tlsEnabled: true

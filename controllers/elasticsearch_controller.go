@@ -58,29 +58,48 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 
+	err = secretManager(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
 	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 
-	if instance.Spec.Security.AutoGeneratePassword != nil && *instance.Spec.Security.AutoGeneratePassword {
-		secretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "password")
-		_, err = k8sgo.GetSecret(secretName, instance.ObjectMeta.Name)
-
-		if err != nil {
-			k8selastic.CreateElasticAutoSecret(instance)
-		}
-	}
-
-	if instance.Spec.Security.TLSEnabled != nil && *instance.Spec.Security.TLSEnabled {
-		tlsSecretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "tls-cert")
-		_, err = k8sgo.GetSecret(tlsSecretName, instance.ObjectMeta.Name)
-
-		if err != nil {
-			k8selastic.CreateElasticTLSSecret(instance)
-		}
-	}
-
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+}
+
+// secretManager is a method to create and manage secrets
+func secretManager(instance *loggingv1beta1.Elasticsearch) error {
+	if instance.Spec.Security != nil {
+		if instance.Spec.Security.AutoGeneratePassword != nil && *instance.Spec.Security.AutoGeneratePassword {
+			secretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "password")
+			_, err := k8sgo.GetSecret(secretName, instance.ObjectMeta.Name)
+
+			if err != nil {
+				err = k8selastic.CreateElasticAutoSecret(instance)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	if instance.Spec.Security != nil {
+		if instance.Spec.Security.TLSEnabled != nil && *instance.Spec.Security.TLSEnabled {
+			tlsSecretName := fmt.Sprintf("%s-%s", instance.ObjectMeta.Name, "tls-cert")
+			_, err := k8sgo.GetSecret(tlsSecretName, instance.ObjectMeta.Name)
+
+			if err != nil {
+				err = k8selastic.CreateElasticTLSSecret(instance)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
