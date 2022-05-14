@@ -1210,10 +1210,6 @@ spec:
                     format: int32
                     type: integer
                   storage:
-                    default:
-                      storage:
-                        accessModes: '[ReadWriteOnce]'
-                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -1221,10 +1217,12 @@ spec:
                         items:
                           type: string
                         type: array
+                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
+                        default: 1Gi
                     type: object
                 type: object
               esClusterName:
@@ -2404,10 +2402,6 @@ spec:
                     format: int32
                     type: integer
                   storage:
-                    default:
-                      storage:
-                        accessModes: '[ReadWriteOnce]'
-                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -2415,10 +2409,12 @@ spec:
                         items:
                           type: string
                         type: array
+                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
+                        default: 1Gi
                     type: object
                 type: object
               esIngestion:
@@ -3596,10 +3592,6 @@ spec:
                     format: int32
                     type: integer
                   storage:
-                    default:
-                      storage:
-                        accessModes: '[ReadWriteOnce]'
-                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -3607,16 +3599,15 @@ spec:
                         items:
                           type: string
                         type: array
+                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
+                        default: 1Gi
                     type: object
                 type: object
               esMaster:
-                default:
-                  esMaster:
-                    replicas: 3
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
@@ -4790,11 +4781,8 @@ spec:
                   replicas:
                     format: int32
                     type: integer
+                    default: 3
                   storage:
-                    default:
-                      storage:
-                        accessModes: '[ReadWriteOnce]'
-                        storageSize: 1Gi
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
                     properties:
@@ -4802,10 +4790,12 @@ spec:
                         items:
                           type: string
                         type: array
+                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
+                        default: 1Gi
                     type: object
                 type: object
               esSecurity:
@@ -4822,7 +4812,6 @@ spec:
                 type: string
             required:
             - esClusterName
-            - esSecurity
             - esVersion
             type: object
           status:

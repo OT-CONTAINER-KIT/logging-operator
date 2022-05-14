@@ -43,6 +43,7 @@ type ElasticsearchReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=configmaps;events;services;secrets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=coordination.k8s.io,resources=leases,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
