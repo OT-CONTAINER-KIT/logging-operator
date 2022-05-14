@@ -1,28 +1,26 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    control-plane: controller-manager
-  name: system
+  name: ot-operators
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
+  name: logging-operator
+  namespace: ot-operators
   labels:
-    control-plane: controller-manager
+    control-plane: logging-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: logging-operator
   replicas: 1
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: controller-manager
+        control-plane: logging-operator
     spec:
       securityContext:
         runAsNonRoot: true
@@ -31,7 +29,7 @@ spec:
         - /manager
         args:
         - --leader-elect
-        image: controller:latest
+        image: quay.io/opstree/logging-operator:v0.3.0
         name: manager
         securityContext:
           allowPrivilegeEscalation: false
@@ -47,8 +45,6 @@ spec:
             port: 8081
           initialDelaySeconds: 5
           periodSeconds: 10
-        # TODO(user): Configure the resources accordingly based on the project requirements.
-        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
             cpu: 500m
@@ -56,5 +52,5 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
-      serviceAccountName: controller-manager
+      serviceAccountName: logging-operator
       terminationGracePeriodSeconds: 10

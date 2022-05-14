@@ -24,7 +24,7 @@ import (
 type ElasticsearchSpec struct {
 	ClusterName string    `json:"esClusterName"`
 	ESVersion   string    `json:"esVersion"`
-	Security    *Security `json:"esSecurity"`
+	Security    *Security `json:"esSecurity,omitempty"`
 	// +kubebuilder:default:={esMaster:{replicas: 3}}
 	ESMaster    *NodeSpecificConfig `json:"esMaster,omitempty"`
 	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
