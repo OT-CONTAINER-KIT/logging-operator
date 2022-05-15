@@ -20,12 +20,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:object:root=true
+
 // ElasticsearchSpec defines the desired state of Elasticsearch
 type ElasticsearchSpec struct {
 	ClusterName string    `json:"esClusterName"`
 	ESVersion   string    `json:"esVersion"`
 	Security    *Security `json:"esSecurity,omitempty"`
-	// +kubebuilder:default:={esMaster:{replicas: 3}}
+	// +kubebuilder:validation:default:={esMaster:{replicas: 3}}
+	// +kubebuilder:default:={storage:{accessModes: {[ReadWriteOnce]}, storageSize: "1Gi"},jvmMaxMemory: "1g", jvmMinMemory: "1g", replicas: 3}
 	ESMaster    *NodeSpecificConfig `json:"esMaster,omitempty"`
 	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
 	ESIngestion *NodeSpecificConfig `json:"esIngestion,omitempty"`
@@ -37,11 +40,8 @@ type NodeSpecificConfig struct {
 	KubernetesConfig   *KubernetesConfig  `json:"kubernetesConfig,omitempty"`
 	Replicas           *int32             `json:"replicas,omitempty"`
 	CustomEnvVariables *map[string]string `json:"customEnvVariables,omitempty"`
-	// +kubebuilder:default:={storage:{accessModes: [ReadWriteOnce], storageSize: "1Gi"}}
 	Storage *Storage `json:"storage,omitempty"`
-	// +kubebuilder:default:="1g"
 	JvmMaxMemory *string `json:"jvmMaxMemory,omitempty"`
-	// +kubebuilder:default:="1g"
 	JvmMinMemory *string `json:"jvmMinMemory,omitempty"`
 }
 

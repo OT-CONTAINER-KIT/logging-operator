@@ -44,10 +44,8 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
-                    default: 1g
                     type: string
                   jvmMinMemory:
-                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -1217,12 +1215,10 @@ spec:
                         items:
                           type: string
                         type: array
-                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
-                        default: 1Gi
                     type: object
                 type: object
               esClusterName:
@@ -1236,10 +1232,8 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
-                    default: 1g
                     type: string
                   jvmMinMemory:
-                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -2409,12 +2403,10 @@ spec:
                         items:
                           type: string
                         type: array
-                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
-                        default: 1Gi
                     type: object
                 type: object
               esIngestion:
@@ -2426,10 +2418,8 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
-                    default: 1g
                     type: string
                   jvmMinMemory:
-                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -3599,15 +3589,21 @@ spec:
                         items:
                           type: string
                         type: array
-                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
-                        default: 1Gi
                     type: object
                 type: object
               esMaster:
+                default:
+                  jvmMaxMemory: 1g
+                  jvmMinMemory: 1g
+                  replicas: 3
+                  storage:
+                    accessModes:
+                    - '[ReadWriteOnce]'
+                    storageSize: 1Gi
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
@@ -3616,10 +3612,8 @@ spec:
                       type: string
                     type: object
                   jvmMaxMemory:
-                    default: 1g
                     type: string
                   jvmMinMemory:
-                    default: 1g
                     type: string
                   kubernetesConfig:
                     description: KubernetesConfig will define the Kubernetes specific
@@ -4781,7 +4775,6 @@ spec:
                   replicas:
                     format: int32
                     type: integer
-                    default: 3
                   storage:
                     description: Storage is the inteface to add pvc and pv support
                       in MongoDB
@@ -4790,12 +4783,10 @@ spec:
                         items:
                           type: string
                         type: array
-                        default: [ReadWriteOnce]
                       storageClass:
                         type: string
                       storageSize:
                         type: string
-                        default: 1Gi
                     type: object
                 type: object
               esSecurity:
