@@ -41,7 +41,7 @@ type StatefulSetParameters struct {
 	Affinity          *corev1.Affinity
 	NodeSelector      map[string]string
 	Tolerations       *[]corev1.Toleration
-	PriorityClassName string
+	PriorityClassName *string
 	SecurityContext   *corev1.PodSecurityContext
 	ExtraVolumes      *[]corev1.Volume
 }
@@ -167,10 +167,9 @@ func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{Labels: params.Labels},
 				Spec: corev1.PodSpec{
-					Containers:        generateContainerDef(params.ContainerParams),
-					NodeSelector:      params.NodeSelector,
-					Affinity:          params.Affinity,
-					PriorityClassName: params.PriorityClassName,
+					Containers:   generateContainerDef(params.ContainerParams),
+					NodeSelector: params.NodeSelector,
+					Affinity:     params.Affinity,
 					SecurityContext: &corev1.PodSecurityContext{
 						FSGroup:   &fsGroup,
 						RunAsUser: &runasUser,
@@ -184,6 +183,9 @@ func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
 
 	if params.ExtraVolumes != nil {
 		statefulset.Spec.Template.Spec.Volumes = *params.ExtraVolumes
+	}
+	if params.PriorityClassName != nil {
+		statefulset.Spec.Template.Spec.PriorityClassName = *params.PriorityClassName
 	}
 	if params.Tolerations != nil {
 		statefulset.Spec.Template.Spec.Tolerations = *params.Tolerations
@@ -215,10 +217,9 @@ func getInitContainer(params ContainerParams) corev1.Container {
 	var privileged = true
 	var runasUser int64 = 0
 	return corev1.Container{
-		Name:      "sysctl-init",
-		Image:     params.Image,
-		Command:   []string{"sysctl", "-w", "vm.max_map_count=262144"},
-		Resources: *params.InitResources,
+		Name:    "sysctl-init",
+		Image:   params.Image,
+		Command: []string{"sysctl", "-w", "vm.max_map_count=262144"},
 		SecurityContext: &corev1.SecurityContext{
 			Privileged: &privileged,
 			RunAsUser:  &runasUser,

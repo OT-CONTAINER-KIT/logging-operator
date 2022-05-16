@@ -72,13 +72,13 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 		if nodeConfig.KubernetesConfig != nil {
 			statefulsetParams.Affinity = nodeConfig.KubernetesConfig.Affinity
 			statefulsetParams.NodeSelector = nodeConfig.KubernetesConfig.NodeSelector
-			statefulsetParams.PriorityClassName = *nodeConfig.KubernetesConfig.PriorityClassName
+			statefulsetParams.PriorityClassName = nodeConfig.KubernetesConfig.PriorityClassName
 			statefulsetParams.Tolerations = nodeConfig.KubernetesConfig.Tolerations
 			statefulsetParams.ContainerParams.Resources = nodeConfig.KubernetesConfig.Resources
 		} else {
 			statefulsetParams.Affinity = &corev1.Affinity{}
 			statefulsetParams.NodeSelector = map[string]string{}
-			statefulsetParams.PriorityClassName = ""
+			statefulsetParams.PriorityClassName = nil
 			statefulsetParams.Tolerations = &[]corev1.Toleration{}
 			statefulsetParams.ContainerParams.Resources = &corev1.ResourceRequirements{}
 			statefulsetParams.ContainerParams.InitResources = &corev1.ResourceRequirements{}
