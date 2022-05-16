@@ -40,10 +40,12 @@ func generateContainerDef(params ContainerParams) []corev1.Container {
 			Image:          params.Image,
 			VolumeMounts:   *params.VolumeMount,
 			Env:            params.EnvVar,
-			Resources:      *params.Resources,
 			LivenessProbe:  params.LivenessProbe,
 			ReadinessProbe: params.ReadinessProbe,
 		},
+	}
+	if params.Resources != nil {
+		containerDef[0].Resources = *params.Resources
 	}
 	if params.EnvVarFrom != nil {
 		containerDef[0].EnvFrom = params.EnvVarFrom

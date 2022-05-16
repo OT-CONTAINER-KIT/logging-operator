@@ -13,13 +13,15 @@ spec:
       accessModes: [ReadWriteOnce]
       storageClass: do-block-storage
     kubernetesConfig:
-      resources:
-        requests:
-          cpu: 101m
-          memory: 512Mi
-        limits:
-          cpu: 2000m
-          memory: 2Gi
+      elasticAffinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: beta.kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
     jvmMaxMemory: "1g"
     jvmMinMemory: "1g"
   esSecurity:
