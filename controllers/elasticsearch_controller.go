@@ -74,6 +74,26 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 
+	if instance.Spec.ESData != nil {
+		err = k8selastic.SetupElasticSearchData(instance)
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
+	}
+
+	if instance.Spec.ESIngestion != nil {
+		err = k8selastic.SetupElasticSearchIngestion(instance)
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
+	}
+
+	if instance.Spec.ESClient != nil {
+		err = k8selastic.SetupElasticSearchClient(instance)
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
+	}
 	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
