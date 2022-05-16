@@ -37,12 +37,12 @@ type ElasticsearchSpec struct {
 
 // NodeSpecificConfig defines the properties for elasticsearch nodes
 type NodeSpecificConfig struct {
-	KubernetesConfig   *KubernetesConfig  `json:"kubernetesConfig,omitempty"`
-	Replicas           *int32             `json:"replicas,omitempty"`
-	CustomEnvVariables *map[string]string `json:"customEnvVariables,omitempty"`
-	Storage *Storage `json:"storage,omitempty"`
-	JvmMaxMemory *string `json:"jvmMaxMemory,omitempty"`
-	JvmMinMemory *string `json:"jvmMinMemory,omitempty"`
+	KubernetesConfig *KubernetesConfig `json:"kubernetesConfig,omitempty"`
+	Replicas         *int32            `json:"replicas,omitempty"`
+	CustomConfig     *string           `json:"customConfig,omitempty"`
+	Storage          *Storage          `json:"storage,omitempty"`
+	JvmMaxMemory     *string           `json:"jvmMaxMemory,omitempty"`
+	JvmMinMemory     *string           `json:"jvmMinMemory,omitempty"`
 }
 
 // Security defines the security config of Elasticsearch

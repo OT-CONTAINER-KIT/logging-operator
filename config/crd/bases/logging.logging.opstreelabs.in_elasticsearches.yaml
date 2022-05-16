@@ -39,10 +39,8 @@ spec:
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
-                  customEnvVariables:
-                    additionalProperties:
-                      type: string
-                    type: object
+                  customConfig:
+                    type: string
                   jvmMaxMemory:
                     type: string
                   jvmMinMemory:
@@ -51,7 +49,7 @@ spec:
                     description: KubernetesConfig will define the Kubernetes specific
                       properties
                     properties:
-                      mongoAffinity:
+                      elasticAffinity:
                         description: Affinity is a group of affinity scheduling rules.
                         properties:
                           nodeAffinity:
@@ -951,6 +949,10 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                        type: object
+                      nodeSelectors:
+                        additionalProperties:
+                          type: string
                         type: object
                       priorityClassName:
                         type: string
@@ -1227,10 +1229,8 @@ spec:
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
-                  customEnvVariables:
-                    additionalProperties:
-                      type: string
-                    type: object
+                  customConfig:
+                    type: string
                   jvmMaxMemory:
                     type: string
                   jvmMinMemory:
@@ -1239,7 +1239,7 @@ spec:
                     description: KubernetesConfig will define the Kubernetes specific
                       properties
                     properties:
-                      mongoAffinity:
+                      elasticAffinity:
                         description: Affinity is a group of affinity scheduling rules.
                         properties:
                           nodeAffinity:
@@ -2139,6 +2139,10 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                        type: object
+                      nodeSelectors:
+                        additionalProperties:
+                          type: string
                         type: object
                       priorityClassName:
                         type: string
@@ -2413,10 +2417,8 @@ spec:
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
-                  customEnvVariables:
-                    additionalProperties:
-                      type: string
-                    type: object
+                  customConfig:
+                    type: string
                   jvmMaxMemory:
                     type: string
                   jvmMinMemory:
@@ -2425,7 +2427,7 @@ spec:
                     description: KubernetesConfig will define the Kubernetes specific
                       properties
                     properties:
-                      mongoAffinity:
+                      elasticAffinity:
                         description: Affinity is a group of affinity scheduling rules.
                         properties:
                           nodeAffinity:
@@ -3325,6 +3327,10 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                        type: object
+                      nodeSelectors:
+                        additionalProperties:
+                          type: string
                         type: object
                       priorityClassName:
                         type: string
@@ -3607,10 +3613,8 @@ spec:
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes
                 properties:
-                  customEnvVariables:
-                    additionalProperties:
-                      type: string
-                    type: object
+                  customConfig:
+                    type: string
                   jvmMaxMemory:
                     type: string
                   jvmMinMemory:
@@ -3619,7 +3623,7 @@ spec:
                     description: KubernetesConfig will define the Kubernetes specific
                       properties
                     properties:
-                      mongoAffinity:
+                      elasticAffinity:
                         description: Affinity is a group of affinity scheduling rules.
                         properties:
                           nodeAffinity:
@@ -4519,6 +4523,10 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                        type: object
+                      nodeSelectors:
+                        additionalProperties:
+                          type: string
                         type: object
                       priorityClassName:
                         type: string

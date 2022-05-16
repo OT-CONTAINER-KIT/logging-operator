@@ -44,6 +44,7 @@ type ElasticsearchReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=elasticsearches/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=configmaps;events;services;secrets,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=coordination.k8s.io,resources=leases,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -64,6 +65,11 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	}
 
 	err = k8selastic.CreateElasticSearchService(instance, "master")
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	err = k8selastic.SetupElasticSearchMaster(instance)
 	if err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}

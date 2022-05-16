@@ -555,16 +555,10 @@ func (in *NodeSpecificConfig) DeepCopyInto(out *NodeSpecificConfig) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.CustomEnvVariables != nil {
-		in, out := &in.CustomEnvVariables, &out.CustomEnvVariables
-		*out = new(map[string]string)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make(map[string]string, len(*in))
-			for key, val := range *in {
-				(*out)[key] = val
-			}
-		}
+	if in.CustomConfig != nil {
+		in, out := &in.CustomConfig, &out.CustomConfig
+		*out = new(string)
+		**out = **in
 	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage

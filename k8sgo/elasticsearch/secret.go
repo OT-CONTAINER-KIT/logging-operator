@@ -30,7 +30,7 @@ const (
 
 // CreateElasticAutoSecret is a method to generate automatic credentials
 func CreateElasticAutoSecret(cr *loggingv1beta1.Elasticsearch) error {
-	secretName := fmt.Sprintf("%s-%s", cr.ObjectMeta.Name, "password")
+	secretName := fmt.Sprintf("%s-password", cr.ObjectMeta.Name)
 	labels := map[string]string{
 		"app": cr.ObjectMeta.Name,
 	}
@@ -54,7 +54,7 @@ func CreateElasticAutoSecret(cr *loggingv1beta1.Elasticsearch) error {
 
 // CreateElasticTLSSecret is a method to generate automatic credentials
 func CreateElasticTLSSecret(cr *loggingv1beta1.Elasticsearch) error {
-	secretName := fmt.Sprintf("%s-%s", cr.ObjectMeta.Name, "tls-cert")
+	secretName := fmt.Sprintf("%s-tls-cert", cr.ObjectMeta.Name)
 	labels := map[string]string{
 		"app": cr.ObjectMeta.Name,
 	}

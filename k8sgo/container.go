@@ -20,18 +20,20 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-type containerParams struct {
+type ContainerParams struct {
 	Name           string
 	Image          string
 	Resources      *corev1.ResourceRequirements
+	InitResources  *corev1.ResourceRequirements
 	VolumeMount    *[]corev1.VolumeMount
 	EnvVar         []corev1.EnvVar
+	EnvVarFrom     []corev1.EnvFromSource
 	ReadinessProbe *corev1.Probe
 	LivenessProbe  *corev1.Probe
 }
 
 // generateContainerDef is a method to create container definition
-func generateContainerDef(params containerParams) []corev1.Container {
+func generateContainerDef(params ContainerParams) []corev1.Container {
 	containerDef := []corev1.Container{
 		{
 			Name:           params.Name,
@@ -42,6 +44,9 @@ func generateContainerDef(params containerParams) []corev1.Container {
 			LivenessProbe:  params.LivenessProbe,
 			ReadinessProbe: params.ReadinessProbe,
 		},
+	}
+	if params.EnvVarFrom != nil {
+		containerDef[0].EnvFrom = params.EnvVarFrom
 	}
 	return containerDef
 }

@@ -23,7 +23,8 @@ import (
 // KubernetesConfig will define the Kubernetes specific properties
 type KubernetesConfig struct {
 	Resources         *corev1.ResourceRequirements `json:"resources,omitempty"`
-	Affinity          *corev1.Affinity             `json:"mongoAffinity,omitempty"`
+	Affinity          *corev1.Affinity             `json:"elasticAffinity,omitempty"`
+	NodeSelector      map[string]string            `json:"nodeSelectors,omitempty"`
 	Tolerations       *[]corev1.Toleration         `json:"tolerations,omitempty"`
 	PriorityClassName *string                      `json:"priorityClassName,omitempty"`
 	SecurityContext   *corev1.PodSecurityContext   `json:"securityContext,omitempty"`
