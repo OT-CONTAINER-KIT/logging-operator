@@ -19,14 +19,13 @@ package k8selastic
 import (
 	"fmt"
 	"logging-operator/k8sgo"
-	"sort"
 
 	corev1 "k8s.io/api/core/v1"
 	loggingv1beta1 "logging-operator/api/v1beta1"
 )
 
 // CreateElasticsearchStatefulSet is a method to create elasticsearch statefulset
-func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig loggingv1beta1.NodeSpecificConfig, role string, envVars []corev1.EnvVar) error {
+func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig *loggingv1beta1.NodeSpecificConfig, role string, envVars []corev1.EnvVar) error {
 	appName := fmt.Sprintf("%s-%s", cr.ObjectMeta.Name, role)
 	labels := map[string]string{
 		"app":  appName,
@@ -39,11 +38,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 		ContainerParams: k8sgo.ContainerParams{
 			Name:           "elastic",
 			Image:          fmt.Sprintf("docker.elastic.co/elasticsearch/elasticsearch:%s", cr.Spec.ESVersion),
-			Resources:      nodeConfig.KubernetesConfig.Resources,
 			VolumeMount:    getVolumeMounts(cr, role),
 			EnvVar:         envVars,
 			ReadinessProbe: createProbeInfo(),
-			LivenessProbe:  createProbeInfo(),
 		},
 		Labels:      labels,
 		Annotations: k8sgo.GenerateAnnotations(),
@@ -57,21 +54,34 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 			StorageSize:      nodeConfig.Storage.StorageSize,
 			StorageClassName: nodeConfig.Storage.StorageClassName,
 		},
-		Affinity:          nodeConfig.KubernetesConfig.Affinity,
-		NodeSelector:      nodeConfig.KubernetesConfig.NodeSelector,
-		PriorityClassName: *nodeConfig.KubernetesConfig.PriorityClassName,
-		Tolerations:       nodeConfig.KubernetesConfig.Tolerations,
 	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
-	if nodeConfig.CustomConfig != nil {
-		statefulsetParams.ContainerParams.EnvVarFrom = []corev1.EnvFromSource{
-			{
-				ConfigMapRef: &corev1.ConfigMapEnvSource{
-					LocalObjectReference: corev1.LocalObjectReference{
-						Name: *nodeConfig.CustomConfig,
+
+	if nodeConfig != nil {
+		if nodeConfig.CustomConfig != nil {
+			statefulsetParams.ContainerParams.EnvVarFrom = []corev1.EnvFromSource{
+				{
+					ConfigMapRef: &corev1.ConfigMapEnvSource{
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: *nodeConfig.CustomConfig,
+						},
 					},
 				},
-			},
+			}
+		}
+		if nodeConfig.KubernetesConfig != nil {
+			statefulsetParams.Affinity = nodeConfig.KubernetesConfig.Affinity
+			statefulsetParams.NodeSelector = nodeConfig.KubernetesConfig.NodeSelector
+			statefulsetParams.PriorityClassName = *nodeConfig.KubernetesConfig.PriorityClassName
+			statefulsetParams.Tolerations = nodeConfig.KubernetesConfig.Tolerations
+			statefulsetParams.ContainerParams.Resources = nodeConfig.KubernetesConfig.Resources
+		} else {
+			statefulsetParams.Affinity = &corev1.Affinity{}
+			statefulsetParams.NodeSelector = map[string]string{}
+			statefulsetParams.PriorityClassName = ""
+			statefulsetParams.Tolerations = &[]corev1.Toleration{}
+			statefulsetParams.ContainerParams.Resources = &corev1.ResourceRequirements{}
+			statefulsetParams.ContainerParams.InitResources = &corev1.ResourceRequirements{}
 		}
 	}
 	err := k8sgo.CreateOrUpdateStateFul(statefulsetParams)
@@ -155,16 +165,15 @@ func generateEnvVariables(cr *loggingv1beta1.Elasticsearch, nodeConfig loggingv1
 		} else {
 			envVars = append(envVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 		}
+	} else {
+		envVars = append(envVars, corev1.EnvVar{Name: "SCHEME", Value: "http"})
 	}
 	if nodeConfig.JvmMaxMemory != nil && nodeConfig.JvmMinMemory != nil {
-		javaOpts = fmt.Sprintf("-Xmx%s, -Xms%s", *nodeConfig.JvmMaxMemory, *nodeConfig.JvmMinMemory)
+		javaOpts = fmt.Sprintf("-Xmx%s -Xms%s", *nodeConfig.JvmMaxMemory, *nodeConfig.JvmMinMemory)
 	} else {
-		javaOpts = fmt.Sprintf("-Xmx1g, -Xms1g")
+		javaOpts = fmt.Sprintf("-Xmx1g -Xms1g")
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: javaOpts})
-	sort.SliceStable(envVars, func(i, j int) bool {
-		return envVars[i].Name < envVars[j].Name
-	})
 	return envVars
 }
 

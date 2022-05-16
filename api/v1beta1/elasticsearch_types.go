@@ -28,7 +28,7 @@ type ElasticsearchSpec struct {
 	ESVersion   string    `json:"esVersion"`
 	Security    *Security `json:"esSecurity,omitempty"`
 	// +kubebuilder:validation:default:={esMaster:{replicas: 3}}
-	// +kubebuilder:default:={storage:{accessModes: {[ReadWriteOnce]}, storageSize: "1Gi"},jvmMaxMemory: "1g", jvmMinMemory: "1g", replicas: 3}
+	// +kubebuilder:default:={storage:{accessModes: {ReadWriteOnce}, storageSize: "1Gi"},jvmMaxMemory: "1g", jvmMinMemory: "1g", replicas: 3}
 	ESMaster    *NodeSpecificConfig `json:"esMaster,omitempty"`
 	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
 	ESIngestion *NodeSpecificConfig `json:"esIngestion,omitempty"`

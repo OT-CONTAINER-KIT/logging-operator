@@ -3608,7 +3608,7 @@ spec:
                   replicas: 3
                   storage:
                     accessModes:
-                    - '[ReadWriteOnce]'
+                    - ReadWriteOnce
                     storageSize: 1Gi
                 description: NodeSpecificConfig defines the properties for elasticsearch
                   nodes

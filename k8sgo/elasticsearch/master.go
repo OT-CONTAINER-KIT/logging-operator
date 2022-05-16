@@ -18,6 +18,7 @@ package k8selastic
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -44,10 +45,14 @@ func SetupElasticSearchMaster(cr *loggingv1beta1.Elasticsearch) error {
 	envVars = append(envVars, corev1.EnvVar{Name: "discovery.seed_hosts", Value: fmt.Sprintf("%s-master-headless", cr.ObjectMeta.Name)})
 	envVars = append(envVars, corev1.EnvVar{Name: "network.host", Value: "0.0.0.0"})
 	envVars = append(envVars, corev1.EnvVar{Name: "cluster.name", Value: cr.Spec.ClusterName})
-	envVars = append(envVars, corev1.EnvVar{Name: "node.data", Value: "false"})
 	envVars = append(envVars, corev1.EnvVar{Name: "node.ingest", Value: "false"})
 	envVars = append(envVars, corev1.EnvVar{Name: "node.master", Value: "true"})
 
+	if cr.Spec.ESData == nil {
+		envVars = append(envVars, corev1.EnvVar{Name: "node.data", Value: "true"})
+	} else {
+		envVars = append(envVars, corev1.EnvVar{Name: "node.data", Value: "false"})
+	}
 	if cr.Spec.Security != nil {
 		if cr.Spec.Security.TLSEnabled != nil && *cr.Spec.Security.TLSEnabled {
 			envVars = append(envVars, corev1.EnvVar{Name: "xpack.security.enabled", Value: "true"})
@@ -60,7 +65,10 @@ func SetupElasticSearchMaster(cr *loggingv1beta1.Elasticsearch) error {
 			envVars = append(envVars, corev1.EnvVar{Name: "xpack.security.http.ssl.keystore.path", Value: "/usr/share/elasticsearch/config/certs/elastic-certificates.p12"})
 		}
 	}
-	err := CreateElasticsearchStatefulSet(cr, nodeParams, "master", envVars)
+	sort.SliceStable(envVars, func(i, j int) bool {
+		return envVars[i].Name < envVars[j].Name
+	})
+	err := CreateElasticsearchStatefulSet(cr, &nodeParams, "master", envVars)
 	if err != nil {
 		return err
 	}

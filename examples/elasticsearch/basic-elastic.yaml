@@ -1,3 +1,4 @@
+---
 apiVersion: logging.logging.opstreelabs.in/v1beta1
 kind: Elasticsearch
 metadata:

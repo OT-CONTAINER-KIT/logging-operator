@@ -149,13 +149,21 @@ func GetStateFulSet(namespace string, stateful string) (*appsv1.StatefulSet, err
 
 // generateStatefulSetDef is a method to generate statefulset definition
 func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
+	var serviceLink = true
+	var runasUser int64 = 1000
+	var fsGroup int64 = 1000
 	statefulset := &appsv1.StatefulSet{
 		TypeMeta:   GenerateMetaInformation("StatefulSet", "apps/v1"),
 		ObjectMeta: params.StatefulSetMeta,
 		Spec: appsv1.StatefulSetSpec{
-			Selector:    LabelSelectors(params.Labels),
-			ServiceName: params.StatefulSetMeta.Name,
-			Replicas:    params.Replicas,
+			Selector:            LabelSelectors(params.Labels),
+			ServiceName:         params.StatefulSetMeta.Name,
+			Replicas:            params.Replicas,
+			PodManagementPolicy: appsv1.ParallelPodManagement,
+			UpdateStrategy: appsv1.StatefulSetUpdateStrategy{
+				Type:          appsv1.RollingUpdateStatefulSetStrategyType,
+				RollingUpdate: &appsv1.RollingUpdateStatefulSetStrategy{},
+			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{Labels: params.Labels},
 				Spec: corev1.PodSpec{
@@ -163,8 +171,12 @@ func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
 					NodeSelector:      params.NodeSelector,
 					Affinity:          params.Affinity,
 					PriorityClassName: params.PriorityClassName,
-					SecurityContext:   params.SecurityContext,
-					InitContainers:    []corev1.Container{getInitContainer(params.ContainerParams)},
+					SecurityContext: &corev1.PodSecurityContext{
+						FSGroup:   &fsGroup,
+						RunAsUser: &runasUser,
+					},
+					InitContainers:     []corev1.Container{getInitContainer(params.ContainerParams)},
+					EnableServiceLinks: &serviceLink,
 				},
 			},
 		},
