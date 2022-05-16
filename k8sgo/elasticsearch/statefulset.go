@@ -103,7 +103,7 @@ func getVolumeMounts(cr *loggingv1beta1.Elasticsearch, role string) *[]corev1.Vo
 	if cr.Spec.Security != nil {
 		if cr.Spec.Security.TLSEnabled != nil && *cr.Spec.Security.TLSEnabled {
 			volumeMounts = append(volumeMounts, corev1.VolumeMount{
-				Name:      fmt.Sprintf("%s-tls-cert"),
+				Name:      "tls-cert",
 				MountPath: "/usr/share/elasticsearch/config/certs",
 			})
 		}
@@ -120,7 +120,7 @@ func getVolumes(cr *loggingv1beta1.Elasticsearch) *[]corev1.Volume {
 				Name: "tls-cert",
 				VolumeSource: corev1.VolumeSource{
 					Secret: &corev1.SecretVolumeSource{
-						SecretName: fmt.Sprintf("%s-tls-cert"),
+						SecretName: fmt.Sprintf("%s-tls-cert", cr.ObjectMeta.Name),
 					},
 				},
 			})
@@ -186,7 +186,7 @@ func createProbeInfo() *corev1.Probe {
 		TimeoutSeconds:      5,
 		ProbeHandler: corev1.ProbeHandler{
 			Exec: &corev1.ExecAction{
-				Command: []string{"sh", "-c", healthCheckScript},
+				Command: []string{"bash", "-c", healthCheckScript},
 			},
 		},
 	}
