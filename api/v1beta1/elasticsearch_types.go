@@ -52,13 +52,29 @@ type Security struct {
 	AutoGeneratePassword *bool   `json:"autoGeneratePassword,omitempty"`
 }
 
+//+kubebuilder:subresource:status
 // ElasticsearchStatus defines the observed state of Elasticsearch
 type ElasticsearchStatus struct {
+	ESVersion    string `json:"esVersion,omitempty"`
+	ClusterState string `json:"esClusterState,omitempty"`
+	ActiveShards *int32 `json:"activeShards,omitempty"`
+	Indices      *int32 `json:"indices,omitempty"`
+	ESMaster     *int32 `json:"esMaster,omitempty"`
+	ESData       *int32 `json:"esData,omitempty"`
+	ESClient     *int32 `json:"esClient,omitempty"`
+	ESIngestion  *int32 `json:"esIngestion,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-
+// +kubebuilder:printcolumn:name="Version",type=string,priority=0,JSONPath=`.status.esVersion`
+// +kubebuilder:printcolumn:name="State",type=string,priority=0,JSONPath=`.status.esClusterState`
+// +kubebuilder:printcolumn:name="Shards",type=integer,priority=0,JSONPath=`.status.activeShards`
+// +kubebuilder:printcolumn:name="Indices",type=integer,priority=0,JSONPath=`.status.indices`
+// +kubebuilder:printcolumn:name="Master",type=integer,priority=1,JSONPath=`.status.esMaster`
+// +kubebuilder:printcolumn:name="Data",type=integer,priority=1,JSONPath=`.status.esClient`
+// +kubebuilder:printcolumn:name="Client",type=integer,priority=1,JSONPath=`.status.esMaster`
+// +kubebuilder:printcolumn:name="Ingestion",type=integer,priority=1,JSONPath=`.status.esIngestion`
 // Elasticsearch is the Schema for the elasticsearches API
 type Elasticsearch struct {
 	metav1.TypeMeta   `json:",inline"`

@@ -15,7 +15,36 @@ spec:
     singular: elasticsearch
   scope: Namespaced
   versions:
-  - name: v1beta1
+  - additionalPrinterColumns:
+    - jsonPath: .status.esVersion
+      name: ESVersion
+      type: string
+    - jsonPath: .status.esClusterState
+      name: State
+      type: string
+    - jsonPath: .status.activeShards
+      name: Shards
+      type: integer
+    - jsonPath: .status.indices
+      name: Indices
+      type: integer
+    - jsonPath: .status.esMaster
+      name: Master
+      priority: 1
+      type: integer
+    - jsonPath: .status.esClient
+      name: Data
+      priority: 1
+      type: integer
+    - jsonPath: .status.esMaster
+      name: Client
+      priority: 1
+      type: integer
+    - jsonPath: .status.esIngestion
+      name: Ingestion
+      priority: 1
+      type: integer
+    name: v1beta1
     schema:
       openAPIV3Schema:
         description: Elasticsearch is the Schema for the elasticsearches API
@@ -4815,6 +4844,29 @@ spec:
             type: object
           status:
             description: ElasticsearchStatus defines the observed state of Elasticsearch
+            properties:
+              activeShards:
+                format: int32
+                type: integer
+              esClient:
+                format: int32
+                type: integer
+              esClusterState:
+                type: string
+              esData:
+                format: int32
+                type: integer
+              esIngestion:
+                format: int32
+                type: integer
+              esMaster:
+                format: int32
+                type: integer
+              esVersion:
+                type: string
+              indices:
+                format: int32
+                type: integer
             type: object
         type: object
     served: true
