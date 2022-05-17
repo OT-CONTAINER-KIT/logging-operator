@@ -73,7 +73,7 @@ func GetElasticDBPassword(name, namespace string) string {
 	logger := LogGenerator(name, namespace, "Secret")
 	secretName, err := GenerateK8sClient().CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(err, "Failed in getting existing secret for mongodb admin")
+		logger.Error(err, "Failed in getting existing secret for admin")
 	}
 	value := string(secretName.Data["password"])
 	return value

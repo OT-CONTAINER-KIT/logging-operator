@@ -17,17 +17,27 @@ limitations under the License.
 package elasticgo
 
 import (
+	"context"
 	"crypto/tls"
-	"net"
-	"time"
+	"encoding/json"
+	"fmt"
+	"net/http"
 
 	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/elastic/go-elasticsearch/v7/esapi"
 	loggingv1beta1 "logging-operator/api/v1beta1"
 	"logging-operator/k8sgo"
 )
 
+// ESClusterDetails is a method for return ESClusterDetails
+type ESClusterDetails struct {
+	ClusterState string `json:"status"`
+	Shards       int32  `json:"active_shards"`
+}
+
 // generateElasticClient is a method to generate client for elasticsearch
-func generateElasticClient(cr *loggingv1beta1.Elasticsearch) error {
+func generateElasticClient(cr *loggingv1beta1.Elasticsearch) (esapi.Transport, error) {
+	logger := k8sgo.LogGenerator(cr.ObjectMeta.Name, cr.Namespace, "Elasticsearch")
 	var urlScheme, elasticPassword string
 	if cr.Spec.Security != nil {
 		urlScheme = "https"
@@ -40,11 +50,7 @@ func generateElasticClient(cr *loggingv1beta1.Elasticsearch) error {
 			elasticURL,
 		},
 		Transport: &http.Transport{
-			MaxIdleConnsPerHost:   10,
-			ResponseHeaderTimeout: time.Second,
-			DialContext:           (&net.Dialer{Timeout: time.Nanosecond}).DialContext,
 			TLSClientConfig: &tls.Config{
-				MinVersion:         tls.VersionTLS12,
 				InsecureSkipVerify: true,
 			},
 		},
@@ -61,7 +67,32 @@ func generateElasticClient(cr *loggingv1beta1.Elasticsearch) error {
 	}
 	es, err := elasticsearch.NewClient(cfg)
 	if err != nil {
+		logger.Error(err, "Failed in generating elasticsearch client")
 		return nil, err
 	}
-	return err, nil
+	return es, nil
+}
+
+// GetElasticClusterDetails is a method to get health of elastic
+func GetElasticClusterDetails(cr *loggingv1beta1.Elasticsearch) (ESClusterDetails, error) {
+	var clusterInfo ESClusterDetails
+	logger := k8sgo.LogGenerator(cr.ObjectMeta.Name, cr.Namespace, "Elasticsearch")
+	esClient, err := generateElasticClient(cr)
+	if err != nil {
+		logger.Error(err, "Failed in generating elasticsearch client")
+		return clusterInfo, err
+	}
+	req := esapi.ClusterHealthRequest{}
+	res, err := req.Do(context.Background(), esClient)
+	if err != nil {
+		logger.Error(err, "Error while making request to elasticsearch")
+		return clusterInfo, err
+	}
+	defer res.Body.Close()
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&clusterInfo)
+	if err != nil {
+		return clusterInfo, err
+	}
+	return clusterInfo, nil
 }

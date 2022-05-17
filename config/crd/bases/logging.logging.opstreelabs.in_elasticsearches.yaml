@@ -17,7 +17,7 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.esVersion
-      name: ESVersion
+      name: Version
       type: string
     - jsonPath: .status.esClusterState
       name: State

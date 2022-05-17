@@ -29,6 +29,7 @@ import (
 	// 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/elasticgo"
 	"logging-operator/k8sgo"
 	"logging-operator/k8sgo/elasticsearch"
 )
@@ -101,9 +102,24 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	instance.Status.ESVersion = instance.Spec.ESVersion
 	instance.Status.ESMaster = instance.Spec.ESMaster.Replicas
-	instance.Status.ESData = instance.Spec.ESData.Replicas
-	instance.Status.ESClient = instance.Spec.ESClient.Replicas
-	instance.Status.ESIngestion = instance.Spec.ESIngestion.Replicas
+	if instance.Spec.ESData != nil {
+		instance.Status.ESData = instance.Spec.ESData.Replicas
+	}
+	if instance.Spec.ESIngestion != nil {
+		instance.Status.ESIngestion = instance.Spec.ESIngestion.Replicas
+	}
+	if instance.Spec.ESClient != nil {
+		instance.Status.ESClient = instance.Spec.ESClient.Replicas
+	}
+
+	clusterInfo, err := elasticgo.GetElasticClusterDetails(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	instance.Status.ClusterState = clusterInfo.ClusterState
+	instance.Status.ActiveShards = &clusterInfo.Shards
+	instance.Status.Indices = &clusterInfo.Shards
 
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		if errors.IsConflict(err) {
