@@ -94,10 +94,23 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 			return ctrl.Result{RequeueAfter: time.Second * 10}, err
 		}
 	}
+
 	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 
+	instance.Status.ESVersion = instance.Spec.ESVersion
+	instance.Status.ESMaster = instance.Spec.ESMaster.Replicas
+	instance.Status.ESData = instance.Spec.ESData.Replicas
+	instance.Status.ESClient = instance.Spec.ESClient.Replicas
+	instance.Status.ESIngestion = instance.Spec.ESIngestion.Replicas
+
+	if err := r.Status().Update(context.TODO(), instance); err != nil {
+		if errors.IsConflict(err) {
+			return ctrl.Result{Requeue: true}, nil
+		}
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
