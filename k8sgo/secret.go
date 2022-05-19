@@ -46,7 +46,7 @@ func GenerateSecret(params SecretsParameters) *corev1.Secret {
 	return secret
 }
 
-// createSecret is a method to create Kubernetes secrets
+// CreateSecret is a method to create Kubernetes secrets
 func CreateSecret(namespace string, secret *corev1.Secret) error {
 	logger := LogGenerator(secret.Name, namespace, "Secret")
 	_, err := GenerateK8sClient().CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})

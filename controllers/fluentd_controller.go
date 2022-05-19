@@ -18,13 +18,16 @@ package controllers
 
 import (
 	"context"
+	"time"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/k8sgo"
+	"logging-operator/k8sgo/fluentd"
 )
 
 // FluentdReconciler reconciles a Fluentd object
@@ -42,11 +45,32 @@ type FluentdReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *FluentdReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	instance := &loggingv1beta1.Fluentd{}
+	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
 
-	// TODO(user): your logic here
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	err = setupFluentdRBAC(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+}
 
-	return ctrl.Result{}, nil
+// setupFluentdRBAC is a method to setup RBAC access for Fluentd
+func setupFluentdRBAC(instance *loggingv1beta1.Fluentd) error {
+	_, err := k8sgo.GetServiceAccount(instance.ObjectMeta.Name, instance.Namespace)
+	if err != nil {
+		err = k8sfluentd.CreateFluentdServiceAccount(instance)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
