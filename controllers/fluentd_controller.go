@@ -70,6 +70,13 @@ func setupFluentdRBAC(instance *loggingv1beta1.Fluentd) error {
 			return err
 		}
 	}
+	_, err = k8sgo.GetClusterRole(instance.ObjectMeta.Name)
+	if err != nil {
+		err = k8sfluentd.CreateFluentdClusterRole(instance)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

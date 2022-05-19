@@ -43,7 +43,7 @@ func GenerateServiceAccount(params ServiceAccountParameters) *corev1.ServiceAcco
 
 // CreateServiceAccount is a method to create Kubernetes serviceaccount
 func CreateServiceAccount(namespace string, serviceAccount *corev1.ServiceAccount) error {
-	logger := LogGenerator(serviceAccount.Name, namespace, "Secret")
+	logger := LogGenerator(serviceAccount.Name, namespace, "ServiceAccount")
 	_, err := GenerateK8sClient().CoreV1().ServiceAccounts(namespace).Create(context.TODO(), serviceAccount, metav1.CreateOptions{})
 	if err != nil {
 		logger.Error(err, "ServiceAccount creation is failed")
