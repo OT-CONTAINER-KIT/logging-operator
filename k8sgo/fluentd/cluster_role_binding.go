@@ -17,31 +17,22 @@ limitations under the License.
 package k8sfluentd
 
 import (
-	rbacv1 "k8s.io/api/rbac/v1"
-
 	loggingv1beta1 "logging-operator/api/v1beta1"
 	"logging-operator/k8sgo"
 )
 
-// CreateFluentdClusterRole is a method to create clusterrole for fluentd
-func CreateFluentdClusterRole(cr *loggingv1beta1.Fluentd) error {
+// CreateFluentdClusterRoleBinding is a method to create clusterrolebinding for fluentd
+func CreateFluentdClusterRoleBinding(cr *loggingv1beta1.Fluentd) error {
 	labels := map[string]string{
 		"app": cr.ObjectMeta.Name,
 	}
-	clusterRoleParams := k8sgo.ClusterRoleParameters{
-		Name:            cr.ObjectMeta.Name,
-		OwnerDef:        k8sgo.FluentdAsOwner(cr),
-		Namespace:       cr.Namespace,
-		ClusterRoleMeta: k8sgo.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, k8sgo.GenerateAnnotations()),
-		Rules: []rbacv1.PolicyRule{
-			{
-				APIGroups: []string{""},
-				Resources: []string{"pods", "namespaces"},
-				Verbs:     []string{"get", "list", "watch"},
-			},
-		},
+	clusterRoleBindingParams := k8sgo.ClusterRoleBindingParameters{
+		Name:                   cr.ObjectMeta.Name,
+		OwnerDef:               k8sgo.FluentdAsOwner(cr),
+		Namespace:              cr.Namespace,
+		ClusterRoleBindingMeta: k8sgo.GenerateObjectMetaInformation(cr.ObjectMeta.Name, cr.Namespace, labels, k8sgo.GenerateAnnotations()),
 	}
-	err := k8sgo.CreateClusterRole(k8sgo.GenerateClusterRoles(clusterRoleParams))
+	err := k8sgo.CreateClusterRoleBinding(k8sgo.GenerateClusterRoleBinding(clusterRoleBindingParams))
 	if err != nil {
 		return err
 	}

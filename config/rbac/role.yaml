@@ -23,6 +23,8 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - namespaces
+  - pods
   - serviceaccounts
   verbs:
   - create

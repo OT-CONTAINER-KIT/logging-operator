@@ -39,7 +39,7 @@ type FluentdReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds/finalizers,verbs=update
-//+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=serviceaccounts;pods;namespaces,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterroles;clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -73,6 +73,13 @@ func setupFluentdRBAC(instance *loggingv1beta1.Fluentd) error {
 	_, err = k8sgo.GetClusterRole(instance.ObjectMeta.Name)
 	if err != nil {
 		err = k8sfluentd.CreateFluentdClusterRole(instance)
+		if err != nil {
+			return err
+		}
+	}
+	_, err = k8sgo.GetClusterRoleBinding(instance.ObjectMeta.Name)
+	if err != nil {
+		err = k8sfluentd.CreateFluentdClusterRoleBinding(instance)
 		if err != nil {
 			return err
 		}

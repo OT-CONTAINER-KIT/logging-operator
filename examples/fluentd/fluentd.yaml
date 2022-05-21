@@ -6,11 +6,11 @@ metadata:
 spec:
   esCluster:
     host: elasticsearch-master
-  security:
+  esSecurity:
     tlsEnabled: true
     existingSecret: elasticsearch-password
   indexNameStrategy: namespace
   kubernetesConfig:
-    nodeSelector:
+    nodeSelectors:
       kubernetes.io/os: linux
   additionalConfig: fluentd-extra-configmap
