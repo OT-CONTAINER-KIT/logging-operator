@@ -20,13 +20,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
 // FluentdSpec defines the desired state of Fluentd
 type FluentdSpec struct {
-	ElasticConfig     ElasticConfig     `json:"esCluster"`
-	KubernetesConfig  *KubernetesConfig `json:"kubernetesConfig,omitempty"`
-	Security          *Security         `json:"esSecurity,omitempty"`
-	IndexNameStrategy *string           `json:"indexNameStrategy,omitempty"`
-	CustomConfig      *string           `json:"additionalConfig,omitempty"`
+	ElasticConfig    ElasticConfig     `json:"esCluster"`
+	KubernetesConfig *KubernetesConfig `json:"kubernetesConfig,omitempty"`
+	Security         *Security         `json:"esSecurity,omitempty"`
+	// +kubebuilder:default:=namespace_name
+	// +kubebuilder:validation:Pattern=`namespace_name$|pod_name$`
+	IndexNameStrategy *string `json:"indexNameStrategy,omitempty"`
+	CustomConfig      *string `json:"customConfig,omitempty"`
+	AdditionalConfig  *string `json:"additionalConfig,omitempty"`
 }
 
 // ElasticConfig is a method for elasticsearch configuration

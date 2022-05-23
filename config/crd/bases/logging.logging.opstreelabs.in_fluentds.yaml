@@ -37,6 +37,8 @@ spec:
             properties:
               additionalConfig:
                 type: string
+              customConfig:
+                type: string
               esCluster:
                 description: ElasticConfig is a method for elasticsearch configuration
                 properties:
@@ -56,6 +58,8 @@ spec:
                     type: boolean
                 type: object
               indexNameStrategy:
+                default: namespace_name
+                pattern: namespace_name$|pod_name$
                 type: string
               kubernetesConfig:
                 description: KubernetesConfig will define the Kubernetes specific

@@ -58,6 +58,10 @@ func (r *FluentdReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
+	err = k8sfluentd.CreateFluentdConfigMap(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 

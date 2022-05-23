@@ -9,8 +9,4 @@ spec:
   esSecurity:
     tlsEnabled: true
     existingSecret: elasticsearch-password
-  indexNameStrategy: namespace
-  kubernetesConfig:
-    nodeSelectors:
-      kubernetes.io/os: linux
-  additionalConfig: fluentd-extra-configmap
+  indexNameStrategy: namespace_name
