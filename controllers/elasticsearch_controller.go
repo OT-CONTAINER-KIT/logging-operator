@@ -80,6 +80,10 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			return ctrl.Result{RequeueAfter: time.Second * 10}, err
 		}
+		err = k8selastic.CreateElasticSearchService(instance, "data")
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
 	}
 
 	if instance.Spec.ESIngestion != nil {
@@ -87,10 +91,18 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			return ctrl.Result{RequeueAfter: time.Second * 10}, err
 		}
+		err = k8selastic.CreateElasticSearchService(instance, "ingestion")
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
 	}
 
 	if instance.Spec.ESClient != nil {
 		err = k8selastic.SetupElasticSearchClient(instance)
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
+		err = k8selastic.CreateElasticSearchService(instance, "client")
 		if err != nil {
 			return ctrl.Result{RequeueAfter: time.Second * 10}, err
 		}

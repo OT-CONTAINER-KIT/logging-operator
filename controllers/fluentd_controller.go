@@ -41,6 +41,7 @@ type FluentdReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=fluentds/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=serviceaccounts;pods;namespaces,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=clusterroles;clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=daemonsets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -59,6 +60,10 @@ func (r *FluentdReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
 	err = k8sfluentd.CreateFluentdConfigMap(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	err = k8sfluentd.CreateFluentdDaemonSet(instance)
 	if err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
