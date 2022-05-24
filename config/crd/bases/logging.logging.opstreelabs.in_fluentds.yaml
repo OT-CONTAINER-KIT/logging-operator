@@ -49,6 +49,10 @@ spec:
               esCluster:
                 description: ElasticConfig is a method for elasticsearch configuration
                 properties:
+                  clusterName:
+                    type: string
+                  esVersion:
+                    type: string
                   host:
                     type: string
                 required:

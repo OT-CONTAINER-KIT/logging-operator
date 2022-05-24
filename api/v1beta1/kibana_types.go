@@ -20,22 +20,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KibanaSpec defines the desired state of Kibana
 type KibanaSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Kibana. Edit kibana_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+    // +kubebuilder:default:=1
+	Replicas         *int32            `json:"replicas,omitempty"`
+	ElasticConfig    ElasticConfig     `json:"esCluster"`
+	Security         *Security         `json:"esSecurity,omitempty"`
+	KubernetesConfig *KubernetesConfig `json:"kubernetesConfig,omitempty"`
 }
 
 // KibanaStatus defines the observed state of Kibana
 type KibanaStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true

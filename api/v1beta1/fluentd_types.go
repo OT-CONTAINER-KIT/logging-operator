@@ -36,7 +36,9 @@ type FluentdSpec struct {
 
 // ElasticConfig is a method for elasticsearch configuration
 type ElasticConfig struct {
-	Host *string `json:"host"`
+	Host        *string `json:"host"`
+	ClusterName string  `json:"clusterName,omitempty"`
+	ESVersion   string  `json:"esVersion,omitempty"`
 }
 
 // FluentdStatus defines the observed state of Fluentd
