@@ -67,6 +67,17 @@ func (r *FluentdReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	if err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
+	daemonSetCount, err := k8sgo.GetDaemonSetCount(instance.Namespace, instance.ObjectMeta.Name)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	instance.Status.TotalAgents = daemonSetCount
+	if err := r.Status().Update(context.TODO(), instance); err != nil {
+		if errors.IsConflict(err) {
+			return ctrl.Result{Requeue: true}, nil
+		}
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 

@@ -161,3 +161,12 @@ func updateDaemonSet(namespace string, daemonSet *appsv1.DaemonSet) error {
 	logger.Info("DaemonSet successfully updated")
 	return nil
 }
+
+// GetDaemonSetCount is a method to get running pods of daemonset
+func GetDaemonSetCount(namespace, name string) (*int32, error) {
+	daemonSet, err := getDaemonSet(namespace, name)
+	if err != nil {
+		return nil, err
+	}
+	return &daemonSet.Status.CurrentNumberScheduled, nil
+}

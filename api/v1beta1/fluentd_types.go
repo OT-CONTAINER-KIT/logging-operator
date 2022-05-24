@@ -41,11 +41,13 @@ type ElasticConfig struct {
 
 // FluentdStatus defines the observed state of Fluentd
 type FluentdStatus struct {
+	TotalAgents *int32 `json:"totalAgents,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-
+// +kubebuilder:printcolumn:name="Elasticsearch Host",type=string,priority=0,JSONPath=`.spec.esCluster.host`
+// +kubebuilder:printcolumn:name="Total Agents",type=string,priority=0,JSONPath=`.status.totalAgents`
 // Fluentd is the Schema for the fluentds API
 type Fluentd struct {
 	metav1.TypeMeta   `json:",inline"`

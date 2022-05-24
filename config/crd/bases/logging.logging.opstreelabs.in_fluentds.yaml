@@ -15,7 +15,14 @@ spec:
     singular: fluentd
   scope: Namespaced
   versions:
-  - name: v1beta1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.esCluster.host
+      name: Elasticsearch Host
+      type: string
+    - jsonPath: .status.totalAgents
+      name: Total Agents
+      type: string
+    name: v1beta1
     schema:
       openAPIV3Schema:
         description: Fluentd is the Schema for the fluentds API
@@ -1182,6 +1189,10 @@ spec:
             type: object
           status:
             description: FluentdStatus defines the observed state of Fluentd
+            properties:
+              totalAgents:
+                format: int32
+                type: integer
             type: object
         type: object
     served: true
