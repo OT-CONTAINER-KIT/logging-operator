@@ -21,6 +21,7 @@ const configMapContent = `@include "#{ENV['FLUENTD_SYSTEMD_CONF'] || 'systemd'}.
 @include "#{ENV['FLUENTD_PROMETHEUS_CONF'] || 'prometheus'}.conf"
 @include kubernetes.conf
 @include conf.d/*.conf
+@include conf.d/additional-config/*.conf
 
 <match **>
    @type elasticsearch_dynamic

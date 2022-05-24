@@ -6,4 +6,10 @@ metadata:
 spec:
   esCluster:
     host: elasticsearch-master
+  kubernetesConfig:
+    nodeSelectors:
+      kubernetes.io/os: linux
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password
   indexNameStrategy: namespace_name

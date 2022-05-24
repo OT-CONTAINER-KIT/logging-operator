@@ -169,7 +169,7 @@ func generateVolumeMounts(cr *loggingv1beta1.Fluentd) *[]corev1.VolumeMount {
 	if cr.Spec.AdditionalConfig != nil {
 		volumeMounts = append(volumeMounts, corev1.VolumeMount{
 			Name:      "fluentd-additional",
-			MountPath: "/fluentd/etc/conf.d",
+			MountPath: "/fluentd/etc/conf.d/additional-config/",
 		})
 	}
 	return &volumeMounts

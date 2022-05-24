@@ -6,4 +6,9 @@ metadata:
 spec:
   esCluster:
     host: elasticsearch-master
+  kubernetesConfig:
+    priorityClassName: system-node-critical
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password
   indexNameStrategy: namespace_name

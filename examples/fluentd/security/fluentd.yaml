@@ -6,4 +6,7 @@ metadata:
 spec:
   esCluster:
     host: elasticsearch-master
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password
   indexNameStrategy: namespace_name
