@@ -18,13 +18,15 @@ package controllers
 
 import (
 	"context"
+	"time"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/k8sgo/kibana"
 )
 
 // KibanaReconciler reconciles a Kibana object
@@ -36,22 +38,29 @@ type KibanaReconciler struct {
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas/finalizers,verbs=update
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Kibana object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *KibanaReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	instance := &loggingv1beta1.Kibana{}
+	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
 
-	// TODO(user): your logic here
-
-	return ctrl.Result{}, nil
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	err = k8skibana.CreateKibanaSetup(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	err = k8skibana.CreateKibanaService(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

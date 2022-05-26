@@ -9,3 +9,9 @@ spec:
     host: http://elasticsearch-master:9200
     esVersion: 7.16.0
     clusterName: elasticsearch
+  kubernetesConfig:
+    nodeSelectors:
+      kubernetes.io/os: linux
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password

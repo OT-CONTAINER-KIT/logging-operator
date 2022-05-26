@@ -22,7 +22,7 @@ import (
 
 // KibanaSpec defines the desired state of Kibana
 type KibanaSpec struct {
-    // +kubebuilder:default:=1
+	// +kubebuilder:default:=1
 	Replicas         *int32            `json:"replicas,omitempty"`
 	ElasticConfig    ElasticConfig     `json:"esCluster"`
 	Security         *Security         `json:"esSecurity,omitempty"`

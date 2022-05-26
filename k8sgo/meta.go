@@ -68,6 +68,18 @@ func FluentdAsOwner(cr *loggingv1beta1.Fluentd) metav1.OwnerReference {
 	}
 }
 
+// KibanaAsOwner generates and returns object refernece
+func KibanaAsOwner(cr *loggingv1beta1.Kibana) metav1.OwnerReference {
+	trueVar := true
+	return metav1.OwnerReference{
+		APIVersion: cr.APIVersion,
+		Kind:       cr.Kind,
+		Name:       cr.Name,
+		UID:        cr.UID,
+		Controller: &trueVar,
+	}
+}
+
 // LabelSelectors generates object for label selection
 func LabelSelectors(labels map[string]string) *metav1.LabelSelector {
 	return &metav1.LabelSelector{MatchLabels: labels}
