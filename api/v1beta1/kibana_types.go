@@ -35,7 +35,8 @@ type KibanaStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-
+// +kubebuilder:printcolumn:name="Version",type=string,priority=0,JSONPath=`.spec.esCluster.esVersion`
+// +kubebuilder:printcolumn:name="Es Cluster",type=string,priority=0,JSONPath=`.spec.esCluster.clusterName`
 // Kibana is the Schema for the kibanas API
 type Kibana struct {
 	metav1.TypeMeta   `json:",inline"`
