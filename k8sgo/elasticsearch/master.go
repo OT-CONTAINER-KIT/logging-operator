@@ -45,13 +45,11 @@ func SetupElasticSearchMaster(cr *loggingv1beta1.Elasticsearch) error {
 	envVars = append(envVars, corev1.EnvVar{Name: "discovery.seed_hosts", Value: fmt.Sprintf("%s-master-headless", cr.ObjectMeta.Name)})
 	envVars = append(envVars, corev1.EnvVar{Name: "network.host", Value: "0.0.0.0"})
 	envVars = append(envVars, corev1.EnvVar{Name: "cluster.name", Value: cr.Spec.ClusterName})
-	envVars = append(envVars, corev1.EnvVar{Name: "node.ingest", Value: "false"})
-	envVars = append(envVars, corev1.EnvVar{Name: "node.master", Value: "true"})
 
 	if cr.Spec.ESData == nil {
-		envVars = append(envVars, corev1.EnvVar{Name: "node.data", Value: "true"})
+		envVars = append(envVars, corev1.EnvVar{Name: "node.roles", Value: "master,data"})
 	} else {
-		envVars = append(envVars, corev1.EnvVar{Name: "node.data", Value: "false"})
+		envVars = append(envVars, corev1.EnvVar{Name: "node.roles", Value: "master"})
 	}
 	if cr.Spec.Security != nil {
 		if cr.Spec.Security.TLSEnabled != nil && *cr.Spec.Security.TLSEnabled {
