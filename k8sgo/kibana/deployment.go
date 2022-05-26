@@ -109,7 +109,7 @@ func generateEnvVariables(cr *loggingv1beta1.Kibana) []corev1.EnvVar {
 	}
 	if cr.Spec.Security != nil {
 		if *cr.Spec.Security.TLSEnabled && cr.Spec.Security.TLSEnabled != nil {
-			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{Name: "ELASTICSEARCH_USER", Value: "elastic"})
+			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{Name: "ELASTICSEARCH_USERNAME", Value: "elastic"})
 			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{
 				Name: "ELASTICSEARCH_PASSWORD",
 				ValueFrom: &corev1.EnvVarSource{
