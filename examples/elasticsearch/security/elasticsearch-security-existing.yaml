@@ -1,0 +1,19 @@
+---
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  esClusterName: "prod"
+  esVersion: "7.16.0"
+  esSecurity:
+    existingSecret: elastic-custom-password
+    tlsEnabled: true
+---
+apiVersion: v1
+data:
+  password: cGFzc3dvcmQ=
+kind: Secret
+metadata:
+  name: elastic-custom-password
+type: Opaque

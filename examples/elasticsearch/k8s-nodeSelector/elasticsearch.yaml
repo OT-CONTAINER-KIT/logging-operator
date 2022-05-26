@@ -1,0 +1,22 @@
+---
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  esClusterName: "prod"
+  esVersion: "7.16.0"
+  esMaster:
+    replicas: 3
+    storage:
+      storageSize: 2Gi
+      accessModes: [ReadWriteOnce]
+      storageClass: do-block-storage
+    kubernetesConfig:
+      nodeSelectors:
+        kubernetes.io/os: linux
+    jvmMaxMemory: "1g"
+    jvmMinMemory: "1g"
+  esSecurity:
+    autoGeneratePassword: true
+    tlsEnabled: true

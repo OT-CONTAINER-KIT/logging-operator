@@ -1,0 +1,34 @@
+---
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Fluentd
+metadata:
+  name: fluentd
+spec:
+  esCluster:
+    host: elasticsearch-master
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password
+  additionalConfig: fluentd-additional-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-additional-config
+data:
+  systemd-kubelet.conf: |
+    <source>
+      @type systemd
+      @id in_systemd_kubelet
+      matches [{ "_SYSTEMD_UNIT": "kubelet.service" }]
+      <storage>
+        @type local
+        persistent true
+        path /var/log/fluentd-journald-kubelet-cursor.json
+      </storage>
+      <entry>
+        fields_strip_underscores true
+      </entry>
+      read_from_head true
+      tag kubelet
+    </source>

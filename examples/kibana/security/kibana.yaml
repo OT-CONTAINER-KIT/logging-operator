@@ -1,0 +1,14 @@
+---
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Kibana
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  esCluster:
+    host: https://elasticsearch-master:9200
+    esVersion: 7.16.0
+    clusterName: elasticsearch
+  esSecurity:
+    tlsEnabled: true
+    existingSecret: elasticsearch-password

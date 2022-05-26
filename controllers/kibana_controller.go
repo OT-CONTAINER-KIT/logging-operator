@@ -1,5 +1,5 @@
 /*
-Copyright 2020 Opstree Solutions.
+Copyright 2022 Opstree Solutions.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,57 +20,52 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"logging-operator/k8sutils/configmap"
-	"logging-operator/k8sutils/deployment"
-	kibanaservice "logging-operator/k8sutils/service/kibana"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	loggingv1alpha1 "logging-operator/api/v1alpha1"
+	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/k8sgo/kibana"
 )
 
 // KibanaReconciler reconciles a Kibana object
 type KibanaReconciler struct {
 	client.Client
-	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=kibanas,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=logging.opstreelabs.in,resources=kibanas/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=logging.logging.opstreelabs.in,resources=kibanas/finalizers,verbs=update
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 
-// Reconcile will reconcile for kibana
-func (r *KibanaReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	reqLogger := r.Log.WithValues("kibana", req.NamespacedName)
+// Reconcile is part of the main kubernetes reconciliation loop which aims to
+// move the current state of the cluster closer to the desired state.
+func (r *KibanaReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	instance := &loggingv1beta1.Kibana{}
+	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
 
-	instance := &loggingv1alpha1.Kibana{}
-	err := r.Get(context.TODO(), req.NamespacedName, instance)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 		}
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
-
-	if err := controllerutil.SetControllerReference(instance, instance, r.Scheme); err != nil {
+	err = k8skibana.CreateKibanaSetup(instance)
+	if err != nil {
 		return ctrl.Result{RequeueAfter: time.Second * 10}, err
 	}
-
-	configmap.CreateKibanaConfigMap(instance)
-	deployment.CreateKibanaDeployment(instance)
-	kibanaservice.CreateKibanaService(instance)
-
-	reqLogger.Info("Will reconcile after 10 seconds", "Kibana.Namespace", instance.Namespace, "Kibana.Name", instance.Name)
+	err = k8skibana.CreateKibanaService(instance)
+	if err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
 	return ctrl.Result{RequeueAfter: time.Second * 10}, nil
 }
 
-// SetupWithManager will setup manager for kibana
+// SetupWithManager sets up the controller with the Manager.
 func (r *KibanaReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&loggingv1alpha1.Kibana{}).
+		For(&loggingv1beta1.Kibana{}).
 		Complete(r)
 }

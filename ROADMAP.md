@@ -1,5 +1,0 @@
-- Add CHANGELOG.md file to release track
-- Add DEVELOPMENT.md for development of operator
-- Add helm integration for deployment
-- Add documentation site with detailed information
-- Publish the operator at Operatorhub

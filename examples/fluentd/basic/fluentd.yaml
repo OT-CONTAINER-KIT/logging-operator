@@ -1,0 +1,9 @@
+---
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Fluentd
+metadata:
+  name: fluentd
+spec:
+  esCluster:
+    host: elasticsearch-master
+  indexNameStrategy: namespace_name

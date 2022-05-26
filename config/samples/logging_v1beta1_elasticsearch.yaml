@@ -1,0 +1,6 @@
+apiVersion: logging.logging.opstreelabs.in/v1beta1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch-sample
+spec:
+  # TODO(user): Add fields here

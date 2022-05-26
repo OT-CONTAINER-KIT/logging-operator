@@ -1,13 +1,89 @@
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: manager-role
+  name: logging-operator
 rules:
 - apiGroups:
-  - logging.opstreelabs.in
+  - ""
+  resources:
+  - configmaps
+  - events
+  - secrets
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  - serviceaccounts
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - elasticsearches
   verbs:
@@ -19,7 +95,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
+  resources:
+  - elasticsearches/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - elasticsearches/status
   verbs:
@@ -27,7 +109,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - fluentds
   verbs:
@@ -39,7 +121,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
+  resources:
+  - fluentds/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - fluentds/status
   verbs:
@@ -47,7 +135,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - indexlifecycles
   verbs:
@@ -59,7 +147,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
+  resources:
+  - indexlifecycles/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - indexlifecycles/status
   verbs:
@@ -67,7 +161,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - indextemplates
   verbs:
@@ -79,7 +173,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
+  resources:
+  - indextemplates/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - indextemplates/status
   verbs:
@@ -87,7 +187,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
   resources:
   - kibanas
   verbs:
@@ -99,10 +199,29 @@ rules:
   - update
   - watch
 - apiGroups:
-  - logging.opstreelabs.in
+  - logging.logging.opstreelabs.in
+  resources:
+  - kibanas/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - logging.logging.opstreelabs.in
   resources:
   - kibanas/status
   verbs:
   - get
   - patch
   - update
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  - clusterroles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
