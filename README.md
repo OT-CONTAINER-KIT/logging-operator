@@ -29,7 +29,7 @@ For documentation, please refer to [https://ot-logging-operator.netlify.app/](ht
 Architecture of logging operator looks like this:-
 
 <div align="center">
-    <img src="./static/logging-operator-arc.svg">
+    <img src="./static/logging-operator-arc.png">
 </div>
 
 ## Purpose
