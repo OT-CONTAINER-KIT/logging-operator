@@ -25,3 +25,4 @@ extends:
     GithubImageName: ot-container-kit/logging-operator/logging-operator
     BuildDocs: false
     AppVersion: "0.3.1"
+    GolangVersion: "1.17"
