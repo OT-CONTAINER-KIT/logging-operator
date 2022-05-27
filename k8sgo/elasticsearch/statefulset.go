@@ -44,7 +44,6 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 		},
 		Labels:      labels,
 		Annotations: k8sgo.GenerateAnnotations(),
-		Replicas:    nodeConfig.Replicas,
 		PVCParameters: k8sgo.PVCParameters{
 			Name:             appName,
 			Namespace:        cr.Namespace,
@@ -54,6 +53,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 			StorageSize:      nodeConfig.Storage.StorageSize,
 			StorageClassName: nodeConfig.Storage.StorageClassName,
 		},
+	}
+	if nodeConfig.Replicas != nil {
+		statefulsetParams.Replicas = nodeConfig.Replicas
 	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
 
@@ -171,7 +173,7 @@ func generateEnvVariables(cr *loggingv1beta1.Elasticsearch, nodeConfig loggingv1
 	if nodeConfig.JvmMaxMemory != nil && nodeConfig.JvmMinMemory != nil {
 		javaOpts = fmt.Sprintf("-Xmx%s -Xms%s", *nodeConfig.JvmMaxMemory, *nodeConfig.JvmMinMemory)
 	} else {
-		javaOpts = fmt.Sprintf("-Xmx1g -Xms1g")
+		javaOpts = "-Xmx1g -Xms1g"
 	}
 	envVars = append(envVars, corev1.EnvVar{Name: "ES_JAVA_OPTS", Value: javaOpts})
 	return envVars
