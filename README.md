@@ -32,6 +32,8 @@ Architecture of logging operator looks like this:-
     <img src="./static/logging-operator-arc.png">
 </div>
 
+## Purpose
+
 ```shell
 $ kubectl apply -f config/crd/bases/
 $ kubectl apply -f config/manager/manager.yaml
