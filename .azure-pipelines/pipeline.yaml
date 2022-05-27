@@ -1,0 +1,27 @@
+---
+trigger:
+  - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  - group: RuntimeVariables
+
+resources:
+  repositories:
+    - repository: golang-template
+      type: github
+      name: opstree/azure-devops-template
+      endpoint: OT-CONTAINER-KIT
+
+extends:
+  template: operator-ci.yaml@golang-template
+  parameters:
+    ApplicationName: logging-operator
+    QuayImageName: opstree/logging-operator
+    GithubImageName: ot-container-kit/logging-operator/logging-operator
+    BuildDocs: false
+    AppVersion: "0.3.1"
