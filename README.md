@@ -3,6 +3,9 @@
 </p>
 
 <p align="center">
+  <a href="https://dev.azure.com/opstreedevops/DevOps/_build/latest?definitionId=8&repoName=OT-CONTAINER-KIT%logging-operator&branchName=master">
+    <img src="https://dev.azure.com/opstreedevops/DevOps/_apis/build/status/logging-operator?repoName=OT-CONTAINER-KIT%logging-operator&branchName=master" alt="Azure Pipelines">
+  </a>
   <a href="https://goreportcard.com/report/github.com/OT-CONTAINER-KIT/logging-operator">
     <img src="https://goreportcard.com/badge/github.com/OT-CONTAINER-KIT/logging-operator" alt="GoReportCard">
   </a>
@@ -23,6 +26,11 @@ For documentation, please refer to [https://ot-logging-operator.netlify.app/](ht
 
 ## Architecture
 
+Architecture of logging operator looks like this:-
+
+<div align="center">
+    <img src="./static/logging-operator-arc.png">
+</div>
 
 ```shell
 $ kubectl apply -f config/crd/bases/
