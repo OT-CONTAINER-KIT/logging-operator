@@ -1,11 +1,11 @@
 ---
 trigger:
-  - main
+  - master
 
 pr:
   branches:
     include:
-      - main
+      - master
 
 variables:
   - group: RuntimeVariables
