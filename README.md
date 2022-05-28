@@ -34,6 +34,18 @@ Architecture of logging operator looks like this:-
 
 ## Purpose
 
+The aim and purpose of creating this Logging Operator to provide an easy and extensible interface to setting up logging stack such as EFK(Elasticsearch, Fluentd, and Kibana). It helps in setting up different nodes of elasticsearch cluster, fluentd as a log shipper and kibana for visualization.
+
+## Supported Features
+
+- Setup of elasticsearch cluster with different nodes type:- master, data, ingestion, and client.
+- Customizable configuration for elasticsearch, fluentd stack.
+- Setup of fluentd as light-weight log-shipper as Daemonset.
+- Kibana will be set up as visualization tool for elastic stack.
+- Seamless upgrades of elasticsearch, fluentd, and kibana.
+- Security best practices support for complete stack.
+- Kubernetes resources objects support like:- resources, securityContext, affinity, tolerations, etc.
+
 ```shell
 $ kubectl apply -f config/crd/bases/
 $ kubectl apply -f config/manager/manager.yaml
