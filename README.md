@@ -43,7 +43,7 @@ The aim and purpose of creating this Logging Operator to provide an easy and ext
 - Setup of fluentd as light-weight log-shipper as Daemonset.
 - Kibana will be set up as visualization tool for elastic stack.
 - Seamless upgrades of elasticsearch, fluentd, and kibana.
-- Security best practices support for complete stack.
+- Security best practices support for complete stack such as TLS, elastic security.
 - Kubernetes resources objects support like:- resources, securityContext, affinity, tolerations, etc.
 
 ## Prerequisites
@@ -56,10 +56,57 @@ If you want to start using the logging-operator in a quickstart mode, you can be
 
 The configuration for EFK (Elasticsearch, Fluentd, Kibana) set up is defined inside the CRD manifests. But all the examples manifests can be found in the [example](./examples) directory.
 
+## Quickstart
+
+### Logging Operator Setup
+
+The setup can be done by using helm. The mongodb-operator can easily get installed using helm commands.
+
 ```shell
-$ kubectl apply -f config/crd/bases/
-$ kubectl apply -f config/manager/manager.yaml
-$ kubectl apply -f config/rbac/service_account.yaml
-$ kubectl apply -f config/rbac/role.yaml
-$ kubectl apply -f config/rbac/role_binding.yaml
+# Add the helm chart
+$ helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
+...
+"ot-helm" has been added to your repositories
 ```
+
+```shell
+# Deploy the Logging Operator
+$ helm upgrade logging-operator ot-helm/logging-operator \
+  --install --namespace ot-operators
+...
+Release "logging-operator" does not exist. Installing it now.
+NAME: logging-operator
+LAST DEPLOYED: Sun May 29 01:06:58 2022
+NAMESPACE: ot-operators
+STATUS: deployed
+REVISION: 1
+```
+
+After the deployment, verify the installation of operator.
+
+```shell
+# Testing Operator
+$ helm test logging-operator --namespace ot-operators
+...
+NAME:           logging-operator
+LAST DEPLOYED:  Sun May 29 01:06:58 2022
+NAMESPACE:      ot-operators
+STATUS:         deployed
+REVISION:       1
+TEST SUITE:     logging-operator-test-connection
+Last Started:   Sun May 29 01:07:56 2022
+Last Completed: Sun May 29 01:08:02 2022
+Phase:          Succeeded
+```
+
+## Upcoming Features
+
+- Plugins support for elasticsearch and kibana
+- Plugins support for fluentd
+- Index template support in operator
+- Index lifecycle support in operator
+
+## Contact
+
+This project is managed by [OpsTree Solutions](https://opstree.com/). If you have any queries or suggestions, mail us at [opensource@opstree.com](mailto:opensource@opstree.com).
+
