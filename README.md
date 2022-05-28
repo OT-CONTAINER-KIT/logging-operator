@@ -20,7 +20,7 @@
   </a>
 </p>
 
-Logging Operator is an operator created in Golang to setup and manage EFK(Elasticsearch, Fluentd, and Kibana) cluster inside Kubernetes and Openshift environment. This operator is capable of setting up each individual component of EFK cluster separately.
+Logging Operator is an operator created in Golang to set up and manage EFK(Elasticsearch, Fluentd, and Kibana) cluster inside Kubernetes and Openshift environment. This operator is capable of setting up each individual component of EFK cluster separately.
 
 For documentation, please refer to [https://ot-logging-operator.netlify.app/](https://ot-logging-operator.netlify.app/)
 
@@ -45,6 +45,16 @@ The aim and purpose of creating this Logging Operator to provide an easy and ext
 - Seamless upgrades of elasticsearch, fluentd, and kibana.
 - Security best practices support for complete stack.
 - Kubernetes resources objects support like:- resources, securityContext, affinity, tolerations, etc.
+
+## Prerequisites
+
+Logging Operator requires a Kubernetes cluster of version `>=1.16.0`. If you have just started with the CRD and Operators, it is highly recommended using the latest version of Kubernetes cluster.
+
+## Getting Started
+
+If you want to start using the logging-operator in a quickstart mode, you can begin with the [documentation](https://ot-logging-operator.netlify.app/). It will help you and guide you through the setup of Elasticsearch, Fluentd, and Kibana  step-by-step.
+
+The configuration for EFK (Elasticsearch, Fluentd, Kibana) set up is defined inside the CRD manifests. But all the examples manifests can be found in the [example](./examples) directory.
 
 ```shell
 $ kubectl apply -f config/crd/bases/
