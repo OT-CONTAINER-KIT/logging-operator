@@ -15,15 +15,12 @@ There are different elasticsearch nodes supported by this operator:-
 - **Ingestion Node:** A node that has ingest role (default). Ingest nodes are able to apply an ingest pipeline to a document in order to transform and enrich the document before indexing. With a heavy ingest load, it makes sense to use dedicated ingest nodes and to not include ingest role from nodes that have the master or data roles.
 - **Client or Coordinator Node:** Requests like search requests or bulk-indexing requests may involve data held on different data nodes. A search request, for example, is executed in two phases which are coordinated by the node which receives the client request the coordinating node.
 
-<<<<<<< HEAD
 There are few additional functionalities supported in the elasticsearch CRD.
 
 - TLS support and xpack support
 - Multi node cluster setup - master, data, ingestion, client
 - Custom configuration for each type of elasticsearch node
 
-=======
->>>>>>> 426f61139fb4ba51dc832fb1dd200e9ce21d3b85
 <div align="center">
     <img src="https://github.com/OT-CONTAINER-KIT/logging-operator/blob/master/static/es-architecture.png?raw=true">
 </div>
