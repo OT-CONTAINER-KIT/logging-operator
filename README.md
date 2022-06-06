@@ -60,7 +60,7 @@ The configuration for EFK (Elasticsearch, Fluentd, Kibana) set up is defined ins
 
 ### Logging Operator Setup
 
-The setup can be done by using helm. The mongodb-operator can easily get installed using helm commands.
+The setup can be done by using helm. The logging-operator can easily get installed using helm commands.
 
 ```shell
 # Add the helm chart

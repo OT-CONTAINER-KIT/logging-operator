@@ -91,7 +91,7 @@ func patchStateFulSet(storedStateful *appsv1.StatefulSet, newStateful *appsv1.St
 		patch.IgnoreField("metadata"),
 	)
 	if err != nil {
-		logger.Error(err, "Unable to patch mongodb statefulset with comparison object")
+		logger.Error(err, "Unable to patch statefulset with comparison object")
 		return err
 	}
 	if !patchResult.IsEmpty() {
