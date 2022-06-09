@@ -15,6 +15,12 @@ There are different elasticsearch nodes supported by this operator:-
 - **Ingestion Node:** A node that has ingest role (default). Ingest nodes are able to apply an ingest pipeline to a document in order to transform and enrich the document before indexing. With a heavy ingest load, it makes sense to use dedicated ingest nodes and to not include ingest role from nodes that have the master or data roles.
 - **Client or Coordinator Node:** Requests like search requests or bulk-indexing requests may involve data held on different data nodes. A search request, for example, is executed in two phases which are coordinated by the node which receives the client request the coordinating node.
 
+There are few additional functionalities supported in the elasticsearch CRD.
+
+- TLS support and xpack support
+- Multi node cluster setup - master, data, ingestion, client
+- Custom configuration for each type of elasticsearch node
+
 <div align="center">
     <img src="https://github.com/OT-CONTAINER-KIT/logging-operator/blob/master/static/es-architecture.png?raw=true">
 </div>
@@ -40,7 +46,7 @@ $ helm repo update
 Once all these things have completed, we can install Elasticsearch cluster by using:-
 
 ```shell
-# Install the helm chart of MongoDB
+# Install the helm chart of Elasticsearch
 $ helm install elasticsearch ot-helm/elasticsearch --namespace ot-operators \
   --set esMaster.storage.storageClass=do-block-storage \
   --set esData.storage.storageClass=do-block-storage
