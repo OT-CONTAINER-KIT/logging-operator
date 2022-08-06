@@ -109,15 +109,26 @@ func generateEnvVariables(cr *loggingv1beta1.Kibana) []corev1.EnvVar {
 	}
 	if cr.Spec.Security != nil {
 		if *cr.Spec.Security.TLSEnabled && cr.Spec.Security.TLSEnabled != nil {
-			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{Name: "ELASTICSEARCH_USERNAME", Value: "elastic"})
+			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{Name: "ELASTIC_USERNAME", Value: "elastic"})
 			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{
-				Name: "ELASTICSEARCH_PASSWORD",
+				Name: "ELASTIC_PASSWORD",
+				ValueFrom: &corev1.EnvVarSource{
+					SecretKeyRef: &corev1.SecretKeySelector{
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: fmt.Sprintf("%s-password", cr.Spec.ElasticConfig.ClusterName),
+						},
+						Key: "password",
+					},
+				},
+			})
+			kibanaEnvVars = append(kibanaEnvVars, corev1.EnvVar{
+				Name: "ELASTICSEARCH_SERVICEACCOUNTTOKEN",
 				ValueFrom: &corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
 						LocalObjectReference: corev1.LocalObjectReference{
 							Name: *cr.Spec.Security.ExistingSecret,
 						},
-						Key: "password",
+						Key: "token",
 					},
 				},
 			})

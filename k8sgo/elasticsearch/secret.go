@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/thanhpk/randstr"
 	loggingv1beta1 "logging-operator/api/v1beta1"
+	"logging-operator/elasticgo"
 	"logging-operator/k8sgo"
 )
 
@@ -76,5 +77,32 @@ func CreateElasticTLSSecret(cr *loggingv1beta1.Elasticsearch) error {
 		return err
 	}
 
+	return nil
+}
+
+// CreateServiceAccountToken is a method for creating sa token for Kibana
+func CreateServiceAccountToken(cr *loggingv1beta1.Elasticsearch) error {
+	secretName := fmt.Sprintf("%s-sa-token", cr.ObjectMeta.Name)
+	labels := map[string]string{
+		"app":     cr.ObjectMeta.Name,
+		"service": "kibana",
+	}
+	tokenInfo, err := elasticgo.CreateServiceAccountTokenKibana(cr)
+	if err != nil {
+		return err
+	}
+	tokenValue := tokenInfo.Token.Value
+	secretParams := k8sgo.SecretsParameters{
+		Name:        secretName,
+		Namespace:   cr.Namespace,
+		SecretsMeta: k8sgo.GenerateObjectMetaInformation(secretName, cr.Namespace, labels, k8sgo.GenerateAnnotations()),
+		OwnerDef:    k8sgo.ElasticAsOwner(cr),
+		SecretKey:   "token",
+		SecretValue: []byte(tokenValue),
+	}
+	err = k8sgo.CreateSecret(cr.Namespace, k8sgo.GenerateSecret(secretParams))
+	if err != nil {
+		return err
+	}
 	return nil
 }

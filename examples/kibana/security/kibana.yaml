@@ -11,4 +11,4 @@ spec:
     clusterName: elasticsearch
   esSecurity:
     tlsEnabled: true
-    existingSecret: elasticsearch-password
+    existingSecret: elasticsearch-sa-token
