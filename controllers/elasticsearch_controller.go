@@ -133,6 +133,12 @@ func (r *ElasticsearchReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	instance.Status.ActiveShards = &clusterInfo.Shards
 	instance.Status.Indices = &clusterInfo.Shards
 
+	if clusterInfo.ClusterState == "green" {
+		err = serviceAccountSecretManager(instance)
+		if err != nil {
+			return ctrl.Result{RequeueAfter: time.Second * 10}, err
+		}
+	}
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		if errors.IsConflict(err) {
 			return ctrl.Result{Requeue: true}, nil
@@ -171,7 +177,11 @@ func secretManager(instance *loggingv1beta1.Elasticsearch) error {
 			}
 		}
 	}
+	return nil
+}
 
+// serviceAccountSecretManager is a method for service account
+func serviceAccountSecretManager(instance *loggingv1beta1.Elasticsearch) error {
 	if instance.Spec.Security != nil {
 		tokenSecretName := fmt.Sprintf("%s-sa-token", instance.ObjectMeta.Name)
 		_, err := k8sgo.GetSecret(tokenSecretName, instance.Namespace)
