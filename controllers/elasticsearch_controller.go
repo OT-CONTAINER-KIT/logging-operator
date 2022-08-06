@@ -171,6 +171,17 @@ func secretManager(instance *loggingv1beta1.Elasticsearch) error {
 			}
 		}
 	}
+
+	if instance.Spec.Security != nil {
+		tokenSecretName := fmt.Sprintf("%s-sa-token", instance.ObjectMeta.Name)
+		_, err := k8sgo.GetSecret(tokenSecretName, instance.Namespace)
+		if err != nil {
+			err = k8selastic.CreateServiceAccountToken(instance)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 

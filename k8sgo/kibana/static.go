@@ -20,8 +20,8 @@ const healthCheckScript = `#!/usr/bin/env bash -e
 http () {
 	local path="${1}"
 	set -- -XGET -s --fail
-	if [ -n "${ELASTICSEARCH_USERNAME}" ] && [ -n "${ELASTICSEARCH_PASSWORD}" ]; then
-	  set -- "$@" -u "${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}"
+	if [ -n "${ELASTIC_USERNAME}" ] && [ -n "${ELASTIC_PASSWORD}" ]; then
+	  set -- "$@" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}"
 	fi
 	STATUS=$(curl --output /dev/null --write-out "%{http_code}" -k "$@" "http://localhost:5601${path}")
 	if [[ "${STATUS}" -eq 200 ]]; then

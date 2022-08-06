@@ -35,6 +35,15 @@ type ESClusterDetails struct {
 	Shards       int32  `json:"active_shards"`
 }
 
+// ElasticsearchToken is a interface for elasticsearch token
+type ElasticsearchToken struct {
+	Created bool `json:"created"`
+	Token   struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"token"`
+}
+
 // generateElasticClient is a method to generate client for elasticsearch
 func generateElasticClient(cr *loggingv1beta1.Elasticsearch) (esapi.Transport, error) {
 	logger := k8sgo.LogGenerator(cr.ObjectMeta.Name, cr.Namespace, "Elasticsearch")
@@ -95,4 +104,28 @@ func GetElasticClusterDetails(cr *loggingv1beta1.Elasticsearch) (ESClusterDetail
 		return clusterInfo, err
 	}
 	return clusterInfo, nil
+}
+
+// CreateServiceAccountTokenKibana is a method to get serviceaccount token for Kibana
+func CreateServiceAccountTokenKibana(cr *loggingv1beta1.Elasticsearch) (ElasticsearchToken, error) {
+	var tokenInfo ElasticsearchToken
+	logger := k8sgo.LogGenerator(cr.ObjectMeta.Name, cr.Namespace, "Elasticsearch")
+	esClient, err := generateElasticClient(cr)
+	if err != nil {
+		logger.Error(err, "Failed in generating elasticsearch client")
+		return tokenInfo, err
+	}
+	req := esapi.SecurityCreateServiceTokenRequest{Namespace: "elastic", Service: "kibana", Name: "token-sa"}
+	res, err := req.Do(context.Background(), esClient)
+	if err != nil {
+		logger.Error(err, "Error while making request to elasticsearch")
+		return tokenInfo, err
+	}
+	defer res.Body.Close()
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&tokenInfo)
+	if err != nil {
+		return tokenInfo, err
+	}
+	return tokenInfo, nil
 }

@@ -64,7 +64,7 @@ Verify the pod status and secret value by using:-
 
 ```shell
 # Verify the status of the pods
-$ kubectl get pods --namespace ot-operators -l 'app=fluentd'.
+$ kubectl get pods --namespace ot-operators -l 'app=fluentd'
 ...
 NAME            READY   STATUS    RESTARTS   AGE
 fluentd-7w48q   1/1     Running   0          3m9s
