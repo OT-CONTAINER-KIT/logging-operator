@@ -30,6 +30,7 @@ type ContainerParams struct {
 	EnvVarFrom     []corev1.EnvFromSource
 	ReadinessProbe *corev1.Probe
 	LivenessProbe  *corev1.Probe
+	Lifecycle      *corev1.Lifecycle
 }
 
 // generateContainerDef is a method to create container definition

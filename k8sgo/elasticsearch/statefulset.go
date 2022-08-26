@@ -19,6 +19,7 @@ package k8selastic
 import (
 	"fmt"
 	"logging-operator/k8sgo"
+	"sort"
 
 	corev1 "k8s.io/api/core/v1"
 	loggingv1beta1 "logging-operator/api/v1beta1"
@@ -85,6 +86,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 			statefulsetParams.ContainerParams.Resources = &corev1.ResourceRequirements{}
 			statefulsetParams.ContainerParams.InitResources = &corev1.ResourceRequirements{}
 		}
+	}
+	if cr.Spec.ESPlugins != nil {
+		statefulsetParams.ContainerParams.Lifecycle = generatePluginLifeCycle(*cr.Spec.ESPlugins)
 	}
 	err := k8sgo.CreateOrUpdateStateFul(statefulsetParams)
 	if err != nil {
@@ -189,6 +193,22 @@ func createProbeInfo() *corev1.Probe {
 		ProbeHandler: corev1.ProbeHandler{
 			Exec: &corev1.ExecAction{
 				Command: []string{"bash", "-c", healthCheckScript},
+			},
+		},
+	}
+}
+
+// generatePluginLifeCycle is a method to create plugins lifecycle
+func generatePluginLifeCycle(pluginList []string) *corev1.Lifecycle {
+	command := []string{"/usr/share/elasticsearchbin/elasticsearch-plugin", "install", "--batch"}
+	sort.Strings(pluginList)
+	for _, plugin := range pluginList {
+		command = append(command, plugin)
+	}
+	return &corev1.Lifecycle{
+		PreStop: &corev1.LifecycleHandler{
+			Exec: &corev1.ExecAction{
+				Command: command,
 			},
 		},
 	}

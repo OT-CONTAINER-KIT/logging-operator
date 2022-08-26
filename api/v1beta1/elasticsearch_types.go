@@ -33,6 +33,7 @@ type ElasticsearchSpec struct {
 	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
 	ESIngestion *NodeSpecificConfig `json:"esIngestion,omitempty"`
 	ESClient    *NodeSpecificConfig `json:"esClient,omitempty"`
+	ESPlugins   *[]string           `json:"esPlugins,omitempty"`
 }
 
 // NodeSpecificConfig defines the properties for elasticsearch nodes
