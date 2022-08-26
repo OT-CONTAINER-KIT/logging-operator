@@ -202,9 +202,7 @@ func createProbeInfo() *corev1.Probe {
 func generatePluginLifeCycle(pluginList []string) *corev1.Lifecycle {
 	command := []string{"/usr/share/elasticsearchbin/elasticsearch-plugin", "install", "--batch"}
 	sort.Strings(pluginList)
-	for _, plugin := range pluginList {
-		command = append(command, plugin)
-	}
+	command = append(command, pluginList...)
 	return &corev1.Lifecycle{
 		PreStop: &corev1.LifecycleHandler{
 			Exec: &corev1.ExecAction{
