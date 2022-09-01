@@ -58,6 +58,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 	if nodeConfig.Replicas != nil {
 		statefulsetParams.Replicas = nodeConfig.Replicas
 	}
+	if cr.Spec.ESPlugins != nil {
+		statefulsetParams.ContainerParams.Lifecycle = generatePluginLifeCycle(*cr.Spec.ESPlugins)
+	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
 
 	if nodeConfig != nil {
@@ -86,9 +89,6 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 			statefulsetParams.ContainerParams.Resources = &corev1.ResourceRequirements{}
 			statefulsetParams.ContainerParams.InitResources = &corev1.ResourceRequirements{}
 		}
-	}
-	if cr.Spec.ESPlugins != nil {
-		statefulsetParams.ContainerParams.Lifecycle = generatePluginLifeCycle(*cr.Spec.ESPlugins)
 	}
 	err := k8sgo.CreateOrUpdateStateFul(statefulsetParams)
 	if err != nil {
