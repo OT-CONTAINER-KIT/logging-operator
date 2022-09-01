@@ -19,7 +19,6 @@ package k8selastic
 import (
 	"fmt"
 	"logging-operator/k8sgo"
-	"sort"
 
 	corev1 "k8s.io/api/core/v1"
 	loggingv1beta1 "logging-operator/api/v1beta1"
@@ -59,7 +58,7 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 		statefulsetParams.Replicas = nodeConfig.Replicas
 	}
 	if cr.Spec.ESPlugins != nil {
-		statefulsetParams.ContainerParams.Lifecycle = generatePluginLifeCycle(*cr.Spec.ESPlugins)
+		statefulsetParams.ESPlugins = cr.Spec.ESPlugins
 	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
 
@@ -114,6 +113,12 @@ func getVolumeMounts(cr *loggingv1beta1.Elasticsearch, role string) *[]corev1.Vo
 			})
 		}
 	}
+	if cr.Spec.ESPlugins != nil {
+		volumeMounts = append(volumeMounts, corev1.VolumeMount{
+			Name:      "plugin-volume",
+			MountPath: "/usr/share/elasticsearch/plugins",
+		})
+	}
 	return &volumeMounts
 }
 
@@ -131,6 +136,14 @@ func getVolumes(cr *loggingv1beta1.Elasticsearch) *[]corev1.Volume {
 				},
 			})
 		}
+	}
+	if cr.Spec.ESPlugins != nil {
+		volume = append(volume, corev1.Volume{
+			Name: "plugin-volume",
+			VolumeSource: corev1.VolumeSource{
+				EmptyDir: &corev1.EmptyDirVolumeSource{},
+			},
+		})
 	}
 	return &volume
 }
@@ -193,20 +206,6 @@ func createProbeInfo() *corev1.Probe {
 		ProbeHandler: corev1.ProbeHandler{
 			Exec: &corev1.ExecAction{
 				Command: []string{"bash", "-c", healthCheckScript},
-			},
-		},
-	}
-}
-
-// generatePluginLifeCycle is a method to create plugins lifecycle
-func generatePluginLifeCycle(pluginList []string) *corev1.Lifecycle {
-	command := []string{"/usr/share/elasticsearchbin/elasticsearch-plugin", "install", "--batch"}
-	sort.Strings(pluginList)
-	command = append(command, pluginList...)
-	return &corev1.Lifecycle{
-		PreStop: &corev1.LifecycleHandler{
-			Exec: &corev1.ExecAction{
-				Command: command,
 			},
 		},
 	}
