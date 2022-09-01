@@ -18,6 +18,7 @@ package k8sgo
 
 import (
 	"context"
+	"strings"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -233,12 +234,15 @@ func getInitContainer(params ContainerParams) corev1.Container {
 
 // getPluginInitContainers is a method to create plugins init container
 func getPluginInitContainers(params StatefulSetParameters) corev1.Container {
+	shellCommand := []string{"sh", "-c"}
 	command := []string{"bin/elasticsearch-plugin install --batch"}
 	command = append(command, *params.ESPlugins...)
+
+	shellCommand = append(shellCommand, strings.Join(command, " "))
 	return corev1.Container{
 		Name:    "plugins",
 		Image:   params.ContainerParams.Image,
-		Command: command,
+		Command: shellCommand,
 		VolumeMounts: []corev1.VolumeMount{
 			{
 				Name:      "plugin-volume",
