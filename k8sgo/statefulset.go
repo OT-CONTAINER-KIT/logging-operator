@@ -18,6 +18,7 @@ package k8sgo
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -46,6 +47,7 @@ type StatefulSetParameters struct {
 	SecurityContext   *corev1.PodSecurityContext
 	ExtraVolumes      *[]corev1.Volume
 	ESPlugins         *[]string
+	ESKeystoreSecret  *string
 }
 
 // PVCParameters is a struct to pass arguments for PVC
@@ -186,6 +188,9 @@ func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
 	if params.ESPlugins != nil {
 		statefulset.Spec.Template.Spec.InitContainers = append(statefulset.Spec.Template.Spec.InitContainers, getPluginInitContainers(params))
 	}
+	if params.ESKeystoreSecret != nil {
+		statefulset.Spec.Template.Spec.InitContainers = append(statefulset.Spec.Template.Spec.InitContainers, getKeystoreInitContainer(params))
+	}
 	if params.ExtraVolumes != nil {
 		statefulset.Spec.Template.Spec.Volumes = *params.ExtraVolumes
 	}
@@ -247,6 +252,26 @@ func getPluginInitContainers(params StatefulSetParameters) corev1.Container {
 			{
 				Name:      "plugin-volume",
 				MountPath: "/usr/share/elasticsearch/plugins",
+			},
+		},
+	}
+}
+
+// getKeystoreInitContainer is a method to create init container for keystore
+func getKeystoreInitContainer(params StatefulSetParameters) corev1.Container {
+	secretName := fmt.Sprintf("/tmp/keystoreSecrets/%s", *params.ESKeystoreSecret)
+	return corev1.Container{
+		Name:    "keystore",
+		Image:   params.ContainerParams.Image,
+		Command: []string{"bash", "-c", keyStoreCommand},
+		VolumeMounts: []corev1.VolumeMount{
+			{
+				Name:      "keystore-volume",
+				MountPath: "/tmp/keystore",
+			},
+			{
+				Name:      "keystore-secret",
+				MountPath: secretName,
 			},
 		},
 	}
