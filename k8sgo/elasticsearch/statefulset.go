@@ -122,6 +122,13 @@ func getVolumeMounts(cr *loggingv1beta1.Elasticsearch, role string) *[]corev1.Vo
 			MountPath: "/usr/share/elasticsearch/plugins",
 		})
 	}
+	if cr.Spec.ESKeystoreSecret != nil {
+		volumeMounts = append(volumeMounts, corev1.VolumeMount{
+			Name:      "keystore-volume",
+			MountPath: "/usr/share/elasticsearch/config/elasticsearch.keystore",
+			SubPath:   "elasticsearch.keystore",
+		})
+	}
 	return &volumeMounts
 }
 
