@@ -3630,14 +3630,8 @@ spec:
                         type: string
                     type: object
                 type: object
-              esKeystore:
-                items:
-                  description: ESKeystore is a interface for storing keystore in elasticsearch
-                  properties:
-                    secretName:
-                      type: string
-                  type: object
-                type: array
+              esKeystoreSecret:
+                type: string
               esMaster:
                 default:
                   jvmMaxMemory: 1g
