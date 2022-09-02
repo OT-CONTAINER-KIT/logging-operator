@@ -18,6 +18,7 @@ package k8sgo
 
 import (
 	"context"
+	"strings"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -44,6 +45,7 @@ type StatefulSetParameters struct {
 	PriorityClassName *string
 	SecurityContext   *corev1.PodSecurityContext
 	ExtraVolumes      *[]corev1.Volume
+	ESPlugins         *[]string
 }
 
 // PVCParameters is a struct to pass arguments for PVC
@@ -181,6 +183,9 @@ func generateStatefulSetDef(params StatefulSetParameters) *appsv1.StatefulSet {
 		},
 	}
 
+	if params.ESPlugins != nil {
+		statefulset.Spec.Template.Spec.InitContainers = append(statefulset.Spec.Template.Spec.InitContainers, getPluginInitContainers(params))
+	}
 	if params.ExtraVolumes != nil {
 		statefulset.Spec.Template.Spec.Volumes = *params.ExtraVolumes
 	}
@@ -223,6 +228,26 @@ func getInitContainer(params ContainerParams) corev1.Container {
 		SecurityContext: &corev1.SecurityContext{
 			Privileged: &privileged,
 			RunAsUser:  &runasUser,
+		},
+	}
+}
+
+// getPluginInitContainers is a method to create plugins init container
+func getPluginInitContainers(params StatefulSetParameters) corev1.Container {
+	shellCommand := []string{"sh", "-c"}
+	command := []string{"bin/elasticsearch-plugin install --batch"}
+	command = append(command, *params.ESPlugins...)
+
+	shellCommand = append(shellCommand, strings.Join(command, " "))
+	return corev1.Container{
+		Name:    "plugins",
+		Image:   params.ContainerParams.Image,
+		Command: shellCommand,
+		VolumeMounts: []corev1.VolumeMount{
+			{
+				Name:      "plugin-volume",
+				MountPath: "/usr/share/elasticsearch/plugins",
+			},
 		},
 	}
 }

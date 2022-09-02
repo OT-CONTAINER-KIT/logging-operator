@@ -57,6 +57,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 	if nodeConfig.Replicas != nil {
 		statefulsetParams.Replicas = nodeConfig.Replicas
 	}
+	if cr.Spec.ESPlugins != nil {
+		statefulsetParams.ESPlugins = cr.Spec.ESPlugins
+	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
 
 	if nodeConfig != nil {
@@ -110,6 +113,12 @@ func getVolumeMounts(cr *loggingv1beta1.Elasticsearch, role string) *[]corev1.Vo
 			})
 		}
 	}
+	if cr.Spec.ESPlugins != nil {
+		volumeMounts = append(volumeMounts, corev1.VolumeMount{
+			Name:      "plugin-volume",
+			MountPath: "/usr/share/elasticsearch/plugins",
+		})
+	}
 	return &volumeMounts
 }
 
@@ -127,6 +136,14 @@ func getVolumes(cr *loggingv1beta1.Elasticsearch) *[]corev1.Volume {
 				},
 			})
 		}
+	}
+	if cr.Spec.ESPlugins != nil {
+		volume = append(volume, corev1.Volume{
+			Name: "plugin-volume",
+			VolumeSource: corev1.VolumeSource{
+				EmptyDir: &corev1.EmptyDirVolumeSource{},
+			},
+		})
 	}
 	return &volume
 }
