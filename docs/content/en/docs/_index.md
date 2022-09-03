@@ -8,4 +8,4 @@ menu:
     weight: 20
 ---
 
-All of Logging Operator documentation
+All the Logging Operator documentation and examples.
