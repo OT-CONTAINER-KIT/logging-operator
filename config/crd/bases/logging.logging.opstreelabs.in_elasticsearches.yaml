@@ -3630,6 +3630,8 @@ spec:
                         type: string
                     type: object
                 type: object
+              esKeystoreSecret:
+                type: string
               esMaster:
                 default:
                   jvmMaxMemory: 1g

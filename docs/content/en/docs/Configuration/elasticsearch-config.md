@@ -16,6 +16,8 @@ The values.yaml file for Elasticsearch setup can be found [here](https://github.
 |----------------------------------|-----------------|--------------------------------------------------------------------|
 | clusterName                      | elastic-prod    | Name of the elasticsearch cluster                                  |
 | esVersion                        | 7.17.0          | Major and minor version of elaticsearch                            |
+| esPlugins                        | []              | Plugins list to install inside elasticsearch                       |
+| esKeystoreSecret                 | -               | Keystore secret to include in elasticsearch cluster                |
 | customConfiguration              | {}              | Additional configuration parameters for elasticsearch              |
 | esSecurity.enabled               | true            | To enabled the xpack security of elasticsearch                     |
 | esMaster.replicas                | 3               | Number of replicas for elasticsearch master node                   |
@@ -86,6 +88,22 @@ esClusterName: "prod"
 
 ```yaml
 esVersion: "7.16.0"
+```
+
+### esPlugins
+
+`esPlugins` is a CRD parameter through which we can define the list of plugins that needs to install inside elasticsearch cluster.
+
+```yaml
+esPlugins: ["respository-s3", "repository-gcs"]
+```
+
+### esKeystoreSecret
+
+`esKeystoreSecret` is a CRD parameter through which we can define the keystore related secret to include in elasticsearch cluster.
+
+```yaml
+esKeystoreSecret: keystore-secret
 ```
 
 ### esMaster

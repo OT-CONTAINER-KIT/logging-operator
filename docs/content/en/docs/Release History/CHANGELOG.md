@@ -6,6 +6,16 @@ description: >
     Changelog version history for Logging Operator
 ---
 
+### v0.4.0
+
+**September 3, 2022**
+
+**🏄 Features**
+
+- Added elasticsearch 8.X version support
+- Added plugin's installation support in elasticsearch
+- Added keystore integration in elasticsearch
+
 ### v0.3.0
 
 **July 4, 2022**

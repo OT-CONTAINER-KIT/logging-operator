@@ -1,8 +1,7 @@
 ---
 title: "Release History"
 linkTitle: "Release History"
-weight: 5
+weight: 6
 description: >
-    Release history information for MongoDB
+    Release history information for Logging Operator
 ---
-

@@ -60,6 +60,9 @@ func CreateElasticsearchStatefulSet(cr *loggingv1beta1.Elasticsearch, nodeConfig
 	if cr.Spec.ESPlugins != nil {
 		statefulsetParams.ESPlugins = cr.Spec.ESPlugins
 	}
+	if cr.Spec.ESKeystoreSecret != nil {
+		statefulsetParams.ESKeystoreSecret = cr.Spec.ESKeystoreSecret
+	}
 	statefulsetParams.ExtraVolumes = getVolumes(cr)
 
 	if nodeConfig != nil {
@@ -119,6 +122,13 @@ func getVolumeMounts(cr *loggingv1beta1.Elasticsearch, role string) *[]corev1.Vo
 			MountPath: "/usr/share/elasticsearch/plugins",
 		})
 	}
+	if cr.Spec.ESKeystoreSecret != nil {
+		volumeMounts = append(volumeMounts, corev1.VolumeMount{
+			Name:      "keystore-volume",
+			MountPath: "/usr/share/elasticsearch/config/elasticsearch.keystore",
+			SubPath:   "elasticsearch.keystore",
+		})
+	}
 	return &volumeMounts
 }
 
@@ -142,6 +152,24 @@ func getVolumes(cr *loggingv1beta1.Elasticsearch) *[]corev1.Volume {
 			Name: "plugin-volume",
 			VolumeSource: corev1.VolumeSource{
 				EmptyDir: &corev1.EmptyDirVolumeSource{},
+			},
+		})
+	}
+	if cr.Spec.ESKeystoreSecret != nil {
+		volume = append(volume, corev1.Volume{
+			Name: "keystore-volume",
+			VolumeSource: corev1.VolumeSource{
+				EmptyDir: &corev1.EmptyDirVolumeSource{},
+			},
+		})
+	}
+	if cr.Spec.ESKeystoreSecret != nil {
+		volume = append(volume, corev1.Volume{
+			Name: "keystore-secret",
+			VolumeSource: corev1.VolumeSource{
+				Secret: &corev1.SecretVolumeSource{
+					SecretName: *cr.Spec.ESKeystoreSecret,
+				},
 			},
 		})
 	}

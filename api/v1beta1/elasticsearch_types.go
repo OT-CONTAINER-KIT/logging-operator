@@ -29,11 +29,12 @@ type ElasticsearchSpec struct {
 	Security    *Security `json:"esSecurity,omitempty"`
 	// +kubebuilder:validation:default:={esMaster:{replicas: 3}}
 	// +kubebuilder:default:={storage:{accessModes: {ReadWriteOnce}, storageSize: "1Gi"},jvmMaxMemory: "1g", jvmMinMemory: "1g", replicas: 3}
-	ESMaster    *NodeSpecificConfig `json:"esMaster,omitempty"`
-	ESData      *NodeSpecificConfig `json:"esData,omitempty"`
-	ESIngestion *NodeSpecificConfig `json:"esIngestion,omitempty"`
-	ESClient    *NodeSpecificConfig `json:"esClient,omitempty"`
-	ESPlugins   *[]string           `json:"esPlugins,omitempty"`
+	ESMaster         *NodeSpecificConfig `json:"esMaster,omitempty"`
+	ESData           *NodeSpecificConfig `json:"esData,omitempty"`
+	ESIngestion      *NodeSpecificConfig `json:"esIngestion,omitempty"`
+	ESClient         *NodeSpecificConfig `json:"esClient,omitempty"`
+	ESPlugins        *[]string           `json:"esPlugins,omitempty"`
+	ESKeystoreSecret *string             `json:"esKeystoreSecret,omitempty"`
 }
 
 // NodeSpecificConfig defines the properties for elasticsearch nodes
