@@ -30,7 +30,7 @@ If the repository is added make sure you have updated it with the latest informa
 $ helm repo update
 ```
 
-Once all these things have completed, we can install Fluentd cluster by using:-
+Once all these things have completed, we can install Kibana cluster by using:-
 
 ```shell
 # Install the helm chart of Kibana
@@ -60,7 +60,7 @@ Verify the pod status value by using:-
 
 ```shell
 # Verify the status of the pods
-$ kubectl get pods --namespace ot-operators -l 'app=fluentd'.
+$ kubectl get pods --namespace ot-operators -l 'app=kibana'
 ...
 NAME                      READY   STATUS    RESTARTS   AGE
 kibana-7b649df777-nkr2p   1/1     Running   0          3m27s
@@ -69,7 +69,7 @@ kibana-7b649df777-nkr2p   1/1     Running   0          3m27s
 Kibana deployment can be listed and verify using `kubectl cli` as well.
 
 ```shell
-$ kubectl get fluentd -n ot-operators
+$ kubectl get kibana -n ot-operators
 NAME     VERSION   ES CLUSTER
 kibana   7.17.0    elasticsearch
 ```
@@ -83,18 +83,18 @@ All the kubectl related manifest are located inside the [example](https://github
 For an example:-
 
 ```shell
-$ kubectl apply -f examples/kibana/basic/fluentd.yaml -n ot-operators
+$ kubectl apply -f examples/kibana/basic/kibana.yaml -n ot-operators
 ...
-fluentd/fluentd is created
+kibana.logging.logging.opstreelabs.in/kibana is created
 ```
 
 ## Validation of Kibana
 
-To validate the state of Fluentd, we can verify the log status of kibana pods managed by deployment.
+To validate the state of Kibana, we can verify the log status of kibana pods managed by deployment.
 
 ```shell
-# Validation of fluentd logs
-$ kubectl logs fluentd-7w48q -n ot-operators
+# Validation of kibana logs
+$ kubectl logs kibana-7bc5cd8747-pgtzc -n ot-operators
 ...
 {"type":"log","@timestamp":"2022-08-06T18:22:04+00:00","tags":["info","plugins-service"],"pid":8,"message":"Plugin \"metricsEntities\" is disabled."}
 {"type":"log","@timestamp":"2022-08-06T18:22:04+00:00","tags":["info","http","server","Preboot"],"pid":8,"message":"http server running at http://0.0.0.0:5601"}
