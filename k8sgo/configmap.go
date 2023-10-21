@@ -89,8 +89,9 @@ func createConfigMap(namespace string, configMap *corev1.ConfigMap) error {
 	return nil
 }
 
-//nolint:gosimple
 // getConfigMap is a method to check configmap exists
+//
+//nolint:gosimple
 func getConfigMap(name, namespace string) (*corev1.ConfigMap, error) {
 	configMapInfo, err := GenerateK8sClient().CoreV1().ConfigMaps(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {

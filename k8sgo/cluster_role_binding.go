@@ -65,8 +65,9 @@ func CreateClusterRoleBinding(clusterRoleBinding *rbacv1.ClusterRoleBinding) err
 	return nil
 }
 
-//nolint:gosimple
 // GetClusterRoleBinding is a method to check clusterrolebindings exists
+//
+//nolint:gosimple
 func GetClusterRoleBinding(name string) (*rbacv1.ClusterRoleBinding, error) {
 	clusterRoleBindingsInfo, err := GenerateK8sClient().RbacV1().ClusterRoleBindings().Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {

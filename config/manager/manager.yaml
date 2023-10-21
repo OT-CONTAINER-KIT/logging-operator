@@ -6,8 +6,8 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: logging-operator
-  namespace: ot-operators
+  name: controller-manager
+  namespace: system
   labels:
     control-plane: logging-operator
 spec:
@@ -29,7 +29,7 @@ spec:
         - /manager
         args:
         - --leader-elect
-        image: quay.io/opstree/logging-operator:v0.3.0
+        image: controller:latest
         name: manager
         securityContext:
           allowPrivilegeEscalation: false
