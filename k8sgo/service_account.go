@@ -53,8 +53,9 @@ func CreateServiceAccount(namespace string, serviceAccount *corev1.ServiceAccoun
 	return nil
 }
 
-//nolint:gosimple
 // GetServiceAccount is a method to check serviceaccount exists
+//
+//nolint:gosimple
 func GetServiceAccount(name, namespace string) (*corev1.ServiceAccount, error) {
 	serviceAccountInfo, err := GenerateK8sClient().CoreV1().ServiceAccounts(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
