@@ -20,8 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:object:root=true
-
 // ElasticsearchSpec defines the desired state of Elasticsearch
 type ElasticsearchSpec struct {
 	ClusterName string    `json:"esClusterName"`
@@ -54,7 +52,6 @@ type Security struct {
 	AutoGeneratePassword *bool   `json:"autoGeneratePassword,omitempty"`
 }
 
-//+kubebuilder:subresource:status
 // ElasticsearchStatus defines the observed state of Elasticsearch
 type ElasticsearchStatus struct {
 	ESVersion    string `json:"esVersion,omitempty"`
@@ -67,8 +64,8 @@ type ElasticsearchStatus struct {
 	ESIngestion  *int32 `json:"esIngestion,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Version",type=string,priority=0,JSONPath=`.status.esVersion`
 // +kubebuilder:printcolumn:name="State",type=string,priority=0,JSONPath=`.status.esClusterState`
 // +kubebuilder:printcolumn:name="Shards",type=integer,priority=0,JSONPath=`.status.activeShards`
