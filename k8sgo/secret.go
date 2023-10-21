@@ -58,8 +58,9 @@ func CreateSecret(namespace string, secret *corev1.Secret) error {
 	return nil
 }
 
-//nolint:gosimple
 // GetSecret is a method to check secret exists
+//
+//nolint:gosimple
 func GetSecret(name, namespace string) (*corev1.Secret, error) {
 	secretInfo, err := GenerateK8sClient().CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
