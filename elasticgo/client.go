@@ -53,7 +53,7 @@ func generateElasticClient(cr *loggingv1beta1.Elasticsearch) (esapi.Transport, e
 	} else {
 		urlScheme = "http"
 	}
-	elasticURL := fmt.Sprintf("%s://%s-master:9200", urlScheme, cr.ObjectMeta.Name)
+	elasticURL := fmt.Sprintf("%s://%s-master.%s:9200", urlScheme, cr.ObjectMeta.Name, cr.ObjectMeta.Namespace)
 	cfg := elasticsearch.Config{
 		Addresses: []string{
 			elasticURL,
