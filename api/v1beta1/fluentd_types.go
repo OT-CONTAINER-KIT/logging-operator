@@ -20,8 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 // FluentdSpec defines the desired state of Fluentd
 type FluentdSpec struct {
 	ElasticConfig    ElasticConfig     `json:"esCluster"`
@@ -46,8 +44,8 @@ type FluentdStatus struct {
 	TotalAgents *int32 `json:"totalAgents,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Elasticsearch Host",type=string,priority=0,JSONPath=`.spec.esCluster.host`
 // +kubebuilder:printcolumn:name="Total Agents",type=string,priority=0,JSONPath=`.status.totalAgents`
 // Fluentd is the Schema for the fluentds API

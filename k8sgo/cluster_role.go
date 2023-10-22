@@ -55,8 +55,9 @@ func CreateClusterRole(clusterRole *rbacv1.ClusterRole) error {
 	return nil
 }
 
-//nolint:gosimple
 // GetClusterRole is a method to check clusterrole exists
+//
+//nolint:gosimple
 func GetClusterRole(name string) (*rbacv1.ClusterRole, error) {
 	clusterRoleInfo, err := GenerateK8sClient().RbacV1().ClusterRoles().Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
